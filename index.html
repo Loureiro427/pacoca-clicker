@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Paçoca Clicker</title>
+    <link rel="stylesheet" href="/src/style.css">
+  </head>
+  <body>
+    <div id="app">
+      <!-- Status Bar -->
+      <header class="status-bar">
+        <div class="header-logo">
+          <img src="/pacoca.png" alt="Paçoca" class="header-mascot">
+        </div>
+        <div class="header-stats">
+          <h1 id="score-display">0</h1>
+          <p id="pps-display">0 p/s</p>
+        </div>
+      </header>
+
+      <!-- Aba 1: Mascote / Clique -->
+      <main id="click-area" class="tab-content active">
+        <div class="mascot-container">
+          <div class="shine"></div>
+          <img src="/pacoca.png" id="pacoca-button" class="pacoca-mascot" alt="Mascote Paçoca" draggable="false" ondragstart="return false;" oncontextmenu="return false;">
+        </div>
+      </main>
+
+      <!-- Aba 2: Loja de Geradores -->
+      <section id="shop-area" class="tab-content"></section>
+
+      <!-- Aba 3: Melhorias Globais -->
+      <section id="upgrades-area" class="tab-content">
+        <div class="shop-header">
+          <h2>Melhorias</h2>
+        </div>
+        <div id="upgrades-list" class="shop-list"></div>
+      </section>
+
+      <!-- Navegação Inferior -->
+      <nav class="bottom-nav">
+        <button class="nav-btn active" data-target="click-area">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+          </svg>
+          <span class="label">Tocar</span>
+        </button>
+        <button class="nav-btn" data-target="shop-area">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+          </svg>
+          <span class="label">Loja</span>
+        </button>
+        <button class="nav-btn" data-target="upgrades-area">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span class="label">Melhorias</span>
+        </button>
+      </nav>
+      
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
