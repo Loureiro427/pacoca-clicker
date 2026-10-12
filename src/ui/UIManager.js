@@ -204,6 +204,14 @@ export class UIManager {
     const minutes = Math.floor((Date.now() - game.startTime) / 60000);
     document.getElementById('stat-time').innerText = `${minutes}m`;
 
+    // Atualização do Prestígio
+    const pendingChips = Math.floor(Math.sqrt(game.totalEarned / 1000000));
+    const newChips = Math.max(0, pendingChips - game.prestigeChips);
+
+    document.getElementById('prestige-count').innerText = formatNumber(game.prestigeChips);
+    document.getElementById('prestige-mult').innerText = `+${Math.round((game.prestigeMultiplier - 1) * 100)}%`;
+    document.getElementById('prestige-next').innerText = `Ganho ao ascender agora: +${formatNumber(newChips)} Paçocas de Ouro`;
+
     AchievementsData.forEach(ach => {
       const card = document.getElementById(`ach-${ach.id}`);
       if (card) {
@@ -217,6 +225,10 @@ export class UIManager {
   }
 
   initSaveActions() {
+    document.getElementById('btn-prestige').addEventListener('click', () => {
+      this.game.doPrestige();
+    });
+
     document.getElementById('btn-export-save').addEventListener('click', () => {
       const code = this.game.exportSaveCode();
       navigator.clipboard.writeText(code).then(() => {

@@ -573,3 +573,51 @@ html, body {
   pointer-events: auto !important;
   cursor: pointer;
 }
+
+/* Card de Prestígio */
+.prestige-card {
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFF0C2 100%);
+  border: 2px solid #FFD700;
+  border-bottom: 5px solid #E6C200;
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prestige-info h3 {
+  margin: 0 0 4px 0;
+  color: #7A5C00;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.prestige-info p {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  color: #5C4600;
+}
+
+.prestige-info small {
+  color: #8C6B00;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.prestige-btn {
+  background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
+  color: #3B2519;
+  border: none;
+  border-bottom: 4px solid #CC8400;
+  border-radius: 14px;
+  padding: 12px;
+  font-weight: 900;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.prestige-btn:active {
+  transform: translateY(2px);
+  border-bottom: 2px solid #CC8400;
+}
