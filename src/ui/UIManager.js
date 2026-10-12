@@ -235,6 +235,20 @@ export class UIManager {
     });
   }
 
+  updateFrenzy(timeLeft) {
+    const banner = document.getElementById('frenzy-banner');
+    const timer = document.getElementById('frenzy-timer');
+    
+    if (banner && timer) {
+      if (timeLeft > 0) {
+        banner.style.display = 'block';
+        timer.innerText = Math.ceil(timeLeft);
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+  }
+
   initTabs() {
     const btns = document.querySelectorAll('.nav-btn');
     const tabs = document.querySelectorAll('.tab-content');
@@ -252,3 +266,4 @@ export class UIManager {
     });
   }
 }
+

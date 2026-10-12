@@ -494,3 +494,49 @@ html, body {
   background-color: #FDE8E8;
   color: #C53030;
 }
+
+/* Paçoca Dourada Flutuante */
+.golden-pacoca {
+  position: fixed;
+  width: 65px;
+  height: 65px;
+  z-index: 999;
+  cursor: pointer;
+  animation: goldenPulse 1.5s infinite alternate, goldenFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px #FFD700) drop-shadow(0 0 30px #FFA500);
+}
+
+.golden-pacoca img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: sepia(1) saturate(5) hue-rotate(5deg) brightness(1.2);
+}
+
+@keyframes goldenPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15); }
+}
+
+@keyframes goldenFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Banner de Frenesi Ativo */
+.frenzy-banner {
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+  color: #3B2519;
+  text-align: center;
+  padding: 6px 12px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+  display: none;
+  animation: frenzyGlow 1s infinite alternate;
+}
+
+@keyframes frenzyGlow {
+  0% { opacity: 0.9; }
+  100% { opacity: 1; }
+}

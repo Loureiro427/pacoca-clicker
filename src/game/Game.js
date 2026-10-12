@@ -2,6 +2,7 @@ import { calculateCost, calculateTotalPPS, calculateClickValue } from './Economy
 import { UpgradesData } from './Upgrades.js';
 import { AchievementsData } from './Achievements.js';
 import { SaveManager } from '../storage/SaveManager.js';
+import { GoldenPacoca } from '../systems/GoldenPacoca.js';
 
 export class Game {
   constructor(ui) {
@@ -11,7 +12,11 @@ export class Game {
     this.clickValue = 1;
     this.buyAmount = 1;
     
-    // Estatísticas Acumuladas
+    // Frenesi Dourado
+    this.frenzyMultiplier = 1;
+    this.frenzyTimeLeft = 0;
+    
+    // Estatísticas
     this.totalClicks = 0;
     this.totalEarned = 0;
     this.startTime = Date.now();
@@ -25,16 +30,25 @@ export class Game {
     this.lastTick = Date.now();
     
     this.loadGame();
+    this.goldenSystem = new GoldenPacoca(this);
     this.startGameLoop();
     this.startSaveLoop();
   }
 
   click() {
-    this.score += this.clickValue;
-    this.totalEarned += this.clickValue;
+    const val = this.clickValue * this.frenzyMultiplier;
+    this.score += val;
+    this.totalEarned += val;
     this.totalClicks += 1;
     
     this.checkAchievements();
+    this.refreshUI();
+  }
+
+  startFrenzy(multiplier, durationSeconds) {
+    this.frenzyMultiplier = multiplier;
+    this.frenzyTimeLeft = durationSeconds;
+    this.recalculateStats();
     this.refreshUI();
   }
 
@@ -87,8 +101,11 @@ export class Game {
   }
 
   recalculateStats() {
-    this.pps = calculateTotalPPS(this.inventory, this.boughtUpgrades);
-    this.clickValue = calculateClickValue(this.inventory, this.boughtUpgrades);
+    const basePPS = calculateTotalPPS(this.inventory, this.boughtUpgrades);
+    const baseClick = calculateClickValue(this.inventory, this.boughtUpgrades);
+
+    this.pps = basePPS * this.frenzyMultiplier;
+    this.clickValue = baseClick;
   }
 
   refreshUI() {
@@ -96,6 +113,7 @@ export class Game {
     this.ui.updateShop(this.score, this.inventory, this.buyAmount);
     this.ui.updateUpgrades(this.score, this.inventory, this.boughtUpgrades);
     this.ui.updateProfile(this);
+    this.ui.updateFrenzy(this.frenzyTimeLeft);
   }
 
   startGameLoop() {
@@ -103,6 +121,16 @@ export class Game {
       const now = Date.now();
       const delta = (now - this.lastTick) / 1000;
       this.lastTick = now;
+
+      // Atualiza o tempo do frenesi
+      if (this.frenzyTimeLeft > 0) {
+        this.frenzyTimeLeft -= delta;
+        if (this.frenzyTimeLeft <= 0) {
+          this.frenzyTimeLeft = 0;
+          this.frenzyMultiplier = 1;
+          this.recalculateStats();
+        }
+      }
 
       if (this.pps > 0) {
         const earned = this.pps * delta;
@@ -170,7 +198,7 @@ export class Game {
       unlockedAchievements: this.unlockedAchievements,
       lastSaveTime: Date.now()
     });
-    return btoa(data); // Codifica em Base64
+    return btoa(data);
   }
 
   importSaveCode(code) {
