@@ -66,7 +66,10 @@ export class UIManager {
           ${gen.iconSvg}
         </div>
         <div class="generator-info">
-          <h3>${gen.name} <span class="owned-count">(0)</span></h3>
+          <div class="generator-header-line">
+            <h3>${gen.name}</h3>
+            <span class="level-badge">Nível <span class="owned-count">0</span></span>
+          </div>
           <small class="desc-display">${gen.desc}</small>
           <div class="cost-display">Custo: ${formatNumber(gen.baseCost)}</div>
         </div>
@@ -87,7 +90,7 @@ export class UIManager {
       
       const card = document.getElementById(`gen-${gen.id}`);
       if (card) {
-        card.querySelector('.owned-count').innerText = `(${owned})`;
+        card.querySelector('.owned-count').innerText = owned;
         card.querySelector('.cost-display').innerText = `Custo (${buyAmount}x): ${formatNumber(cost)}`;
         
         const btn = document.getElementById(`buy-${gen.id}`);

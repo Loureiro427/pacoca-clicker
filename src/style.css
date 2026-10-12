@@ -1,12 +1,13 @@
 :root {
   --primary: #A47350;        /* Marrom Paçoca principal */
-  --primary-dark: #7A5438;
-  --nav-bg: #3B2519;         /* Marrom escuro chocolate da barra inferior */
-  --nav-inactive: #A89588;    /* Tom creme inativo da barra */
-  --bg-color: #FDFBF7;       /* Fundo suave do app */
+  --primary-dark: #5C3A21;
+  --primary-light: #E0BA98;
+  --nav-bg: #3B2519;
+  --nav-inactive: #A89588;
+  --bg-color: #F7EFE6;
   --text-main: #3E2723;
   --card-bg: #FFFFFF;
-  --border-color: #EAE2D9;
+  --border-color: #E2D8CE;
 }
 
 * {
@@ -16,14 +17,13 @@
   -webkit-touch-callout: none;
 }
 
-/* Trava total no HTML/Body para impedir qualquer 'bounce' ou rolagem no celular */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  position: fixed; /* Impede o scroll elástico no iOS/Android */
+  position: fixed;
   touch-action: none;
   overscroll-behavior: none;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -41,42 +41,52 @@ html, body {
   position: relative;
 }
 
-/* Status Bar */
+/* Header com Tipografia 3D Cartoon (Estilo Cookie Clicker) */
 .status-bar {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding: 16px 10px;
-  background-color: var(--card-bg);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5EDE4 100%);
+  border-bottom: 2px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   z-index: 10;
 }
 
 .header-mascot {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15));
 }
 
 .header-stats {
-  text-align: left;
+  text-align: center;
 }
 
 #score-display {
   margin: 0;
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   color: var(--primary);
-  font-weight: 800;
-  line-height: 1.1;
+  font-weight: 900;
+  line-height: 1;
+  /* Contorno escuro 3D nos números */
+  text-shadow: 
+    2px 2px 0 var(--primary-dark),
+    -1px -1px 0 var(--primary-dark),
+    1px -1px 0 var(--primary-dark),
+    -1px 1px 0 var(--primary-dark),
+    0 4px 8px rgba(0,0,0,0.15);
+  color: #FFF;
+  -webkit-text-stroke: 1px var(--primary-dark);
 }
 
 #pps-display {
-  margin: 2px 0 0;
-  font-size: 0.9rem;
-  color: #8D7B68;
-  font-weight: 600;
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  font-weight: 800;
 }
 
 /* Tabs */
@@ -85,59 +95,48 @@ html, body {
   flex: 1;
   padding: 16px;
   box-sizing: border-box;
+  position: relative;
 }
 
-/* Aba Principal de Toque — Totalmente travada, sem rolagem dentro ou fora do boneco */
+/* Ecrã de Clique */
 #click-area.tab-content.active {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  touch-action: none; /* Impede gestos no fundo da tela */
+  touch-action: none;
   overflow: hidden;
-  user-select: none;
+  background: radial-gradient(circle, #FAF3EB 0%, #E8D9C8 100%);
 }
 
-/* Abas de Conteúdo com Rolagem (Loja e Melhorias) */
-#shop-area.tab-content.active,
-#upgrades-area.tab-content.active {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow-y: auto;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
+/* Chuva de Mini Paçocas ao Fundo */
+.bg-rain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
 }
 
-/* Mensagem de Estado Vazio */
-.empty-state {
-  text-align: center;
-  padding: 32px 20px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  color: #8D7B68;
-  margin-top: 10px;
+.falling-pacoca {
+  position: absolute;
+  top: -60px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.35;
+  animation: fallLinear linear infinite;
+  pointer-events: none;
 }
 
-.empty-state-icon {
-  font-size: 2.5rem;
-  margin-bottom: 8px;
+@keyframes fallLinear {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }
 }
 
-.empty-state h3 {
-  margin: 0 0 6px 0;
-  color: var(--text-main);
-  font-size: 1.1rem;
-}
-
-.empty-state p {
-  margin: 0;
-  font-size: 0.88rem;
-  line-height: 1.4;
-}
-
-/* Area do Mascote */
+/* Mascote e Brilho Radial */
 .mascot-container {
   position: relative;
   display: flex;
@@ -147,15 +146,16 @@ html, body {
   height: 300px;
   margin: 0 auto;
   touch-action: none;
+  z-index: 2;
 }
 
 .shine {
   position: absolute;
-  width: 140%;
-  height: 140%;
+  width: 150%;
+  height: 150%;
   background: repeating-conic-gradient(
     from 0deg,
-    rgba(164, 115, 80, 0.08) 0deg 15deg,
+    rgba(164, 115, 80, 0.12) 0deg 15deg,
     transparent 15deg 30deg
   );
   border-radius: 50%;
@@ -169,41 +169,74 @@ html, body {
 }
 
 .pacoca-mascot {
-  width: 210px;
+  width: 220px;
   height: auto;
   position: relative;
-  z-index: 1;
+  z-index: 2;
   cursor: pointer;
   transition: transform 0.05s ease-out;
   -webkit-user-drag: none;
   touch-action: none;
-  filter: drop-shadow(0 12px 12px rgba(0,0,0,0.12));
+  filter: drop-shadow(0 16px 16px rgba(0,0,0,0.2));
 }
 
 .pacoca-mascot:active {
   transform: scale(0.92) translateY(6px);
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.18));
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25));
 }
 
-/* Numeros Flutuantes */
+/* Onda de Creme na Base (Milk Wave) */
+.cream-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cream-wave svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Números Flutuantes ao Clicar (Estilo +1, +2 Cartoon) */
 .floating-number {
   position: fixed;
-  color: var(--primary);
+  color: #FFFFFF;
   font-weight: 900;
-  font-size: 2rem;
+  font-size: 2.2rem;
   pointer-events: none;
   z-index: 100;
   animation: floatUp 0.8s ease-out forwards;
-  text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff;
+  text-shadow: 
+    2px 2px 0 var(--primary-dark),
+    -2px -2px 0 var(--primary-dark),
+    2px -2px 0 var(--primary-dark),
+    -2px 2px 0 var(--primary-dark);
   transform: translate(-50%, -50%);
 }
 
 @keyframes floatUp {
   0% { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
-  100% { transform: translate(-50%, -140px) scale(1.3); opacity: 0; }
+  100% { transform: translate(-50%, -150px) scale(1.4); opacity: 0; }
 }
 
-/* Loja e Cards */
+/* Abas de Conteúdo (Loja, Melhorias, Perfil) */
+#shop-area.tab-content.active,
+#upgrades-area.tab-content.active,
+#profile-area.tab-content.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  z-index: 2;
+}
+
+/* Loja e Cards em Estilo 3D (Estilo Cookie Clicker) */
 .shop-header {
   display: flex;
   justify-content: space-between;
@@ -215,23 +248,24 @@ html, body {
   margin: 0;
   font-size: 1.4rem;
   color: var(--text-main);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .buy-modes {
   display: flex;
   gap: 4px;
-  background-color: #EFE8E1;
-  padding: 3px;
-  border-radius: 12px;
+  background-color: #E2D4C5;
+  padding: 4px;
+  border-radius: 14px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
 }
 
 .mode-btn {
   background: none;
   border: none;
   padding: 6px 14px;
-  border-radius: 9px;
-  font-weight: 700;
+  border-radius: 10px;
+  font-weight: 800;
   font-size: 0.85rem;
   color: #7A6858;
   cursor: pointer;
@@ -239,9 +273,9 @@ html, body {
 }
 
 .mode-btn.active {
-  background-color: var(--card-bg);
-  color: var(--primary);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  background-color: #FFFFFF;
+  color: var(--primary-dark);
+  box-shadow: 0 3px 0 var(--border-color);
 }
 
 .shop-list {
@@ -251,22 +285,26 @@ html, body {
   padding-bottom: 24px;
 }
 
+/* Cards em estilo Pílula 3D com Relevo */
 .generator-card {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 14px 16px;
+  border: 2px solid var(--border-color);
+  border-bottom: 5px solid var(--border-color); /* Efeito 3D */
+  border-radius: 20px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  gap: 12px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.03);
 }
 
 .generator-icon-wrapper {
-  width: 44px;
-  height: 44px;
-  background-color: #F7F3EE;
-  border-radius: 12px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #FAF4EE 0%, #EFE5D8 100%);
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -275,64 +313,104 @@ html, body {
 }
 
 .generator-icon-wrapper svg {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
 }
 
 .generator-info {
   flex: 1;
 }
 
-.generator-info h3 {
-  margin: 0 0 3px 0;
-  font-size: 1.05rem;
-  color: var(--text-main);
-  font-weight: 700;
+.generator-header-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
 }
 
-.generator-info .owned-count {
-  color: var(--primary);
-  font-weight: 700;
+.generator-info h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+/* Tag "Nível X" igual ao Cookie Clicker */
+.level-badge {
+  background-color: #F2E6D8;
+  color: var(--primary-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
 }
 
 .desc-display {
-  color: var(--primary);
-  font-weight: 600;
+  color: var(--primary-dark);
+  font-weight: 700;
   font-size: 0.82rem;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
+  display: block;
 }
 
 .cost-display {
-  color: #8D7B68;
-  font-weight: 500;
-  font-size: 0.85rem;
+  color: #7A6858;
+  font-weight: 700;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
+/* Botão de Compra 3D */
 .buy-btn {
-  background-color: var(--primary);
+  background: linear-gradient(180deg, #B58461 0%, #8C5D3B 100%);
   color: white;
   border: none;
-  border-radius: 12px;
+  border-bottom: 4px solid #5C3A21;
+  border-radius: 14px;
   padding: 10px 16px;
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 800;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: opacity 0.15s, background-color 0.15s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.05s, border-bottom 0.05s;
+}
+
+.buy-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom: 2px solid #5C3A21;
 }
 
 .buy-btn:disabled {
-  background-color: #E2D8CE;
-  color: #A09285;
+  background: #E0D4C8;
+  border-bottom: 4px solid #C4B5A5;
+  color: #9C8C7D;
   cursor: not-allowed;
 }
 
-/* Navegação Inferior Escura */
+/* Frenesi */
+.frenzy-banner {
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+  color: #3B2519;
+  text-align: center;
+  padding: 8px 12px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 10px rgba(255, 215, 0, 0.5);
+  display: none;
+  z-index: 20;
+}
+
+/* Navegação Inferior Escura estilo App */
 .bottom-nav {
   display: flex;
   background-color: var(--nav-bg);
   padding: 10px 16px;
   padding-bottom: env(safe-area-inset-bottom, 12px);
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+  z-index: 10;
 }
 
 .nav-btn {
@@ -350,43 +428,26 @@ html, body {
 }
 
 .nav-icon {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   fill: currentColor;
 }
 
 .nav-btn .label {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .nav-btn.active {
   color: #FFFFFF;
 }
 
-.nav-btn.active .label {
-  color: #FFFFFF;
-  font-weight: 700;
-}
-
-/* Abas com Rolagem */
-#shop-area.tab-content.active,
-#upgrades-area.tab-content.active,
-#profile-area.tab-content.active {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow-y: auto;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Seção de Perfil e Estatísticas */
+/* Perfil e Conquistas */
 .profile-section h2 {
   margin: 0 0 12px 0;
   font-size: 1.2rem;
   color: var(--text-main);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .stats-grid {
@@ -397,8 +458,9 @@ html, body {
 
 .stat-card {
   background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
+  border: 2px solid var(--border-color);
+  border-bottom: 4px solid var(--border-color);
+  border-radius: 16px;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -408,39 +470,36 @@ html, body {
 .stat-label {
   font-size: 0.78rem;
   color: #8D7B68;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .stat-card strong {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--primary);
-  font-weight: 800;
+  font-weight: 900;
 }
 
-/* Conquistas (Badges) */
 .achievement-card {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border: 2px solid var(--border-color);
+  border-bottom: 4px solid var(--border-color);
+  border-radius: 18px;
   padding: 12px 14px;
   display: flex;
   align-items: center;
   gap: 12px;
   opacity: 0.5;
   filter: grayscale(1);
-  transition: all 0.2s ease;
 }
 
 .achievement-card.unlocked {
   opacity: 1;
   filter: grayscale(0);
-  border-color: #D4C3B3;
-  box-shadow: 0 2px 8px rgba(164, 115, 80, 0.08);
 }
 
 .achievement-icon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   background-color: #F7F3EE;
   border-radius: 12px;
   display: flex;
@@ -451,23 +510,23 @@ html, body {
 }
 
 .achievement-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
 }
 
 .achievement-info h3 {
   margin: 0 0 2px 0;
-  font-size: 0.98rem;
+  font-size: 1rem;
   color: var(--text-main);
+  font-weight: 800;
 }
 
 .achievement-info p {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: #8D7B68;
 }
 
-/* Botões de Salvamento */
 .save-actions {
   display: flex;
   flex-direction: column;
@@ -477,66 +536,40 @@ html, body {
 
 .action-btn {
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 12px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.15s;
 }
 
 .action-btn.secondary {
   background-color: #EFE8E1;
   color: #5C493B;
+  border-bottom: 3px solid #D8CBBD;
 }
 
 .action-btn.danger {
   background-color: #FDE8E8;
   color: #C53030;
+  border-bottom: 3px solid #F5C6C6;
 }
 
-/* Paçoca Dourada Flutuante */
+/* Trava de segurança: Garante que efeitos não bloqueiem cliques */
+.bg-rain, 
+.falling-pacoca, 
+.cream-wave, 
+.shine {
+  pointer-events: none !important;
+}
+
+/* Garante a captação de toque nos botões e no mascote */
+.pacoca-mascot, 
+.nav-btn, 
+.buy-btn, 
+.mode-btn, 
+.action-btn, 
 .golden-pacoca {
-  position: fixed;
-  width: 65px;
-  height: 65px;
-  z-index: 999;
+  pointer-events: auto !important;
   cursor: pointer;
-  animation: goldenPulse 1.5s infinite alternate, goldenFloat 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 15px #FFD700) drop-shadow(0 0 30px #FFA500);
-}
-
-.golden-pacoca img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: sepia(1) saturate(5) hue-rotate(5deg) brightness(1.2);
-}
-
-@keyframes goldenPulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.15); }
-}
-
-@keyframes goldenFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-/* Banner de Frenesi Ativo */
-.frenzy-banner {
-  background: linear-gradient(90deg, #FFD700, #FFA500);
-  color: #3B2519;
-  text-align: center;
-  padding: 6px 12px;
-  font-weight: 800;
-  font-size: 0.85rem;
-  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
-  display: none;
-  animation: frenzyGlow 1s infinite alternate;
-}
-
-@keyframes frenzyGlow {
-  0% { opacity: 0.9; }
-  100% { opacity: 1; }
 }

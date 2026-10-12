@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Evento de toque instantâneo para mobile e desktop
     pacocaBtn.addEventListener('pointerdown', (e) => {
-      e.preventDefault(); // Previne gestos de zoom e arrasto nativos do navegador
+      e.preventDefault(); // Previne gestos de zoom e arrasto nativos
       
       game.click();
       
@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Inicializa a chuva de partículas de fundo
+  initBackgroundRain();
 });
 
 /**
@@ -66,4 +69,37 @@ function createFloatingNumber(x, y, value) {
   setTimeout(() => {
     floater.remove();
   }, 800);
+}
+
+/**
+ * Gerar chuva de mini paçocas ao fundo (Background Particle Rain)
+ */
+function initBackgroundRain() {
+  const container = document.getElementById('bg-rain-container');
+  if (!container) return;
+
+  container.innerHTML = ''; // Limpa elementos anteriores
+
+  const count = 12; // Quantidade de paçocas a cair ao fundo
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('img');
+    el.src = '/pacoca.png';
+    el.className = 'falling-pacoca';
+    
+    // Posição X aleatória
+    el.style.left = `${Math.random() * 100}%`;
+    
+    // Duração e desvio aleatórios
+    const duration = 6 + Math.random() * 8; // 6s a 14s
+    const delay = Math.random() * 8;
+    const size = 24 + Math.random() * 20; // Tamanhos variados
+
+    el.style.width = `${size}px`;
+    el.style.height = 'auto';
+    el.style.animationDuration = `${duration}s`;
+    el.style.animationDelay = `${delay}s`;
+
+    container.appendChild(el);
+  }
 }

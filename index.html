@@ -8,31 +8,42 @@
   </head>
   <body>
     <div id="app">
-      <!-- Status Bar -->
+      <!-- Status Bar com Tipografia 3D -->
       <header class="status-bar">
         <div class="header-logo">
           <img src="/pacoca.png" alt="Paçoca" class="header-mascot">
         </div>
         <div class="header-stats">
           <h1 id="score-display">0</h1>
-          <p id="pps-display">0 p/s</p>
+          <p id="pps-display">0 por segundo</p>
         </div>
       </header>
 
-      <!-- NOVO: Banner do Frenesi Dourado -->
+      <!-- Banner de Frenesi Dourado -->
       <div id="frenzy-banner" class="frenzy-banner">
         🔥 FRENESI 7X ATIVO: <span id="frenzy-timer">20</span>s
       </div>
 
-      <!-- Aba 1: Tocar -->
+      <!-- Aba 1: Tocar com Chuva de Fundo e Onda na Base -->
       <main id="click-area" class="tab-content active">
+        <!-- Container de chuva de mini paçocas -->
+        <div id="bg-rain-container" class="bg-rain"></div>
+
+        <!-- Mascote Central e Brilho -->
         <div class="mascot-container">
           <div class="shine"></div>
           <img src="/pacoca.png" id="pacoca-button" class="pacoca-mascot" alt="Mascote Paçoca" draggable="false" ondragstart="return false;" oncontextmenu="return false;">
         </div>
+
+        <!-- Onda de Creme na base (Estilo Cookie Clicker) -->
+        <div class="cream-wave">
+          <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path fill="#ffffff" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,144C672,149,768,203,864,218.7C960,235,1056,213,1152,192C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+          </svg>
+        </div>
       </main>
 
-      <!-- Aba 2: Loja -->
+      <!-- Aba 2: Loja estilo Cookie Clicker -->
       <section id="shop-area" class="tab-content"></section>
 
       <!-- Aba 3: Melhorias -->
@@ -43,7 +54,7 @@
         <div id="upgrades-list" class="shop-list"></div>
       </section>
 
-      <!-- Aba 4: Perfil, Estatísticas e Conquistas -->
+      <!-- Aba 4: Perfil -->
       <section id="profile-area" class="tab-content">
         <div class="profile-section">
           <h2>Estatísticas</h2>
@@ -82,7 +93,7 @@
         </div>
       </section>
 
-      <!-- Navegação Inferior -->
+      <!-- Navegação Inferior 3D -->
       <nav class="bottom-nav">
         <button class="nav-btn active" data-target="click-area">
           <svg class="nav-icon" viewBox="0 0 24 24">
@@ -113,7 +124,7 @@
           <span class="label">Perfil</span>
         </button>
       </nav>
-      
+
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
