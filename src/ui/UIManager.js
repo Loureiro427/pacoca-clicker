@@ -3,6 +3,7 @@ import { GeneratorsData } from '../game/Generators.js';
 import { UpgradesData } from '../game/Upgrades.js';
 import { AchievementsData } from '../game/Achievements.js';
 import { calculateCost } from '../game/Economy.js';
+import { Prestige } from '../game/Prestige.js';
 
 export class UIManager {
   constructor() {
@@ -204,13 +205,33 @@ export class UIManager {
     const minutes = Math.floor((Date.now() - game.startTime) / 60000);
     document.getElementById('stat-time').innerText = `${minutes}m`;
 
-    // Atualização do Prestígio
-    const pendingChips = Math.floor(Math.sqrt(game.totalEarned / 1000000));
+    // Atualização detalhada do Prestígio
+    const req = Prestige.getNextChipRequirement(game.totalEarned);
+    const pendingChips = Prestige.calculatePrestigeChips(game.totalEarned);
     const newChips = Math.max(0, pendingChips - game.prestigeChips);
 
     document.getElementById('prestige-count').innerText = formatNumber(game.prestigeChips);
     document.getElementById('prestige-mult').innerText = `+${Math.round((game.prestigeMultiplier - 1) * 100)}%`;
-    document.getElementById('prestige-next').innerText = `Ganho ao ascender agora: +${formatNumber(newChips)} Paçocas de Ouro`;
+    document.getElementById('prestige-next-gain').innerText = `Ganho ao ascender: +${formatNumber(newChips)} 🌟`;
+    
+    // Progresso e barra
+    document.getElementById('prestige-progress-pct').innerText = `${Math.floor(req.progressPercent)}%`;
+    document.getElementById('prestige-bar-fill').style.width = `${req.progressPercent}%`;
+
+    const missingEl = document.getElementById('prestige-missing-text');
+    if (req.missing > 0) {
+      missingEl.innerText = `Faltam ${formatNumber(Math.ceil(req.missing))} Paçocas para a próxima Paçoca de Ouro!`;
+    } else {
+      missingEl.innerText = `✨ Você já pode ascender para ganhar nova Paçoca de Ouro!`;
+    }
+
+    const prestigeBtn = document.getElementById('btn-prestige');
+    prestigeBtn.disabled = newChips <= 0;
+    if (newChips > 0) {
+      prestigeBtn.innerText = `Ascender Agora (+${formatNumber(newChips)} 🌟)`;
+    } else {
+      prestigeBtn.innerText = `Ascender (Bloqueado)`;
+    }
 
     AchievementsData.forEach(ach => {
       const card = document.getElementById(`ach-${ach.id}`);

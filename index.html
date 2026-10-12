@@ -54,17 +54,44 @@
         <div id="upgrades-list" class="shop-list"></div>
       </section>
 
-      <!-- Aba 4: Perfil, Estatísticas e Prestígio -->
+      <!-- Aba 4: Perfil, Estatísticas e Ascensão -->
       <section id="profile-area" class="tab-content">
         <div class="profile-section">
           <h2>Ascensão & Prestígio</h2>
           <div class="prestige-card">
-            <div class="prestige-info">
-              <h3>⭐ Paçocas de Ouro: <span id="prestige-count">0</span></h3>
-              <p>Bônus permanente atual: <strong id="prestige-mult">+0%</strong> em toda a produção.</p>
-              <small id="prestige-next">Ganho no próximo prestígio: +0 Paçocas de Ouro</small>
+            <div class="prestige-badge-header">
+              <div class="prestige-icon-main">🌟</div>
+              <div>
+                <h3>Paçocas de Ouro: <span id="prestige-count">0</span></h3>
+                <p class="prestige-bonus-text">Bônus atual: <strong id="prestige-mult">+0%</strong> em toda a produção</p>
+              </div>
             </div>
-            <button id="btn-prestige" class="action-btn prestige-btn">Ascender</button>
+
+            <!-- Barra de Progresso com Contagem -->
+            <div class="prestige-progress-box">
+              <div class="prestige-progress-labels">
+                <span id="prestige-next-gain">Ganho ao ascender: +0 🌟</span>
+                <span id="prestige-progress-pct">0%</span>
+              </div>
+              <div class="prestige-bar-bg">
+                <div id="prestige-bar-fill" class="prestige-bar-fill" style="width: 0%;"></div>
+              </div>
+              <small id="prestige-missing-text" class="prestige-missing-text">Faltam 1.0 milhão de Paçocas para a próxima!</small>
+            </div>
+
+            <!-- O que a Ascensão melhora -->
+            <div class="prestige-benefits-list">
+              <div class="benefit-item">
+                <span class="benefit-icon">✨</span>
+                <span><strong>+2% de produção</strong> permanente por Paçoca de Ouro.</span>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">⚡</span>
+                <span>Multiplicador acumulativo aplicado em <strong>cliques e PPS</strong>.</span>
+              </div>
+            </div>
+
+            <button id="btn-prestige" class="action-btn prestige-btn" disabled>Ascender (Bloqueado)</button>
           </div>
         </div>
 
