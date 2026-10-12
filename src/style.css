@@ -368,3 +368,129 @@ html, body {
   color: #FFFFFF;
   font-weight: 700;
 }
+
+/* Abas com Rolagem */
+#shop-area.tab-content.active,
+#upgrades-area.tab-content.active,
+#profile-area.tab-content.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Seção de Perfil e Estatísticas */
+.profile-section h2 {
+  margin: 0 0 12px 0;
+  font-size: 1.2rem;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  color: #8D7B68;
+  font-weight: 600;
+}
+
+.stat-card strong {
+  font-size: 1.15rem;
+  color: var(--primary);
+  font-weight: 800;
+}
+
+/* Conquistas (Badges) */
+.achievement-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0.5;
+  filter: grayscale(1);
+  transition: all 0.2s ease;
+}
+
+.achievement-card.unlocked {
+  opacity: 1;
+  filter: grayscale(0);
+  border-color: #D4C3B3;
+  box-shadow: 0 2px 8px rgba(164, 115, 80, 0.08);
+}
+
+.achievement-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #F7F3EE;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.achievement-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.achievement-info h3 {
+  margin: 0 0 2px 0;
+  font-size: 0.98rem;
+  color: var(--text-main);
+}
+
+.achievement-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #8D7B68;
+}
+
+/* Botões de Salvamento */
+.save-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.action-btn.secondary {
+  background-color: #EFE8E1;
+  color: #5C493B;
+}
+
+.action-btn.danger {
+  background-color: #FDE8E8;
+  color: #C53030;
+}

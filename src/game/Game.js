@@ -1,5 +1,6 @@
 import { calculateCost, calculateTotalPPS, calculateClickValue } from './Economy.js';
 import { UpgradesData } from './Upgrades.js';
+import { AchievementsData } from './Achievements.js';
 import { SaveManager } from '../storage/SaveManager.js';
 
 export class Game {
@@ -9,11 +10,18 @@ export class Game {
     this.pps = 0;
     this.clickValue = 1;
     this.buyAmount = 1;
+    
+    // Estatísticas Acumuladas
+    this.totalClicks = 0;
+    this.totalEarned = 0;
+    this.startTime = Date.now();
+    
     this.inventory = {
       cursor: 0, ajudante: 0, bancada: 0, carrinho: 0,
       loja: 0, fabrica: 0, centro: 0, imperio: 0
     };
     this.boughtUpgrades = [];
+    this.unlockedAchievements = [];
     this.lastTick = Date.now();
     
     this.loadGame();
@@ -23,9 +31,11 @@ export class Game {
 
   click() {
     this.score += this.clickValue;
-    this.ui.updateScore(this.score, this.pps);
-    this.ui.updateShop(this.score, this.inventory, this.buyAmount);
-    this.ui.updateUpgrades(this.score, this.inventory, this.boughtUpgrades);
+    this.totalEarned += this.clickValue;
+    this.totalClicks += 1;
+    
+    this.checkAchievements();
+    this.refreshUI();
   }
 
   setBuyAmount(amount) {
@@ -41,6 +51,7 @@ export class Game {
       this.score -= cost;
       this.inventory[genId] = owned + this.buyAmount;
       this.recalculateStats();
+      this.checkAchievements();
       this.refreshUI();
     }
   }
@@ -51,8 +62,28 @@ export class Game {
       this.score -= upg.cost;
       this.boughtUpgrades.push(upgId);
       this.recalculateStats();
+      this.checkAchievements();
       this.refreshUI();
     }
+  }
+
+  getTotalStructures() {
+    return Object.values(this.inventory).reduce((acc, curr) => acc + curr, 0);
+  }
+
+  checkAchievements() {
+    AchievementsData.forEach(ach => {
+      if (this.unlockedAchievements.includes(ach.id)) return;
+
+      let conditionMet = false;
+      if (ach.reqType === 'totalClicks' && this.totalClicks >= ach.reqValue) conditionMet = true;
+      if (ach.reqType === 'totalEarned' && this.totalEarned >= ach.reqValue) conditionMet = true;
+      if (ach.reqType === 'totalStructures' && this.getTotalStructures() >= ach.reqValue) conditionMet = true;
+
+      if (conditionMet) {
+        this.unlockedAchievements.push(ach.id);
+      }
+    });
   }
 
   recalculateStats() {
@@ -64,6 +95,7 @@ export class Game {
     this.ui.updateScore(this.score, this.pps);
     this.ui.updateShop(this.score, this.inventory, this.buyAmount);
     this.ui.updateUpgrades(this.score, this.inventory, this.boughtUpgrades);
+    this.ui.updateProfile(this);
   }
 
   startGameLoop() {
@@ -73,7 +105,10 @@ export class Game {
       this.lastTick = now;
 
       if (this.pps > 0) {
-        this.score += this.pps * delta;
+        const earned = this.pps * delta;
+        this.score += earned;
+        this.totalEarned += earned;
+        this.checkAchievements();
         this.refreshUI();
       }
     }, 100);
@@ -86,8 +121,12 @@ export class Game {
   saveGame() {
     SaveManager.save({
       score: this.score,
+      totalClicks: this.totalClicks,
+      totalEarned: this.totalEarned,
+      startTime: this.startTime,
       inventory: this.inventory,
-      boughtUpgrades: this.boughtUpgrades
+      boughtUpgrades: this.boughtUpgrades,
+      unlockedAchievements: this.unlockedAchievements
     });
   }
 
@@ -95,8 +134,13 @@ export class Game {
     const saved = SaveManager.load();
     if (saved) {
       this.score = saved.score || 0;
+      this.totalClicks = saved.totalClicks || 0;
+      this.totalEarned = saved.totalEarned || 0;
+      this.startTime = saved.startTime || Date.now();
       this.inventory = { ...this.inventory, ...saved.inventory };
       this.boughtUpgrades = saved.boughtUpgrades || [];
+      this.unlockedAchievements = saved.unlockedAchievements || [];
+      
       this.recalculateStats();
       
       if (saved.lastSaveTime) {
@@ -104,12 +148,50 @@ export class Game {
         if (secondsOffline > 60 && this.pps > 0) {
            const maxOffline = 24 * 60 * 60;
            const effectiveTime = Math.min(secondsOffline, maxOffline);
-           this.score += effectiveTime * this.pps;
+           const offlineEarned = effectiveTime * this.pps;
+           this.score += offlineEarned;
+           this.totalEarned += offlineEarned;
            alert('Bem-vindo de volta! As suas fábricas continuaram a produzir Paçocas enquanto esteve fora.');
         }
       }
     } else {
       this.recalculateStats();
+    }
+  }
+
+  exportSaveCode() {
+    const data = JSON.stringify({
+      score: this.score,
+      totalClicks: this.totalClicks,
+      totalEarned: this.totalEarned,
+      startTime: this.startTime,
+      inventory: this.inventory,
+      boughtUpgrades: this.boughtUpgrades,
+      unlockedAchievements: this.unlockedAchievements,
+      lastSaveTime: Date.now()
+    });
+    return btoa(data); // Codifica em Base64
+  }
+
+  importSaveCode(code) {
+    try {
+      const decoded = atob(code);
+      const data = JSON.parse(decoded);
+      if (data && typeof data.score === 'number') {
+        localStorage.setItem('pacoca_clicker_save', JSON.stringify(data));
+        window.location.reload();
+      } else {
+        alert('Código de save inválido.');
+      }
+    } catch (e) {
+      alert('Código de save inválido.');
+    }
+  }
+
+  resetProgress() {
+    if (confirm('Tem certeza de que deseja reiniciar todo o progresso? Esta ação não pode ser desfeita.')) {
+      localStorage.removeItem('pacoca_clicker_save');
+      window.location.reload();
     }
   }
 }

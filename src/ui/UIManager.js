@@ -1,6 +1,7 @@
 import { formatNumber } from '../utils/format.js';
 import { GeneratorsData } from '../game/Generators.js';
 import { UpgradesData } from '../game/Upgrades.js';
+import { AchievementsData } from '../game/Achievements.js';
 import { calculateCost } from '../game/Economy.js';
 
 export class UIManager {
@@ -9,6 +10,7 @@ export class UIManager {
     this.ppsDisplay = document.getElementById('pps-display');
     this.shopArea = document.getElementById('shop-area');
     this.upgradesList = document.getElementById('upgrades-list');
+    this.achievementsList = document.getElementById('achievements-list');
     this.game = null;
   }
 
@@ -16,10 +18,14 @@ export class UIManager {
     this.game = gameInstance;
     this.initShop();
     this.initUpgrades();
+    this.initAchievements();
+    this.initSaveActions();
     this.initTabs();
+    
     this.updateScore(this.game.score, this.game.pps);
     this.updateShop(this.game.score, this.game.inventory, this.game.buyAmount);
     this.updateUpgrades(this.game.score, this.game.inventory, this.game.boughtUpgrades);
+    this.updateProfile(this.game);
   }
 
   updateScore(score, pps) {
@@ -96,7 +102,7 @@ export class UIManager {
       const el = document.createElement('div');
       el.className = 'generator-card';
       el.id = `upg-${upg.id}`;
-      el.style.display = 'none'; // Fica oculto até atingir os pré-requisitos
+      el.style.display = 'none';
       el.innerHTML = `
         <div class="generator-icon-wrapper">
           ${upg.iconSvg}
@@ -139,7 +145,6 @@ export class UIManager {
       }
     });
 
-    // Mensagem de estado caso nenhuma melhoria esteja visível
     let emptyEl = document.getElementById('upgrades-empty-state');
     if (visibleCount === 0) {
       if (!emptyEl) {
@@ -167,6 +172,67 @@ export class UIManager {
     } else if (emptyEl) {
       emptyEl.style.display = 'none';
     }
+  }
+
+  initAchievements() {
+    this.achievementsList.innerHTML = '';
+    AchievementsData.forEach(ach => {
+      const el = document.createElement('div');
+      el.className = 'achievement-card';
+      el.id = `ach-${ach.id}`;
+      el.innerHTML = `
+        <div class="achievement-icon">
+          ${ach.iconSvg}
+        </div>
+        <div class="achievement-info">
+          <h3>${ach.name}</h3>
+          <p>${ach.desc}</p>
+        </div>
+      `;
+      this.achievementsList.appendChild(el);
+    });
+  }
+
+  updateProfile(game) {
+    document.getElementById('stat-clicks').innerText = formatNumber(game.totalClicks);
+    document.getElementById('stat-earned').innerText = formatNumber(Math.floor(game.totalEarned));
+    document.getElementById('stat-structures').innerText = formatNumber(game.getTotalStructures());
+    
+    const minutes = Math.floor((Date.now() - game.startTime) / 60000);
+    document.getElementById('stat-time').innerText = `${minutes}m`;
+
+    AchievementsData.forEach(ach => {
+      const card = document.getElementById(`ach-${ach.id}`);
+      if (card) {
+        if (game.unlockedAchievements.includes(ach.id)) {
+          card.classList.add('unlocked');
+        } else {
+          card.classList.remove('unlocked');
+        }
+      }
+    });
+  }
+
+  initSaveActions() {
+    document.getElementById('btn-export-save').addEventListener('click', () => {
+      const code = this.game.exportSaveCode();
+      navigator.clipboard.writeText(code).then(() => {
+        alert('Código de Save copiado para a área de transferência!');
+      }).catch(() => {
+        prompt('Copie o seu código de Save:', code);
+      });
+    });
+
+    document.getElementById('btn-import-save').addEventListener('click', () => {
+      const code = prompt('Cole o seu código de Save aqui:');
+      if (code) {
+        this.game.importSaveCode(code.trim());
+      }
+    });
+
+    document.getElementById('btn-reset-save').addEventListener('click', () => {
+      this.game.resetProgress();
+    });
   }
 
   initTabs() {

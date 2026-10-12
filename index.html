@@ -19,7 +19,7 @@
         </div>
       </header>
 
-      <!-- Aba 1: Mascote / Clique -->
+      <!-- Aba 1: Tocar -->
       <main id="click-area" class="tab-content active">
         <div class="mascot-container">
           <div class="shine"></div>
@@ -27,15 +27,54 @@
         </div>
       </main>
 
-      <!-- Aba 2: Loja de Geradores -->
+      <!-- Aba 2: Loja -->
       <section id="shop-area" class="tab-content"></section>
 
-      <!-- Aba 3: Melhorias Globais -->
+      <!-- Aba 3: Melhorias -->
       <section id="upgrades-area" class="tab-content">
         <div class="shop-header">
           <h2>Melhorias</h2>
         </div>
         <div id="upgrades-list" class="shop-list"></div>
+      </section>
+
+      <!-- Aba 4: Perfil, Estatísticas e Conquistas -->
+      <section id="profile-area" class="tab-content">
+        <div class="profile-section">
+          <h2>Estatísticas</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">Cliques Totais</span>
+              <strong id="stat-clicks">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Total Acumulado</span>
+              <strong id="stat-earned">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Estruturas</span>
+              <strong id="stat-structures">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Tempo de Jogo</span>
+              <strong id="stat-time">0m</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-section" style="margin-top: 20px;">
+          <h2>Conquistas</h2>
+          <div id="achievements-list" class="shop-list"></div>
+        </div>
+
+        <div class="profile-section" style="margin-top: 20px;">
+          <h2>Dados e Salvamento</h2>
+          <div class="save-actions">
+            <button id="btn-export-save" class="action-btn secondary">Exportar Save</button>
+            <button id="btn-import-save" class="action-btn secondary">Importar Save</button>
+            <button id="btn-reset-save" class="action-btn danger">Resetar Progresso</button>
+          </div>
+        </div>
       </section>
 
       <!-- Navegação Inferior -->
@@ -60,6 +99,13 @@
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
           </svg>
           <span class="label">Melhorias</span>
+        </button>
+        <button class="nav-btn" data-target="profile-area">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="label">Perfil</span>
         </button>
       </nav>
       
