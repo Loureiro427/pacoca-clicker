@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Paçoca Clicker</string>
+    <string name="title_activity_main">Paçoca Clicker</string>
+    <string name="package_name">com.pacoca.clicker</string>
+    <string name="custom_url_scheme">com.pacoca.clicker</string>
+</resources>
