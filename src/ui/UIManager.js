@@ -85,6 +85,8 @@ export class UIManager {
   }
 
   updateShop(score, inventory, buyAmount) {
+    const prestigeMult = this.game ? this.game.prestigeMultiplier : 1;
+
     GeneratorsData.forEach(gen => {
       const owned = inventory[gen.id] || 0;
       const cost = calculateCost(gen.baseCost, owned, buyAmount);
@@ -94,6 +96,18 @@ export class UIManager {
         card.querySelector('.owned-count').innerText = owned;
         card.querySelector('.cost-display').innerText = `Custo (${buyAmount}x): ${formatNumber(cost)}`;
         
+        // Exibe o ganho REAL por unidade já multiplicado pelo Prestígio
+        const descEl = card.querySelector('.desc-display');
+        if (descEl) {
+          if (gen.id === 'cursor') {
+            const effClick = Math.round((gen.clickBonus || 1) * prestigeMult);
+            descEl.innerText = `+${formatNumber(effClick)} por toque`;
+          } else {
+            const effPPS = gen.basePPS * prestigeMult;
+            descEl.innerText = `+${formatNumber(effPPS)} p/s cada`;
+          }
+        }
+
         const btn = document.getElementById(`buy-${gen.id}`);
         btn.disabled = score < cost;
       }
@@ -211,8 +225,8 @@ export class UIManager {
     const newChips = Math.max(0, pendingChips - game.prestigeChips);
 
     document.getElementById('prestige-count').innerText = formatNumber(game.prestigeChips);
-    document.getElementById('prestige-mult').innerText = `+${Math.round((game.prestigeMultiplier - 1) * 100)}%`;
-    document.getElementById('prestige-next-gain').innerText = `Ganho ao ascender: +${formatNumber(newChips)} 🌟`;
+    document.getElementById('prestige-mult').innerText = `${game.prestigeMultiplier}x`;
+    document.getElementById('prestige-next-gain').innerText = `Ganho ao renascer: +${formatNumber(newChips)} 🌟`;
     
     // Progresso e barra
     document.getElementById('prestige-progress-pct').innerText = `${Math.floor(req.progressPercent)}%`;
@@ -222,15 +236,15 @@ export class UIManager {
     if (req.missing > 0) {
       missingEl.innerText = `Faltam ${formatNumber(Math.ceil(req.missing))} Paçocas para a próxima Paçoca de Ouro!`;
     } else {
-      missingEl.innerText = `✨ Você já pode ascender para ganhar nova Paçoca de Ouro!`;
+      missingEl.innerText = `✨ Você já pode renascer para ganhar nova Paçoca de Ouro!`;
     }
 
     const prestigeBtn = document.getElementById('btn-prestige');
     prestigeBtn.disabled = newChips <= 0;
     if (newChips > 0) {
-      prestigeBtn.innerText = `Ascender Agora (+${formatNumber(newChips)} 🌟)`;
+      prestigeBtn.innerText = `Renascer Agora (+${formatNumber(newChips)} 🌟)`;
     } else {
-      prestigeBtn.innerText = `Ascender (Bloqueado)`;
+      prestigeBtn.innerText = `Renascer (Sem novas Paçocas de Ouro)`;
     }
 
     AchievementsData.forEach(ach => {
@@ -283,6 +297,80 @@ export class UIManager {
         banner.style.display = 'none';
       }
     }
+  }
+
+  showOfflineModal(seconds, amount, onCollectNormal, onCollectDouble) {
+    const modal = document.getElementById('offline-modal');
+    if (!modal) return;
+
+    // Formatação amigável do tempo ausente (ex: 1h 25m)
+    const hours = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    let timeStr = '';
+    if (hours > 0) timeStr += `${hours}h `;
+    if (mins > 0 || hours > 0) timeStr += `${mins}m `;
+    if (hours === 0 && mins === 0) timeStr += `${secs}s`;
+
+    document.getElementById('offline-time-val').innerText = timeStr.trim();
+    document.getElementById('offline-amount-val').innerText = `+${formatNumber(Math.floor(amount))}`;
+
+    const btnNormal = document.getElementById('btn-collect-normal');
+    const btnAd = document.getElementById('btn-collect-ad');
+
+    // Remove listeners antigos para evitar chamadas duplas
+    const newNormal = btnNormal.cloneNode(true);
+    const newAd = btnAd.cloneNode(true);
+    btnNormal.parentNode.replaceChild(newNormal, btnNormal);
+    btnAd.parentNode.replaceChild(newAd, btnAd);
+
+    newNormal.addEventListener('click', () => {
+      modal.style.display = 'none';
+      if (onCollectNormal) onCollectNormal();
+    });
+
+    newAd.addEventListener('click', () => {
+      newAd.innerText = '⏳ Carregando...';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        newAd.innerText = '🎬 Dobrar Recompensa (2x)';
+        alert('🎉 Anúncio assistido! Sua recompensa foi dobrada!');
+        if (onCollectDouble) onCollectDouble();
+      }, 800);
+    });
+
+    modal.style.display = 'flex';
+  }
+
+  showPrestigeModal(newChips, newMultiplierPercent, onConfirm) {
+    const modal = document.getElementById('prestige-modal');
+    if (!modal) return;
+
+    document.getElementById('prestige-modal-gain').innerText = `+${formatNumber(newChips)} 🌟`;
+    document.getElementById('prestige-modal-mult').innerText = `Bônus total subirá para: +${newMultiplierPercent}%`;
+
+    const btnConfirm = document.getElementById('btn-prestige-confirm');
+    const btnCancel = document.getElementById('btn-prestige-cancel');
+
+    // Clona os botões para limpar listeners anteriores
+    const newConfirm = btnConfirm.cloneNode(true);
+    const newCancel = btnCancel.cloneNode(true);
+    btnConfirm.parentNode.replaceChild(newConfirm, btnConfirm);
+    btnCancel.parentNode.replaceChild(newCancel, btnCancel);
+
+    // Clique no botão de confirmar
+    newConfirm.addEventListener('click', () => {
+      modal.style.display = 'none';
+      if (onConfirm) onConfirm();
+    });
+
+    // Clique no botão de cancelar
+    newCancel.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    modal.style.display = 'flex';
   }
 
   initTabs() {

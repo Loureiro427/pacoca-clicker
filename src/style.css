@@ -708,3 +708,209 @@ html, body {
   cursor: not-allowed;
   box-shadow: none;
 }
+
+/* Modal de Produção Offline (Overlay + Card 3D) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none; /* Ativado via JS */
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-card {
+  background: #FFFDF8;
+  border: 2px solid var(--border-color);
+  border-bottom: 6px solid var(--primary-dark);
+  border-radius: 24px;
+  padding: 20px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  background-color: #F7EFE6;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border-color);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: var(--text-main);
+  font-weight: 900;
+}
+
+.offline-time-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #7A6858;
+}
+
+.offline-reward-box {
+  background: linear-gradient(135deg, #FAF2E8 0%, #EFE3D3 100%);
+  border: 2px solid var(--border-color);
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.offline-reward-box span {
+  font-size: 0.82rem;
+  color: #8C7866;
+  font-weight: 700;
+}
+
+.offline-reward-box h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  color: var(--primary);
+  font-weight: 900;
+  -webkit-text-stroke: 1px var(--primary-dark);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* Botão de Dobrar Recompensa com Ads */
+.action-btn.ad-btn {
+  background: linear-gradient(180deg, #4CAF50 0%, #2E7D32 100%);
+  color: #FFFFFF;
+  border: none;
+  border-bottom: 4px solid #1B5E20;
+  border-radius: 14px;
+  padding: 14px;
+  font-weight: 900;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+  transition: transform 0.05s, border-bottom 0.05s;
+}
+
+.action-btn.ad-btn:active {
+  transform: translateY(2px);
+  border-bottom: 2px solid #1B5E20;
+}
+/* Caixas de Regras do Renascimento */
+.prestige-rules-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rule-box {
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+}
+
+.rule-box.keep {
+  background-color: #E8F5E9;
+  border: 1px solid #A5D6A7;
+  color: #1B5E20;
+}
+
+.rule-box.reset {
+  background-color: #FFEBEE;
+  border: 1px solid #EF9A9A;
+  color: #B71C1C;
+}
+
+.rule-box h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.rule-box ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.rule-box li {
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+/* Customização do Modal de Prestígio 3D */
+.prestige-modal-card {
+  background: linear-gradient(135deg, #FFFDF5 0%, #FFF5DC 100%);
+  border: 2px solid #FFC837;
+  border-bottom: 6px solid #C48200;
+  box-shadow: 0 12px 32px rgba(196, 130, 0, 0.35);
+}
+
+.prestige-modal-icon {
+  background: linear-gradient(135deg, #FFE89C 0%, #FFC837 100%);
+  border: 2px solid #E09B00;
+}
+
+.prestige-modal-summary {
+  background: #FFFFFF;
+  border: 2px solid #FFE082;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.summary-gain-box span {
+  font-size: 0.85rem;
+  color: #7A5600;
+  font-weight: 800;
+}
+
+.summary-gain-box h1 {
+  margin: 4px 0;
+  font-size: 2.2rem;
+  color: #FF8000;
+  font-weight: 900;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  -webkit-text-stroke: 1px #9E5000;
+}
+
+.summary-gain-box small {
+  font-size: 0.85rem;
+  color: #593C00;
+  font-weight: 800;
+  display: block;
+}

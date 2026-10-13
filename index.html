@@ -8,7 +8,7 @@
   </head>
   <body>
     <div id="app">
-      <!-- Status Bar com Tipografia 3D -->
+      <!-- Status Bar -->
       <header class="status-bar">
         <div class="header-logo">
           <img src="/pacoca.png" alt="Paçoca" class="header-mascot">
@@ -24,18 +24,13 @@
         🔥 FRENESI 7X ATIVO: <span id="frenzy-timer">20</span>s
       </div>
 
-      <!-- Aba 1: Tocar com Chuva de Fundo e Onda na Base -->
+      <!-- Aba 1: Tocar -->
       <main id="click-area" class="tab-content active">
-        <!-- Container de chuva de mini paçocas -->
         <div id="bg-rain-container" class="bg-rain"></div>
-
-        <!-- Mascote Central e Brilho -->
         <div class="mascot-container">
           <div class="shine"></div>
           <img src="/pacoca.png" id="pacoca-button" class="pacoca-mascot" alt="Mascote Paçoca" draggable="false" ondragstart="return false;" oncontextmenu="return false;">
         </div>
-
-        <!-- Onda de Creme na base (Estilo Cookie Clicker) -->
         <div class="cream-wave">
           <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
             <path fill="#ffffff" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,144C672,149,768,203,864,218.7C960,235,1056,213,1152,192C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
@@ -43,7 +38,7 @@
         </div>
       </main>
 
-      <!-- Aba 2: Loja estilo Cookie Clicker -->
+      <!-- Aba 2: Loja -->
       <section id="shop-area" class="tab-content"></section>
 
       <!-- Aba 3: Melhorias -->
@@ -54,23 +49,24 @@
         <div id="upgrades-list" class="shop-list"></div>
       </section>
 
-      <!-- Aba 4: Perfil, Estatísticas e Ascensão -->
+      <!-- Aba 4: Perfil & Renascer -->
       <section id="profile-area" class="tab-content">
         <div class="profile-section">
-          <h2>Ascensão & Prestígio</h2>
+          <h2>Renascer (Ascensão)</h2>
           <div class="prestige-card">
+            <!-- Cabeçalho de Status Ativo -->
             <div class="prestige-badge-header">
               <div class="prestige-icon-main">🌟</div>
               <div>
                 <h3>Paçocas de Ouro: <span id="prestige-count">0</span></h3>
-                <p class="prestige-bonus-text">Bônus atual: <strong id="prestige-mult">+0%</strong> em toda a produção</p>
+                <p class="prestige-bonus-text">Bônus Global Ativo: <strong id="prestige-mult">+0%</strong> em TUDO</p>
               </div>
             </div>
 
-            <!-- Barra de Progresso com Contagem -->
+            <!-- Barra de Progresso -->
             <div class="prestige-progress-box">
               <div class="prestige-progress-labels">
-                <span id="prestige-next-gain">Ganho ao ascender: +0 🌟</span>
+                <span id="prestige-next-gain">Ganho ao renascer: +0 🌟</span>
                 <span id="prestige-progress-pct">0%</span>
               </div>
               <div class="prestige-bar-bg">
@@ -79,19 +75,27 @@
               <small id="prestige-missing-text" class="prestige-missing-text">Faltam 1.0 milhão de Paçocas para a próxima!</small>
             </div>
 
-            <!-- O que a Ascensão melhora -->
-            <div class="prestige-benefits-list">
-              <div class="benefit-item">
-                <span class="benefit-icon">✨</span>
-                <span><strong>+2% de produção</strong> permanente por Paçoca de Ouro.</span>
+            <!-- Guia Explicativo -->
+            <div class="prestige-rules-grid">
+              <div class="rule-box keep">
+                <h4>🟢 Você MANTÉM & GANHA:</h4>
+                <ul>
+                  <li>Suas Paçocas de Ouro e Bônus</li>
+                  <li>Suas Conquistas e Estatísticas</li>
+                  <li><strong>+2% de produção permanente por Paçoca de Ouro</strong></li>
+                </ul>
               </div>
-              <div class="benefit-item">
-                <span class="benefit-icon">⚡</span>
-                <span>Multiplicador acumulativo aplicado em <strong>cliques e PPS</strong>.</span>
+              <div class="rule-box reset">
+                <h4>🔴 Você RECOMEÇA:</h4>
+                <ul>
+                  <li>Paçocas atuais no contador</li>
+                  <li>Estruturas/Geradores da Loja</li>
+                  <li>Melhorias compradas</li>
+                </ul>
               </div>
             </div>
 
-            <button id="btn-prestige" class="action-btn prestige-btn" disabled>Ascender (Bloqueado)</button>
+            <button id="btn-prestige" class="action-btn prestige-btn" disabled>Renascer (Bloqueado)</button>
           </div>
         </div>
 
@@ -132,7 +136,58 @@
         </div>
       </section>
 
-      <!-- Navegação Inferior 3D -->
+      <!-- MODAL 1: PRODUÇÃO OFFLINE -->
+      <div id="offline-modal" class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-header">
+            <div class="modal-icon">💤</div>
+            <h2>Bem-vindo de Volta!</h2>
+          </div>
+          <p class="offline-time-text">Você esteve ausente por: <strong id="offline-time-val">0m</strong></p>
+          <div class="offline-reward-box">
+            <span>Sua produção offline gerou:</span>
+            <h1 id="offline-amount-val">+0</h1>
+          </div>
+          <div class="modal-actions">
+            <button id="btn-collect-ad" class="action-btn ad-btn">
+              🎬 Dobrar Recompensa (2x)
+            </button>
+            <button id="btn-collect-normal" class="action-btn secondary">
+              Coletar Normal (1x)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 2: CONFIRMAÇÃO DE RENASCER (NOVO) -->
+      <div id="prestige-modal" class="modal-overlay">
+        <div class="modal-card prestige-modal-card">
+          <div class="modal-header">
+            <div class="modal-icon prestige-modal-icon">🌟</div>
+            <h2>Confirmar Renascimento</h2>
+          </div>
+          <p class="offline-time-text">Deseja sacrificar suas estruturas atuais para ascender?</p>
+          
+          <div class="prestige-modal-summary">
+            <div class="summary-gain-box">
+              <span>Você receberá:</span>
+              <h1 id="prestige-modal-gain">+0 🌟</h1>
+              <small id="prestige-modal-mult">Bônus total subirá para: +0%</small>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button id="btn-prestige-confirm" class="action-btn prestige-btn">
+              🚀 Confirmar Renascimento
+            </button>
+            <button id="btn-prestige-cancel" class="action-btn secondary">
+              ❌ Voltar / Continuar Jogando
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navegação Inferior -->
       <nav class="bottom-nav">
         <button class="nav-btn active" data-target="click-area">
           <svg class="nav-icon" viewBox="0 0 24 24">

@@ -1,5 +1,6 @@
 import { Game } from './game/Game.js';
 import { UIManager } from './ui/UIManager.js';
+import { formatNumber } from './utils/format.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const ui = new UIManager();
@@ -51,12 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function createFloatingNumber(x, y, value) {
   const floater = document.createElement('div');
   floater.classList.add('floating-number');
-  floater.innerText = `+${value}`;
   
-  // Ligeiro desvio aleatório para evitar sobreposição total em cliques rápidos
+  // Arredonda e formata para garantir números inteiros limpos
+  const cleanValue = Math.round(value);
+  floater.innerText = `+${formatNumber(cleanValue)}`;
+  
   const randomOffsetX = (Math.random() - 0.5) * 40;
   
-  // Posição de reserva caso as coordenadas não venham preenchidas
   const posX = x || window.innerWidth / 2;
   const posY = y || window.innerHeight / 2;
 

@@ -89,26 +89,31 @@ export class Game {
   // Executa o Prestígio
   doPrestige() {
     const pendingChips = Prestige.calculatePrestigeChips(this.totalEarned);
-    const newChips = pendingChips - this.prestigeChips;
+    const newChips = Math.max(0, pendingChips - this.prestigeChips);
 
-    if (newChips <= 0) {
-      alert('Você precisa acumular mais Paçocas na história para ganhar novas Paçocas de Ouro!');
-      return;
-    }
+    if (newChips <= 0) return;
 
-    if (confirm(`Tem certeza de que deseja ascender?\n\nVocê perderá seus geradores e Paçocas atuais, mas ganhará +${newChips} Paçocas de Ouro (+${newChips * 2}% de produção permanente para sempre).`)) {
-      this.prestigeChips = pendingChips;
-      this.score = 0;
-      this.inventory = {
-        cursor: 0, ajudante: 0, bancada: 0, carrinho: 0,
-        loja: 0, fabrica: 0, centro: 0, imperio: 0
-      };
-      this.boughtUpgrades = [];
-      this.recalculateStats();
-      this.saveGame();
-      this.refreshUI();
-      alert('✨ Você ascendeu com sucesso! Seu império agora produz muito mais rápido!');
-    }
+    const totalChipsAfter = pendingChips;
+    const newMultiplierPercent = Math.round((Prestige.getMultiplier(totalChipsAfter) - 1) * 100);
+
+    // Abre o Modal 3D e aguarda a confirmação do jogador
+    this.ui.showPrestigeModal(
+      newChips,
+      newMultiplierPercent,
+      () => {
+        // Callback executado somente se o jogador clicar em "Confirmar Renascimento"
+        this.prestigeChips = pendingChips;
+        this.score = 0;
+        this.inventory = {
+          cursor: 0, ajudante: 0, bancada: 0, carrinho: 0,
+          loja: 0, fabrica: 0, centro: 0, imperio: 0
+        };
+        this.boughtUpgrades = [];
+        this.recalculateStats();
+        this.saveGame();
+        this.refreshUI();
+      }
+    );
   }
 
   getTotalStructures() {
@@ -136,9 +141,11 @@ export class Game {
     const basePPS = calculateTotalPPS(this.inventory, this.boughtUpgrades);
     const baseClick = calculateClickValue(this.inventory, this.boughtUpgrades);
 
-    // Bônus de prestígio aplicado sobre toda a produção
+    // Multiplicador de renascer aplicado diretamente
     this.pps = basePPS * this.frenzyMultiplier * this.prestigeMultiplier;
-    this.clickValue = Math.floor(baseClick * this.prestigeMultiplier);
+    
+    // O valor do clique é SEMPRE um número inteiro exato!
+    this.clickValue = Math.round(baseClick * this.prestigeMultiplier);
   }
 
   refreshUI() {
@@ -208,12 +215,32 @@ export class Game {
       if (saved.lastSaveTime) {
         const secondsOffline = (Date.now() - saved.lastSaveTime) / 1000;
         if (secondsOffline > 60 && this.pps > 0) {
-           const maxOffline = 24 * 60 * 60;
+           const maxOffline = 24 * 60 * 60; // Limite máximo de 24h
            const effectiveTime = Math.min(secondsOffline, maxOffline);
            const offlineEarned = effectiveTime * this.pps;
-           this.score += offlineEarned;
-           this.totalEarned += offlineEarned;
-           alert('Bem-vindo de volta! As suas fábricas continuaram a produzir Paçocas enquanto esteve fora.');
+
+           // Exibir o Modal de Boas-vindas Personalizado
+           setTimeout(() => {
+             this.ui.showOfflineModal(
+               effectiveTime,
+               offlineEarned,
+               () => {
+                 // Coletar Normal (1x)
+                 this.score += offlineEarned;
+                 this.totalEarned += offlineEarned;
+                 this.refreshUI();
+                 this.saveGame();
+               },
+               () => {
+                 // Dobrar Recompensa (2x - Simulação de Anúncio)
+                 const doubled = offlineEarned * 2;
+                 this.score += doubled;
+                 this.totalEarned += doubled;
+                 this.refreshUI();
+                 this.saveGame();
+               }
+             );
+           }, 400);
         }
       }
     } else {
