@@ -1,7 +1,8 @@
 import { GeneratorsData } from './Generators.js';
 import { UpgradesData } from './Upgrades.js';
 
-const PRICE_MULTIPLIER = 1.15;
+// Alterado de 1.15 para 1.10. Isso suaviza o encarecimento repetitivo das compras!
+const PRICE_MULTIPLIER = 1.10; 
 
 export function calculateCost(baseCost, owned, amount = 1) {
   if (amount === 1) {

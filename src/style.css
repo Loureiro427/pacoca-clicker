@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. VARIÁVEIS E CONFIGURAÇÕES GLOBAIS
+   ========================================================================== */
 :root {
   --primary: #A47350;        /* Marrom Paçoca principal */
   --primary-dark: #5C3A21;
@@ -31,6 +34,9 @@ html, body {
   color: var(--text-main);
 }
 
+/* ==========================================================================
+   2. ESTRUTURA E LAYOUT PRINCIPAL (#app)
+   ========================================================================== */
 #app {
   display: flex;
   flex-direction: column;
@@ -41,7 +47,9 @@ html, body {
   position: relative;
 }
 
-/* Header com Tipografia 3D Cartoon (Estilo Cookie Clicker) */
+/* ==========================================================================
+   3. CABEÇALHO (STATUS BAR 3D CARTOON)
+   ========================================================================== */
 .status-bar {
   display: flex;
   align-items: center;
@@ -68,10 +76,8 @@ html, body {
 #score-display {
   margin: 0;
   font-size: 2.5rem;
-  color: var(--primary);
   font-weight: 900;
   line-height: 1;
-  /* Contorno escuro 3D nos números */
   text-shadow: 
     2px 2px 0 var(--primary-dark),
     -1px -1px 0 var(--primary-dark),
@@ -89,7 +95,24 @@ html, body {
   font-weight: 800;
 }
 
-/* Tabs */
+/* ==========================================================================
+   4. BANNER DE FRENESI
+   ========================================================================== */
+.frenzy-banner {
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+  color: #3B2519;
+  text-align: center;
+  padding: 8px 12px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 10px rgba(255, 215, 0, 0.5);
+  display: none;
+  z-index: 20;
+}
+
+/* ==========================================================================
+   5. SISTEMA DE ABAS (TAB CONTENT)
+   ========================================================================== */
 .tab-content {
   display: none;
   flex: 1;
@@ -98,7 +121,22 @@ html, body {
   position: relative;
 }
 
-/* Ecrã de Clique */
+#shop-area.tab-content.active,
+#upgrades-area.tab-content.active,
+#profile-area.tab-content.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  z-index: 2;
+  padding-bottom: 24px;
+}
+
+/* ==========================================================================
+   6. ABA 1: ÁREA DE CLIQUE (MASCOTE & ANIMAÇÕES)
+   ========================================================================== */
 #click-area.tab-content.active {
   display: flex;
   flex-direction: column;
@@ -185,7 +223,7 @@ html, body {
   filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25));
 }
 
-/* Onda de Creme na Base (Milk Wave) */
+/* Onda de Creme na Base */
 .cream-wave {
   position: absolute;
   bottom: 0;
@@ -201,7 +239,7 @@ html, body {
   height: 100%;
 }
 
-/* Números Flutuantes ao Clicar (Estilo +1, +2 Cartoon) */
+/* Números Flutuantes ao Clicar */
 .floating-number {
   position: fixed;
   color: #FFFFFF;
@@ -223,20 +261,9 @@ html, body {
   100% { transform: translate(-50%, -150px) scale(1.4); opacity: 0; }
 }
 
-/* Abas de Conteúdo (Loja, Melhorias, Perfil) */
-#shop-area.tab-content.active,
-#upgrades-area.tab-content.active,
-#profile-area.tab-content.active {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow-y: auto;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-  z-index: 2;
-}
-
-/* Loja e Cards em Estilo 3D (Estilo Cookie Clicker) */
+/* ==========================================================================
+   7. ABA 2 E 3: LOJA & MELHORIAS (CARDS 3D)
+   ========================================================================== */
 .shop-header {
   display: flex;
   justify-content: space-between;
@@ -285,11 +312,11 @@ html, body {
   padding-bottom: 24px;
 }
 
-/* Cards em estilo Pílula 3D com Relevo */
+/* Cards de Geradores em Pílula 3D */
 .generator-card {
   background: var(--card-bg);
   border: 2px solid var(--border-color);
-  border-bottom: 5px solid var(--border-color); /* Efeito 3D */
+  border-bottom: 5px solid var(--border-color);
   border-radius: 20px;
   padding: 12px 14px;
   display: flex;
@@ -335,7 +362,6 @@ html, body {
   font-weight: 800;
 }
 
-/* Tag "Nível X" igual ao Cookie Clicker */
 .level-badge {
   background-color: #F2E6D8;
   color: var(--primary-dark);
@@ -390,59 +416,281 @@ html, body {
   cursor: not-allowed;
 }
 
-/* Frenesi */
-.frenzy-banner {
-  background: linear-gradient(90deg, #FFD700, #FFA500);
-  color: #3B2519;
-  text-align: center;
-  padding: 8px 12px;
-  font-weight: 900;
-  font-size: 0.9rem;
-  box-shadow: 0 3px 10px rgba(255, 215, 0, 0.5);
-  display: none;
-  z-index: 20;
-}
-
-/* Navegação Inferior Escura estilo App */
-.bottom-nav {
-  display: flex;
-  background-color: var(--nav-bg);
-  padding: 10px 16px;
-  padding-bottom: env(safe-area-inset-bottom, 12px);
-  box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
-  z-index: 10;
-}
-
-.nav-btn {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 6px;
+/* ==========================================================================
+   8. ABA 4: ÁRVORE DE TALENTOS RPG (DESIGN AAA VERTICAL)
+   ========================================================================== */
+#skills-area.tab-content.active {
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 130px);
+  overflow: hidden;
+  padding: 0;
+}
+
+.skill-tree-container {
+  width: 100%;
+  height: 100%;
+  background-color: #FDF7ED;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  overflow: hidden;
+}
+
+.skill-tree-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(#E8D8C8 2px, transparent 2px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.skill-tree-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Navegação dos Ramos */
+.skill-branch-nav {
+  display: flex;
+  gap: 12px;
+  padding: 10px 16px;
+  justify-content: center;
   align-items: center;
-  gap: 4px;
-  color: var(--nav-inactive);
+  z-index: 5;
+  background: #FFFDF5;
+  border-bottom: 2px solid #E8D8C8;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.branch-filter-btn {
+  background: #FFF;
+  border: 2px solid #D4C4B7;
+  color: #7A5600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: color 0.15s;
+  white-space: nowrap;
+  transition: all 0.2s;
+  box-shadow: 0 3px 0 #D4C4B7;
 }
 
-.nav-icon {
-  width: 26px;
-  height: 26px;
-  fill: currentColor;
+.branch-filter-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #D4C4B7;
 }
 
-.nav-btn .label {
-  font-size: 0.78rem;
+.branch-filter-btn.active {
+  background: #FFC837;
+  color: #593C00;
+  border-color: #E09B00;
+  box-shadow: 0 3px 0 #C48200;
+}
+
+/* Área do Grafo Centralizada */
+.tree-graph-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+  gap: min(3vh, 24px);
+  padding: 10px; 
+  flex: 1;
+  overflow: hidden;
+}
+
+.tree-tier-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 18px;
+  z-index: 2;
+}
+
+/* Caixa da Habilidade */
+.tree-node-box {
+  width: 48px;
+  height: 48px;
+  background-color: #4A3022; 
+  border: 3px solid #8B6552;
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #331F14, 0 4px 6px rgba(0,0,0,0.15);
+  transition: transform 0.1s;
+  flex-shrink: 0;
+}
+
+.tree-node-box:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #331F14;
+}
+
+.tree-node-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.tree-node-badge {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  background-color: #F5E6D3;
+  border: 2px solid #8B6552;
+  color: #5C3D2E;
+  font-size: 0.65rem;
+  font-weight: 900;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estados do Nó */
+.tree-node-box.locked {
+  background-color: #D4C4B7;
+  border-color: #E8D8C8;
+  box-shadow: 0 3px 0 #C4B2A3;
+}
+.tree-node-box.locked .tree-node-icon {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.tree-node-box.available {
+  border-color: #FF9D00;
+  box-shadow: 0 3px 0 #C47A00, 0 0 14px rgba(255, 157, 0, 0.4);
+  animation: cookiePulse 1.5s infinite alternate;
+}
+
+@keyframes cookiePulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+.tree-node-box.mastered {
+  background-color: #FFC837;
+  border-color: #FFF;
+  box-shadow: 0 3px 0 #E09B00;
+}
+
+.tree-node-box.mastered .tree-node-badge.active {
+  background-color: #FFF;
+  border-color: #E09B00;
+  color: #C48200;
+}
+
+/* Linhas de Conexão SVG */
+.tree-svg-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tree-connection-line {
+  fill: none;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  transition: stroke 0.3s;
+}
+
+.tree-connection-line.locked {
+  stroke: #D4C4B7;
+}
+
+.tree-connection-line.active {
+  stroke: #FFC837;
+  filter: drop-shadow(0 2px 0 #E09B00);
+}
+
+/* Modal de Talentos */
+.skill-modal-card {
+  background: #FFFDF5;
+  border: 3px solid #E8D8C8;
+  border-bottom: 6px solid #D4C4B7;
+  border-radius: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 330px;
+  color: #5C3D2E;
+}
+
+.skill-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.skill-modal-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: #4A3022;
+  border: 3px solid #8B6552;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.skill-modal-title h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #3E2723;
+}
+
+.skill-modal-branch-tag {
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: #3E2723;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.skill-modal-lore {
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #8B6552;
+  margin: 10px 0;
+  line-height: 1.35;
+}
+
+.skill-modal-desc-box {
+  background: #FDF7ED;
+  border: 2px solid #E8D8C8;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 0.88rem;
+  color: #7A5600;
   font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
-.nav-btn.active {
-  color: #FFFFFF;
-}
-
-/* Perfil e Conquistas */
+/* ==========================================================================
+   9. ABA 5: PERFIL, ESTATÍSTICAS E CONQUISTAS
+   ========================================================================== */
 .profile-section h2 {
   margin: 0 0 12px 0;
   font-size: 1.2rem;
@@ -555,77 +803,70 @@ html, body {
   border-bottom: 3px solid #F5C6C6;
 }
 
-/* Trava de segurança: Garante que efeitos não bloqueiem cliques */
-.bg-rain, 
-.falling-pacoca, 
-.cream-wave, 
-.shine {
-  pointer-events: none !important;
-}
-
-/* Garante a captação de toque nos botões e no mascote */
-.pacoca-mascot, 
-.nav-btn, 
-.buy-btn, 
-.mode-btn, 
-.action-btn, 
-.golden-pacoca {
-  pointer-events: auto !important;
-  cursor: pointer;
-}
-
-/* Card de Prestígio 3D Premium */
+/* ==========================================================================
+   10. CARD DE RENASCER (ASCENSÃO - TEMA CARAMELO & OURO AAA)
+   ========================================================================== */
 .prestige-card {
-  background: linear-gradient(135deg, #FFFDF5 0%, #FFF3D6 100%);
-  border: 2px solid #FFC837;
-  border-bottom: 5px solid #E09B00;
-  border-radius: 20px;
-  padding: 16px;
+  background: #FFFDF5;
+  border: 3px solid #E8D8C8;
+  border-bottom: 6px solid #D4C4B7;
+  border-radius: 24px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  box-shadow: 0 4px 12px rgba(224, 155, 0, 0.12);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
 }
 
 .prestige-badge-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  background: linear-gradient(135deg, #FFF8E7 0%, #FFE8B3 100%);
+  border: 2px solid #FFC837;
+  border-radius: 18px;
+  padding: 12px 16px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 .prestige-icon-main {
-  font-size: 2.2rem;
-  width: 52px;
-  height: 52px;
-  background: linear-gradient(135deg, #FFE89C 0%, #FFC837 100%);
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #FFD700 0%, #FF9D00 100%);
+  border: 3px solid #FFF;
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #E09B00;
-  box-shadow: 0 3px 0 #B87F00;
+  font-size: 1.6rem;
+  box-shadow: 0 4px 0 #C47A00;
+  flex-shrink: 0;
 }
 
-.prestige-badge-header h3 {
-  margin: 0 0 2px 0;
-  color: #593C00;
-  font-size: 1.15rem;
+.prestige-header-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
   font-weight: 900;
+  color: #4A3022;
 }
 
 .prestige-bonus-text {
-  margin: 0;
-  font-size: 0.88rem;
+  margin: 2px 0 0 0;
+  font-size: 0.85rem;
   color: #7A5600;
   font-weight: 700;
 }
 
-/* Barra de Progresso de Prestígio */
+.prestige-bonus-text strong {
+  color: #D96B00;
+  font-weight: 900;
+}
+
 .prestige-progress-box {
-  background-color: #FFFFFF;
-  border: 1px solid #FFE082;
-  border-radius: 14px;
-  padding: 10px 12px;
+  background: #FDF7ED;
+  border: 2px solid #E8D8C8;
+  border-radius: 16px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -636,80 +877,130 @@ html, body {
   justify-content: space-between;
   font-size: 0.82rem;
   font-weight: 800;
-  color: #593C00;
+  color: #5C3D2E;
 }
 
 .prestige-bar-bg {
   width: 100%;
-  height: 12px;
-  background-color: #F0E6D2;
+  height: 16px;
+  background-color: #E8D8C8;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid #E0D4B8;
+  padding: 2px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .prestige-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #FFC837 0%, #FF8000 100%);
-  border-radius: 10px;
+  background: linear-gradient(90deg, #FF9D00 0%, #FFC837 100%);
+  border-radius: 8px;
   transition: width 0.3s ease;
+  box-shadow: 0 2px 4px rgba(255, 157, 0, 0.4);
 }
 
 .prestige-missing-text {
-  font-size: 0.82rem;
-  color: #8C6200;
+  font-size: 0.78rem;
+  color: #8B6552;
   font-weight: 700;
   text-align: center;
 }
 
-/* Benefícios */
-.prestige-benefits-list {
+.prestige-rules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.rule-box {
+  border-radius: 16px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.benefit-item {
+.rule-box.keep {
+  background: #F2F9F3;
+  border: 2px solid #C8E6C9;
+}
+
+.rule-box.reset {
+  background: #FFF5F5;
+  border: 2px solid #FFCDD2;
+}
+
+.rule-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: #593C00;
 }
 
-.benefit-icon {
-  font-size: 1rem;
-}
-
-/* Botão de Ascensão 3D */
-.prestige-btn {
-  background: linear-gradient(180deg, #FFD700 0%, #FF8000 100%);
-  color: #3B2519;
-  border: none;
-  border-bottom: 4px solid #B85C00;
-  border-radius: 14px;
-  padding: 12px;
+.rule-tag {
+  font-size: 0.65rem;
   font-weight: 900;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.keep-tag {
+  background: #D1E7DD;
+  color: #0F5132;
+}
+
+.reset-tag {
+  background: #F8D7DA;
+  color: #842029;
+}
+
+.rule-box ul {
+  margin: 0;
+  padding-left: 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.rule-box.keep ul {
+  color: #1F6E43;
+}
+
+.rule-box.reset ul {
+  color: #A92A36;
+}
+
+.prestige-btn {
+  width: 100%;
+  padding: 12px 16px;
   font-size: 1rem;
+  font-weight: 900;
+  color: #3E2000;
+  background: linear-gradient(135deg, #FFC837 0%, #FF9D00 100%);
+  border: 2px solid #E09B00;
+  border-radius: 16px;
+  box-shadow: 0 5px 0 #C47A00, 0 6px 12px rgba(196, 122, 0, 0.25);
   cursor: pointer;
-  box-shadow: 0 3px 8px rgba(255, 128, 0, 0.25);
-  transition: transform 0.05s, border-bottom 0.05s;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .prestige-btn:active:not(:disabled) {
-  transform: translateY(2px);
-  border-bottom: 2px solid #B85C00;
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #C47A00;
 }
 
 .prestige-btn:disabled {
-  background: #E8DCC8;
-  border-bottom: 4px solid #C5B8A0;
-  color: #998B74;
+  background: #E8D8C8;
+  border-color: #D4C4B7;
+  color: #8B6552;
+  box-shadow: 0 4px 0 #C4B2A3;
   cursor: not-allowed;
-  box-shadow: none;
+  opacity: 0.85;
 }
 
-/* Modal de Produção Offline (Overlay + Card 3D) */
+/* ==========================================================================
+   11. MODAIS (OFFLINE, PRESTÍGIO E TALENTOS)
+   ========================================================================== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -719,7 +1010,7 @@ html, body {
   background-color: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(4px);
   z-index: 1000;
-  display: none; /* Ativado via JS */
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -810,7 +1101,6 @@ html, body {
   margin-top: 4px;
 }
 
-/* Botão de Dobrar Recompensa com Ads */
 .action-btn.ad-btn {
   background: linear-gradient(180deg, #4CAF50 0%, #2E7D32 100%);
   color: #FFFFFF;
@@ -829,389 +1119,66 @@ html, body {
   transform: translateY(2px);
   border-bottom: 2px solid #1B5E20;
 }
-/* Caixas de Regras do Renascimento */
-.prestige-rules-grid {
+
+/* ==========================================================================
+   12. NAVEGAÇÃO INFERIOR (BOTTOM NAV)
+   ========================================================================== */
+.bottom-nav {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  background-color: var(--nav-bg);
+  padding: 10px 16px;
+  padding-bottom: env(safe-area-inset-bottom, 12px);
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+  z-index: 10;
 }
 
-.rule-box {
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 0.8rem;
-}
-
-.rule-box.keep {
-  background-color: #E8F5E9;
-  border: 1px solid #A5D6A7;
-  color: #1B5E20;
-}
-
-.rule-box.reset {
-  background-color: #FFEBEE;
-  border: 1px solid #EF9A9A;
-  color: #B71C1C;
-}
-
-.rule-box h4 {
-  margin: 0 0 4px 0;
-  font-size: 0.85rem;
-  font-weight: 800;
-}
-
-.rule-box ul {
-  margin: 0;
-  padding-left: 18px;
-}
-
-.rule-box li {
-  margin-bottom: 2px;
-  font-weight: 600;
-}
-/* Customização do Modal de Prestígio 3D */
-.prestige-modal-card {
-  background: linear-gradient(135deg, #FFFDF5 0%, #FFF5DC 100%);
-  border: 2px solid #FFC837;
-  border-bottom: 6px solid #C48200;
-  box-shadow: 0 12px 32px rgba(196, 130, 0, 0.35);
-}
-
-.prestige-modal-icon {
-  background: linear-gradient(135deg, #FFE89C 0%, #FFC837 100%);
-  border: 2px solid #E09B00;
-}
-
-.prestige-modal-summary {
-  background: #FFFFFF;
-  border: 2px solid #FFE082;
-  border-radius: 18px;
-  padding: 16px;
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-}
-
-.summary-gain-box span {
-  font-size: 0.85rem;
-  color: #7A5600;
-  font-weight: 800;
-}
-
-.summary-gain-box h1 {
-  margin: 4px 0;
-  font-size: 2.2rem;
-  color: #FF8000;
-  font-weight: 900;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  -webkit-text-stroke: 1px #9E5000;
-}
-
-.summary-gain-box small {
-  font-size: 0.85rem;
-  color: #593C00;
-  font-weight: 800;
-  display: block;
-}
-
-/* ==========================================================================
-   ÁRVORE DE TALENTOS RPG - DESIGN PREMIUM (ZERO EMOJIS, NEOMORFISMO & SVG)
-   ========================================================================== */
-
-/* Fixar o Menu Inferior no Rodapé */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 64px;
-  background-color: #3B2519;
-  border-top: 2px solid #5C3D2E;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 1000;
-}
-
-/* Ajuste das Abas de Conteúdo */
-.tab-content {
-  display: none;
-  width: 100%;
-  padding-bottom: 80px; /* Evita que o conteúdo fique atrás do menu */
-}
-
-.tab-content.active {
-  display: block;
-}
-
-#skills-area.tab-content.active {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 70px;
-}
-
-/* ==========================================================================
-   ÁRVORE DE TALENTOS (DESIGN AAA - TELA CHEIA E ESTÁTICA)
-   ========================================================================== */
-
-#skills-area.tab-content.active {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 130px); /* Trava a altura exata do espaço útil */
-  overflow: hidden; /* IMPEDE QUALQUER ROLAGEM NA ABA INTEIRA */
-}
-
-.skill-tree-container {
-  width: 100%;
-  height: 100%;
-  background-color: #FDF7ED;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  user-select: none;
-  overflow: hidden;
-}
-
-.skill-tree-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: radial-gradient(#E8D8C8 2px, transparent 2px);
-  background-size: 20px 20px;
-  pointer-events: none;
-}
-
-/* 1. NAVEGAÇÃO DOS RAMOS - CENTRALIZADA E ELEGANTE */
-.skill-branch-nav {
-  display: flex;
-  gap: 12px;
-  padding: 10px 16px;
-  justify-content: center; /* Centraliza os 3 botões perfeitamente */
-  align-items: center;
-  z-index: 5;
-  background: #FFFDF5;
-  border-bottom: 2px solid #E8D8C8; /* Borda mais subtil */
-  flex-shrink: 0;
-  width: 100%;
-}
-
-.branch-filter-btn {
-  background: #FFF;
-  border: 2px solid #D4C4B7;
-  color: #7A5600;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: 800;
-  font-size: 0.85rem;
+  color: var(--nav-inactive);
   cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s;
-  box-shadow: 0 3px 0 #D4C4B7;
+  transition: color 0.15s;
 }
 
-.branch-filter-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 0 0 #D4C4B7;
+.nav-icon {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
 }
 
-.branch-filter-btn.active {
-  background: #FFC837;
-  color: #593C00;
-  border-color: #E09B00;
-  box-shadow: 0 3px 0 #C48200;
-}
-
-/* 2. ÁREA DO GRAFO - ENQUADRAMENTO PERFEITO (SEM SCROLL) */
-.tree-graph-wrapper {
-  position: relative;
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
-  justify-content: center; /* O SEGREDO: Centraliza a árvore no meio da tela */
-  gap: min(3vh, 24px); /* Espaçamento inteligente que se adapta à altura da tela */
-  padding: 10px; 
-  flex: 1; /* Preenche todo o espaço restante */
-  overflow: hidden; /* TRAVAMENTO DEFINITIVO DA ROLAGEM */
-}
-
-.tree-tier-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 18px; /* Nós um pouco mais próximos horizontalmente */
-  z-index: 2;
-}
-
-/* 3. CAIXA DA HABILIDADE - PROPORÇÃO PROFISSIONAL */
-.tree-node-box {
-  width: 48px; /* Tamanho polido para não poluir o ecrã */
-  height: 48px;
-  background-color: #4A3022; 
-  border: 3px solid #8B6552;
-  border-radius: 12px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 3px 0 #331F14, 0 4px 6px rgba(0,0,0,0.15); /* Sombras mais refinadas */
-  transition: transform 0.1s;
-  flex-shrink: 0;
-}
-
-.tree-node-box:active {
-  transform: translateY(3px);
-  box-shadow: 0 0 0 #331F14;
-}
-
-.tree-node-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-/* Badge Numérico */
-.tree-node-badge {
-  position: absolute;
-  bottom: -5px;
-  right: -5px;
-  background-color: #F5E6D3;
-  border: 2px solid #8B6552;
-  color: #5C3D2E;
-  font-size: 0.65rem;
-  font-weight: 900;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ESTADOS */
-.tree-node-box.locked {
-  background-color: #D4C4B7;
-  border-color: #E8D8C8;
-  box-shadow: 0 3px 0 #C4B2A3;
-}
-.tree-node-box.locked .tree-node-icon {
-  opacity: 0.3;
-  filter: grayscale(1);
-}
-
-.tree-node-box.available {
-  border-color: #FF9D00;
-  box-shadow: 0 3px 0 #C47A00, 0 0 14px rgba(255, 157, 0, 0.4);
-  animation: cookiePulse 1.5s infinite alternate;
-}
-
-@keyframes cookiePulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.05); }
-}
-
-.tree-node-box.mastered {
-  background-color: #FFC837;
-  border-color: #FFF;
-  box-shadow: 0 3px 0 #E09B00;
-}
-.tree-node-box.mastered .tree-node-badge.active {
-  background-color: #FFF;
-  border-color: #E09B00;
-  color: #C48200;
-}
-
-/* 4. LINHAS DE CONEXÃO */
-.tree-svg-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.tree-connection-line {
-  fill: none;
-  stroke-width: 3px; /* Linha ligeiramente mais fina para maior elegância */
-  stroke-linecap: round;
-  transition: stroke 0.3s;
-}
-
-.tree-connection-line.locked {
-  stroke: #D4C4B7;
-}
-
-.tree-connection-line.active {
-  stroke: #FFC837;
-  filter: drop-shadow(0 2px 0 #E09B00);
-}
-
-/* 5. MODAL ADAPTADO */
-.skill-modal-card {
-  background: #FFFDF5;
-  border: 3px solid #E8D8C8;
-  border-bottom: 6px solid #D4C4B7;
-  border-radius: 20px;
-  padding: 20px;
-  width: 100%;
-  max-width: 330px;
-  color: #5C3D2E;
-}
-
-.skill-modal-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 12px;
-}
-
-.skill-modal-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
-  background: #4A3022;
-  border: 3px solid #8B6552;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.skill-modal-title h3 {
-  margin: 0 0 4px 0;
-  font-size: 1.15rem;
-  font-weight: 900;
-  color: #3E2723;
-}
-
-.skill-modal-branch-tag {
-  font-size: 0.65rem;
-  font-weight: 900;
-  padding: 4px 8px;
-  border-radius: 8px;
-  color: #3E2723;
-  text-transform: uppercase;
-  display: inline-block;
-}
-
-.skill-modal-lore {
-  font-style: italic;
-  font-size: 0.8rem;
-  color: #8B6552;
-  margin: 10px 0;
-  line-height: 1.35;
-}
-
-.skill-modal-desc-box {
-  background: #FDF7ED;
-  border: 2px solid #E8D8C8;
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 0.88rem;
-  color: #7A5600;
+.nav-btn .label {
+  font-size: 0.78rem;
   font-weight: 700;
-  text-align: center;
-  margin-bottom: 16px;
+}
+
+.nav-btn.active {
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   13. TRAVAS DE SEGURANÇA E INTERAÇÕES DE TOQUE
+   ========================================================================== */
+.bg-rain, 
+.falling-pacoca, 
+.cream-wave, 
+.shine {
+  pointer-events: none !important;
+}
+
+.pacoca-mascot, 
+.nav-btn, 
+.buy-btn, 
+.mode-btn, 
+.action-btn, 
+.golden-pacoca,
+.branch-filter-btn,
+.tree-node-box {
+  pointer-events: auto !important;
+  cursor: pointer;
 }
