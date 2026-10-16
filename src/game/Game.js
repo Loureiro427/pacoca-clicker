@@ -4,6 +4,8 @@ import { AchievementsData } from './Achievements.js';
 import { SaveManager } from '../storage/SaveManager.js';
 import { GoldenPacoca } from '../systems/GoldenPacoca.js';
 import { Prestige } from './Prestige.js';
+import { SkillTreeManager } from './SkillTree.js';
+import { SkillTreeUI } from '../ui/SkillTreeUI.js';
 
 export class Game {
   constructor(ui) {
@@ -34,6 +36,10 @@ export class Game {
     this.unlockedAchievements = [];
     this.lastTick = Date.now();
     
+    // Árvore de Talentos RPG
+    this.skillTree = new SkillTreeManager(this);
+    this.skillTreeUI = new SkillTreeUI(this);
+
     this.loadGame();
     this.goldenSystem = new GoldenPacoca(this);
     this.startGameLoop();
@@ -154,6 +160,9 @@ export class Game {
     this.ui.updateUpgrades(this.score, this.inventory, this.boughtUpgrades);
     this.ui.updateProfile(this);
     this.ui.updateFrenzy(this.frenzyTimeLeft);
+    if (this.skillTreeUI) {
+      this.skillTreeUI.render();
+    }
   }
 
   startGameLoop() {
@@ -194,7 +203,8 @@ export class Game {
       inventory: this.inventory,
       boughtUpgrades: this.boughtUpgrades,
       unlockedAchievements: this.unlockedAchievements,
-      prestigeChips: this.prestigeChips
+      prestigeChips: this.prestigeChips,
+      unlockedSkills: this.skillTree ? this.skillTree.unlockedSkills : ['origin']
     });
   }
 
@@ -209,6 +219,9 @@ export class Game {
       this.boughtUpgrades = saved.boughtUpgrades || [];
       this.unlockedAchievements = saved.unlockedAchievements || [];
       this.prestigeChips = saved.prestigeChips || 0;
+      if (saved.unlockedSkills && this.skillTree) {
+        this.skillTree.unlockedSkills = saved.unlockedSkills;
+      }
       
       this.recalculateStats();
       
@@ -258,6 +271,7 @@ export class Game {
       boughtUpgrades: this.boughtUpgrades,
       unlockedAchievements: this.unlockedAchievements,
       prestigeChips: this.prestigeChips,
+      unlockedSkills: this.skillTree ? this.skillTree.unlockedSkills : ['origin'],
       lastSaveTime: Date.now()
     });
     return btoa(data);

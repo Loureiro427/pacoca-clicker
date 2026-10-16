@@ -49,12 +49,21 @@
         <div id="upgrades-list" class="shop-list"></div>
       </section>
 
-      <!-- Aba 4: Perfil & Renascer -->
+      <!-- Aba 4: Árvore de Talentos RPG -->
+      <section id="skills-area" class="tab-content">
+        <div class="skill-tree-container">
+          <div class="skill-tree-bg"></div>
+          <div class="skill-tree-viewport" id="skill-tree-viewport">
+            <div id="skill-nodes-container" style="display: flex; flex-direction: column; gap: 12px; width: 100%;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Aba 5: Perfil & Renascer -->
       <section id="profile-area" class="tab-content">
         <div class="profile-section">
           <h2>Renascer (Ascensão)</h2>
           <div class="prestige-card">
-            <!-- Cabeçalho de Status Ativo -->
             <div class="prestige-badge-header">
               <div class="prestige-icon-main">🌟</div>
               <div>
@@ -63,7 +72,6 @@
               </div>
             </div>
 
-            <!-- Barra de Progresso -->
             <div class="prestige-progress-box">
               <div class="prestige-progress-labels">
                 <span id="prestige-next-gain">Ganho ao renascer: +0 🌟</span>
@@ -75,7 +83,6 @@
               <small id="prestige-missing-text" class="prestige-missing-text">Faltam 1.0 milhão de Paçocas para a próxima!</small>
             </div>
 
-            <!-- Guia Explicativo -->
             <div class="prestige-rules-grid">
               <div class="rule-box keep">
                 <h4>🟢 Você MANTÉM & GANHA:</h4>
@@ -136,7 +143,7 @@
         </div>
       </section>
 
-      <!-- MODAL 1: PRODUÇÃO OFFLINE -->
+      <!-- MODAIS -->
       <div id="offline-modal" class="modal-overlay">
         <div class="modal-card">
           <div class="modal-header">
@@ -159,7 +166,6 @@
         </div>
       </div>
 
-      <!-- MODAL 2: CONFIRMAÇÃO DE RENASCER (NOVO) -->
       <div id="prestige-modal" class="modal-overlay">
         <div class="modal-card prestige-modal-card">
           <div class="modal-header">
@@ -187,34 +193,53 @@
         </div>
       </div>
 
+      <div id="skill-modal" class="modal-overlay">
+        <div class="modal-card skill-modal-card">
+          <div class="skill-modal-header">
+            <div id="skill-modal-icon" class="skill-modal-icon"></div>
+            <div class="skill-modal-title">
+              <h3 id="skill-modal-name">Nome do Talento</h3>
+              <span id="skill-modal-branch" class="skill-modal-branch-tag">Caminho</span>
+            </div>
+          </div>
+          
+          <p id="skill-modal-lore" class="skill-modal-lore">Frase de história...</p>
+          
+          <div id="skill-modal-desc" class="skill-modal-desc-box">
+            Efeito da habilidade
+          </div>
+
+          <div class="modal-actions" style="margin-top: 14px;">
+            <button id="btn-learn-skill" class="action-btn prestige-btn">
+              Aprender (1 🌟)
+            </button>
+            <button id="btn-close-skill-modal" class="action-btn secondary">
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Navegação Inferior -->
       <nav class="bottom-nav">
         <button class="nav-btn active" data-target="click-area">
-          <svg class="nav-icon" viewBox="0 0 24 24">
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-          </svg>
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
           <span class="label">Tocar</span>
         </button>
         <button class="nav-btn" data-target="shop-area">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7" rx="2"></rect>
-            <rect x="14" y="3" width="7" height="7" rx="2"></rect>
-            <rect x="14" y="14" width="7" height="7" rx="2"></rect>
-            <rect x="3" y="14" width="7" height="7" rx="2"></rect>
-          </svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect></svg>
           <span class="label">Loja</span>
         </button>
         <button class="nav-btn" data-target="upgrades-area">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-          </svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           <span class="label">Melhorias</span>
         </button>
+        <button class="nav-btn" data-target="skills-area">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span class="label">Talentos</span>
+        </button>
         <button class="nav-btn" data-target="profile-area">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span class="label">Perfil</span>
         </button>
       </nav>

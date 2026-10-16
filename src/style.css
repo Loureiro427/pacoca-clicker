@@ -914,3 +914,304 @@ html, body {
   font-weight: 800;
   display: block;
 }
+
+/* ==========================================================================
+   ÁRVORE DE TALENTOS RPG - DESIGN PREMIUM (ZERO EMOJIS, NEOMORFISMO & SVG)
+   ========================================================================== */
+
+/* Fixar o Menu Inferior no Rodapé */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  background-color: #3B2519;
+  border-top: 2px solid #5C3D2E;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Ajuste das Abas de Conteúdo */
+.tab-content {
+  display: none;
+  width: 100%;
+  padding-bottom: 80px; /* Evita que o conteúdo fique atrás do menu */
+}
+
+.tab-content.active {
+  display: block;
+}
+
+#skills-area.tab-content.active {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 70px;
+}
+
+/* ==========================================================================
+   ÁRVORE DE TALENTOS (DESIGN AAA - TELA CHEIA E ESTÁTICA)
+   ========================================================================== */
+
+#skills-area.tab-content.active {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 130px); /* Trava a altura exata do espaço útil */
+  overflow: hidden; /* IMPEDE QUALQUER ROLAGEM NA ABA INTEIRA */
+}
+
+.skill-tree-container {
+  width: 100%;
+  height: 100%;
+  background-color: #FDF7ED;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  overflow: hidden;
+}
+
+.skill-tree-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(#E8D8C8 2px, transparent 2px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+/* 1. NAVEGAÇÃO DOS RAMOS - CENTRALIZADA E ELEGANTE */
+.skill-branch-nav {
+  display: flex;
+  gap: 12px;
+  padding: 10px 16px;
+  justify-content: center; /* Centraliza os 3 botões perfeitamente */
+  align-items: center;
+  z-index: 5;
+  background: #FFFDF5;
+  border-bottom: 2px solid #E8D8C8; /* Borda mais subtil */
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.branch-filter-btn {
+  background: #FFF;
+  border: 2px solid #D4C4B7;
+  color: #7A5600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  box-shadow: 0 3px 0 #D4C4B7;
+}
+
+.branch-filter-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #D4C4B7;
+}
+
+.branch-filter-btn.active {
+  background: #FFC837;
+  color: #593C00;
+  border-color: #E09B00;
+  box-shadow: 0 3px 0 #C48200;
+}
+
+/* 2. ÁREA DO GRAFO - ENQUADRAMENTO PERFEITO (SEM SCROLL) */
+.tree-graph-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center; /* O SEGREDO: Centraliza a árvore no meio da tela */
+  gap: min(3vh, 24px); /* Espaçamento inteligente que se adapta à altura da tela */
+  padding: 10px; 
+  flex: 1; /* Preenche todo o espaço restante */
+  overflow: hidden; /* TRAVAMENTO DEFINITIVO DA ROLAGEM */
+}
+
+.tree-tier-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 18px; /* Nós um pouco mais próximos horizontalmente */
+  z-index: 2;
+}
+
+/* 3. CAIXA DA HABILIDADE - PROPORÇÃO PROFISSIONAL */
+.tree-node-box {
+  width: 48px; /* Tamanho polido para não poluir o ecrã */
+  height: 48px;
+  background-color: #4A3022; 
+  border: 3px solid #8B6552;
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #331F14, 0 4px 6px rgba(0,0,0,0.15); /* Sombras mais refinadas */
+  transition: transform 0.1s;
+  flex-shrink: 0;
+}
+
+.tree-node-box:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #331F14;
+}
+
+.tree-node-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Badge Numérico */
+.tree-node-badge {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  background-color: #F5E6D3;
+  border: 2px solid #8B6552;
+  color: #5C3D2E;
+  font-size: 0.65rem;
+  font-weight: 900;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ESTADOS */
+.tree-node-box.locked {
+  background-color: #D4C4B7;
+  border-color: #E8D8C8;
+  box-shadow: 0 3px 0 #C4B2A3;
+}
+.tree-node-box.locked .tree-node-icon {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.tree-node-box.available {
+  border-color: #FF9D00;
+  box-shadow: 0 3px 0 #C47A00, 0 0 14px rgba(255, 157, 0, 0.4);
+  animation: cookiePulse 1.5s infinite alternate;
+}
+
+@keyframes cookiePulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+.tree-node-box.mastered {
+  background-color: #FFC837;
+  border-color: #FFF;
+  box-shadow: 0 3px 0 #E09B00;
+}
+.tree-node-box.mastered .tree-node-badge.active {
+  background-color: #FFF;
+  border-color: #E09B00;
+  color: #C48200;
+}
+
+/* 4. LINHAS DE CONEXÃO */
+.tree-svg-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tree-connection-line {
+  fill: none;
+  stroke-width: 3px; /* Linha ligeiramente mais fina para maior elegância */
+  stroke-linecap: round;
+  transition: stroke 0.3s;
+}
+
+.tree-connection-line.locked {
+  stroke: #D4C4B7;
+}
+
+.tree-connection-line.active {
+  stroke: #FFC837;
+  filter: drop-shadow(0 2px 0 #E09B00);
+}
+
+/* 5. MODAL ADAPTADO */
+.skill-modal-card {
+  background: #FFFDF5;
+  border: 3px solid #E8D8C8;
+  border-bottom: 6px solid #D4C4B7;
+  border-radius: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 330px;
+  color: #5C3D2E;
+}
+
+.skill-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.skill-modal-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: #4A3022;
+  border: 3px solid #8B6552;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.skill-modal-title h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #3E2723;
+}
+
+.skill-modal-branch-tag {
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: #3E2723;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.skill-modal-lore {
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #8B6552;
+  margin: 10px 0;
+  line-height: 1.35;
+}
+
+.skill-modal-desc-box {
+  background: #FDF7ED;
+  border: 2px solid #E8D8C8;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 0.88rem;
+  color: #7A5600;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
+}
