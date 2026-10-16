@@ -72,53 +72,50 @@
       <section id="profile-area" class="tab-content">
         <div class="profile-section">
           <h2>Renascer (Ascensão)</h2>
-          <div class="prestige-card">
-            <!-- Cabeçalho Dourado 3D -->
-            <div class="prestige-badge-header">
-              <div class="prestige-icon-main">🌟</div>
-              <div class="prestige-header-info">
-                <h3>Paçocas de Ouro: <span id="prestige-count">0</span></h3>
-                <p class="prestige-bonus-text">Bônus Global Ativo: <strong id="prestige-mult">+0%</strong> em TUDO</p>
+          <div class="prestige-card-clean">
+            <!-- Topo: Destaque Absoluto nas Paçocas de Ouro -->
+            <div class="prestige-top-area">
+              <div class="prestige-icon-glow">
+                <div class="prestige-icon-3d">🌟</div>
+              </div>
+              <div class="prestige-stats-clean">
+                <h4>Paçocas de Ouro</h4>
+                <h1 id="prestige-count">0</h1>
+                <div class="prestige-pill">Bônus Global: <strong id="prestige-mult">1x</strong></div>
               </div>
             </div>
 
-            <!-- Barra de Progresso Estilo Doce/Mel -->
-            <div class="prestige-progress-box">
-              <div class="prestige-progress-labels">
-                <span id="prestige-next-gain">Ganho ao renascer: +0 🌟</span>
-                <span id="prestige-progress-pct">0%</span>
+            <!-- Barra de Progresso Caramelo Animada -->
+            <div class="prestige-progress-clean">
+              <div class="progress-labels-clean">
+                <strong id="prestige-next-gain" class="gain-text">Ganho: +0 🌟</strong>
+                <strong id="prestige-progress-pct" class="pct-text">0%</strong>
               </div>
-              <div class="prestige-bar-bg">
-                <div id="prestige-bar-fill" class="prestige-bar-fill" style="width: 0%;"></div>
+              <div class="progress-track-clean">
+                <div id="prestige-bar-fill" class="progress-fill-clean" style="width: 0%;"></div>
               </div>
-              <small id="prestige-missing-text" class="prestige-missing-text">Faltam 1.0 milhão de Paçocas para a próxima!</small>
+              <small id="prestige-missing-text" class="missing-text-clean">Faltam 100 mi Paçocas para a próxima!</small>
             </div>
 
-            <!-- Regras de Ascensão com Badges Sutis -->
-            <div class="prestige-rules-grid">
-              <div class="rule-box keep">
-                <div class="rule-header">
-                  <span class="rule-tag keep-tag">MANTÉM & GANHA</span>
+            <!-- Regras Minimalistas (Sem caixas coloridas pesadas) -->
+            <div class="prestige-rules-clean">
+              <div class="rule-row">
+                <div class="rule-icon-box keep">🎒</div>
+                <div class="rule-details">
+                  <strong>O que você MANTÉM:</strong>
+                  <p>Paçocas de Ouro, bônus de produção, estatísticas e conquistas.</p>
                 </div>
-                <ul>
-                  <li>Paçocas de Ouro acumuladas</li>
-                  <li>Conquistas e Estatísticas</li>
-                  <li><strong>+1x multiplicador por Paçoca de Ouro</strong></li>
-                </ul>
               </div>
-              <div class="rule-box reset">
-                <div class="rule-header">
-                  <span class="rule-tag reset-tag">REINICIA</span>
+              <div class="rule-row">
+                <div class="rule-icon-box reset">♻️</div>
+                <div class="rule-details">
+                  <strong>O que RECOMEÇA:</strong>
+                  <p>Saldo de paçocas, geradores e melhorias da loja.</p>
                 </div>
-                <ul>
-                  <li>Saldo atual no contador</li>
-                  <li>Estruturas/Geradores da Loja</li>
-                  <li>Melhorias compradas</li>
-                </ul>
               </div>
             </div>
 
-            <button id="btn-prestige" class="action-btn prestige-btn" disabled>Renascer (Bloqueado)</button>
+            <button id="btn-prestige" class="action-btn prestige-btn-clean" disabled>Renascer Bloqueado</button>
           </div>
         </div>
 
@@ -199,7 +196,7 @@
           </div>
 
           <div class="modal-actions">
-            <button id="btn-prestige-confirm" class="action-btn prestige-btn">
+            <button id="btn-prestige-confirm" class="action-btn prestige-btn-clean">
               🚀 Confirmar Renascimento
             </button>
             <button id="btn-prestige-cancel" class="action-btn secondary">
@@ -226,7 +223,7 @@
           </div>
 
           <div class="modal-actions" style="margin-top: 14px;">
-            <button id="btn-learn-skill" class="action-btn prestige-btn">
+            <button id="btn-learn-skill" class="action-btn prestige-btn-clean">
               Aprender (1 🌟)
             </button>
             <button id="btn-close-skill-modal" class="action-btn secondary">
