@@ -1182,3 +1182,180 @@ html, body {
   pointer-events: auto !important;
   cursor: pointer;
 }
+
+/* ==========================================================================
+   ABA DE MELHORIAS (CORREÇÃO DE ESPAÇAMENTO E SCROLL)
+   ========================================================================== */
+
+#upgrades-area.tab-content.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
+  padding-bottom: 110px; /* GERA O ESPAÇO NECESSÁRIO PARA NÃO COBRIR O ÚLTIMO CARD */
+  z-index: 2;
+}
+
+/* Filtros com Altura e Espaçamento Corretos */
+.upgrades-filters {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  padding: 4px 2px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  min-height: 42px; /* Garante que os botões apareçam inteiros */
+  -webkit-overflow-scrolling: touch;
+}
+
+.upgrades-filters::-webkit-scrollbar { 
+  display: none; 
+}
+
+.upg-filter-btn {
+  background: #EFE8E1;
+  border: 2px solid #D8CBBD;
+  color: #7A6858;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upg-filter-btn.active {
+  background: var(--primary);
+  color: #FFF;
+  border-color: var(--primary-dark);
+  box-shadow: 0 3px 0 var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Ajustes nos Cards de Melhorias */
+.upgrade-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+  align-items: center; /* Alinha ícone, informações e botão ao centro */
+  padding: 14px;
+}
+
+.upgrade-card .buy-btn {
+  flex-shrink: 0;
+  min-width: 95px;
+  text-align: center;
+}
+
+.upgrade-card .upg-icon {
+  background: #FFF;
+}
+
+.tier-badge {
+  text-transform: uppercase;
+  font-size: 0.65rem;
+}
+
+/* TIER 2 - PRATA */
+.upgrade-card.tier-2 {
+  border-color: #B0BEC5;
+  border-bottom-color: #90A4AE;
+  background: linear-gradient(145deg, #FFFFFF 0%, #F5F7FA 100%);
+}
+.upgrade-card.tier-2 .upg-icon { border-color: #90A4AE; color: #546E7A; }
+
+/* TIER 3 - OURO */
+.upgrade-card.tier-3 {
+  border-color: #FFCA28;
+  border-bottom-color: #FFB300;
+  background: linear-gradient(145deg, #FFFDF5 0%, #FFF8E1 100%);
+}
+.upgrade-card.tier-3 .upg-icon { border-color: #FFCA28; color: #FF8F00; }
+
+/* TIER ÉPICO */
+.upgrade-card.tier-epic {
+  border-color: #AB47BC;
+  border-bottom-color: #8E24AA;
+  background: linear-gradient(145deg, #FBF3FD 0%, #F3E5F5 100%);
+}
+.upgrade-card.tier-epic .upg-icon { 
+  border-color: #AB47BC; 
+  color: #8E24AA; 
+  background: #F3E5F5;
+}
+
+.tier-badge.epic {
+  background: #8E24AA;
+  color: #FFF;
+  border-color: #6A1B9A;
+  box-shadow: 0 0 8px rgba(142, 36, 170, 0.4);
+  animation: epicPulse 1.5s infinite alternate;
+}
+
+@keyframes epicPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+/* Efeito Shimmer */
+.upgrade-card::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(45deg, 
+    transparent 0%, 
+    rgba(255,255,255,0.05) 45%, 
+    rgba(255,255,255,0.6) 50%, 
+    rgba(255,255,255,0.05) 55%, 
+    transparent 100%);
+  transform: rotate(45deg);
+  animation: holoShimmer 4s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes holoShimmer {
+  0% { left: -100%; top: -100%; }
+  100% { left: 100%; top: 100%; }
+}
+
+/* Estado Bloqueado */
+.upgrade-card.locked-upgrade {
+  opacity: 0.65;
+  filter: grayscale(1);
+  background: #FAF8F5 !important;
+  border-color: #E2D8CE !important;
+}
+
+.upgrade-card.locked-upgrade::after {
+  display: none !important;
+}
+
+.req-display {
+  font-size: 0.72rem;
+  color: #8B5A2B;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 30px 20px;
+  color: #8D7B68;
+}
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  filter: grayscale(0.5) opacity(0.7);
+}

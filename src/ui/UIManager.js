@@ -123,21 +123,43 @@ export class UIManager {
   }
 
   initUpgrades() {
+    this.currentUpgFilter = 'all';
+    
+    // Configura Botões de Filtro
+    const filterBtns = document.querySelectorAll('.upg-filter-btn');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        this.currentUpgFilter = e.target.dataset.filter;
+        if (this.game) this.updateUpgrades(this.game.score, this.game.inventory, this.game.boughtUpgrades);
+      });
+    });
+
     if (!this.upgradesList) return;
     this.upgradesList.innerHTML = '';
+
     UpgradesData.forEach(upg => {
       const el = document.createElement('div');
-      el.className = 'generator-card';
+      el.className = `generator-card upgrade-card tier-${upg.tier}`; 
       el.id = `upg-${upg.id}`;
-      el.style.display = 'none';
+      el.dataset.type = upg.type;
+      
+      let tagTier = upg.tier === 'epic' ? 'ÉPICO' : `Tier ${upg.tier}`;
+      
       el.innerHTML = `
-        <div class="generator-icon-wrapper">
+        <div class="generator-icon-wrapper upg-icon">
           ${upg.iconSvg}
         </div>
         <div class="generator-info">
-          <h3>${upg.name}</h3>
+          <div class="generator-header-line">
+            <h3>${upg.name}</h3>
+            <span class="level-badge tier-badge ${upg.tier === 'epic' ? 'epic' : ''}">${tagTier}</span>
+          </div>
           <small class="desc-display">${upg.desc}</small>
           <div class="cost-display">Custo: ${formatNumber(upg.cost)}</div>
+          <!-- Nova linha que mostrará o requisito quando estiver bloqueado -->
+          <div class="req-display" id="req-upg-${upg.id}" style="display: none;"></div>
         </div>
         <button class="buy-btn" id="buy-upg-${upg.id}">Melhorar</button>
       `;
@@ -163,19 +185,44 @@ export class UIManager {
       const isBought = boughtUpgrades.includes(upg.id);
       const reqOwned = inventory[upg.reqGen] || 0;
       const isUnlocked = reqOwned >= upg.reqCount;
+      const matchesFilter = this.currentUpgFilter === 'all' || this.currentUpgFilter === upg.type;
 
-      if (isBought) {
+      // Oculta apenas se já foi comprado ou se o filtro não bater
+      if (isBought || !matchesFilter) {
         card.style.display = 'none';
-      } else if (isUnlocked) {
+      } else {
         card.style.display = 'flex';
         visibleCount++;
+        
         const btn = document.getElementById(`buy-upg-${upg.id}`);
-        if (btn) btn.disabled = score < upg.cost;
-      } else {
-        card.style.display = 'none';
+        const reqText = document.getElementById(`req-upg-${upg.id}`);
+        
+        if (!isUnlocked) {
+          // ESTADO BLOQUEADO (Cinza)
+          card.classList.add('locked-upgrade');
+          if (reqText) {
+            const genData = GeneratorsData.find(g => g.id === upg.reqGen);
+            const genName = genData ? genData.name : upg.reqGen;
+            reqText.innerText = `Requer: ${upg.reqCount}x ${genName} (Você tem ${reqOwned})`;
+            reqText.style.display = 'block';
+          }
+          if (btn) {
+            btn.disabled = true;
+            btn.innerText = 'Bloqueado';
+          }
+        } else {
+          // ESTADO DESBLOQUEADO (Colorido e Brilhante)
+          card.classList.remove('locked-upgrade');
+          if (reqText) reqText.style.display = 'none';
+          if (btn) {
+            btn.disabled = score < upg.cost;
+            btn.innerText = 'Melhorar';
+          }
+        }
       }
     });
 
+    // Atualiza a mensagem de lista vazia
     let emptyEl = document.getElementById('upgrades-empty-state');
     if (visibleCount === 0) {
       if (!emptyEl) {
@@ -186,17 +233,15 @@ export class UIManager {
       }
       
       const allBought = UpgradesData.every(u => boughtUpgrades.includes(u.id));
-      if (allBought) {
+      if (allBought && this.currentUpgFilter === 'all') {
         emptyEl.innerHTML = `
           <div class="empty-state-icon">🎉</div>
           <h3>Todas as melhorias adquiridas!</h3>
-          <p>Você já comprou todos os upgrades disponíveis até o momento.</p>
         `;
       } else {
         emptyEl.innerHTML = `
-          <div class="empty-state-icon">🔒</div>
-          <h3>Nenhuma melhoria disponível</h3>
-          <p>Compre mais estruturas na <strong>Loja</strong> para desbloquear novos upgrades!</p>
+          <div class="empty-state-icon">🔍</div>
+          <h3>Nenhuma melhoria nesta categoria</h3>
         `;
       }
       emptyEl.style.display = 'block';
@@ -204,7 +249,7 @@ export class UIManager {
       emptyEl.style.display = 'none';
     }
   }
-
+  
   initAchievements() {
     if (!this.achievementsList) return;
     this.achievementsList.innerHTML = '';
