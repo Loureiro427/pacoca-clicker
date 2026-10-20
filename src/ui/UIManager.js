@@ -20,7 +20,7 @@ export class UIManager {
     this.initShop();
     this.initUpgrades();
     this.initAchievements();
-    this.initSaveActions();
+    this.initSettings();
     this.initTabs();
     
     this.updateScore(this.game.score, this.game.pps);
@@ -380,31 +380,41 @@ export class UIManager {
     });
   }
 
-  initSaveActions() {
+  initSettings() {
     const btnPrestige = document.getElementById('btn-prestige');
-    const btnExport = document.getElementById('btn-export-save');
-    const btnImport = document.getElementById('btn-import-save');
     const btnReset = document.getElementById('btn-reset-save');
+    const toggleSfx = document.getElementById('toggle-sfx');
+    const toggleMusic = document.getElementById('toggle-music');
 
-    if (btnPrestige) btnPrestige.addEventListener('click', () => this.game && this.game.doPrestige());
-    if (btnExport) {
-      btnExport.addEventListener('click', () => {
-        if (!this.game) return;
-        const code = this.game.exportSaveCode();
-        navigator.clipboard.writeText(code).then(() => {
-          alert('Código de Save copiado para a área de transferência!');
-        }).catch(() => {
-          prompt('Copie o seu código de Save:', code);
-        });
+    if (btnPrestige) {
+      btnPrestige.addEventListener('click', () => this.game && this.game.doPrestige());
+    }
+
+    // Carregar configurações guardadas (por defeito: ligado)
+    const sfxEnabled = localStorage.getItem('pacoca_sfx') !== 'false';
+    const musicEnabled = localStorage.getItem('pacoca_music') !== 'false';
+
+    if (toggleSfx) {
+      toggleSfx.checked = sfxEnabled;
+      toggleSfx.addEventListener('change', (e) => {
+        localStorage.setItem('pacoca_sfx', e.target.checked);
+        // Futuro: this.game.audioManager.setSfx(e.target.checked);
       });
     }
-    if (btnImport) {
-      btnImport.addEventListener('click', () => {
-        const code = prompt('Cole o seu código de Save aqui:');
-        if (code && this.game) this.game.importSaveCode(code.trim());
+
+    if (toggleMusic) {
+      toggleMusic.checked = musicEnabled;
+      toggleMusic.addEventListener('change', (e) => {
+        localStorage.setItem('pacoca_music', e.target.checked);
+        // Futuro: this.game.audioManager.setMusic(e.target.checked);
       });
     }
-    if (btnReset) btnReset.addEventListener('click', () => this.game && this.game.resetProgress());
+
+    if (btnReset) {
+      btnReset.addEventListener('click', () => {
+        if (this.game) this.game.resetProgress();
+      });
+    }
   }
 
   updateFrenzy(timeLeft) {

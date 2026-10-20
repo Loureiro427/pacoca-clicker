@@ -8,8 +8,10 @@
   </head>
   <body>
     <div id="app">
+      <!-- Container de Notificações Flutuantes -->
+      <div id="floating-notifications" class="floating-notifications-container"></div>
+      
       <!-- Status Bar -->
-       <div id="floating-notifications" class="floating-notifications-container"></div>
       <header class="status-bar">
         <div class="header-logo">
           <img src="/pacoca.png" alt="Paçoca" class="header-mascot">
@@ -21,8 +23,8 @@
       </header>
 
       <!-- Banner de Frenesi Dourado -->
-      <div id="frenzy-banner" class="frenzy-banner">
-        🔥 FRENESI 7X ATIVO: <span id="frenzy-timer">20</span>s
+      <div id="frenzy-banner" class="frenzy-banner" style="display: none;">
+        🔥 FRENESI ATIVO: <span id="frenzy-timer">20</span>s
       </div>
 
       <!-- Aba 1: Tocar -->
@@ -98,7 +100,7 @@
               <small id="prestige-missing-text" class="missing-text-clean">Faltam 100 mi Paçocas para a próxima!</small>
             </div>
 
-            <!-- Regras Minimalistas (Sem caixas coloridas pesadas) -->
+            <!-- Regras Minimalistas -->
             <div class="prestige-rules-clean">
               <div class="rule-row">
                 <div class="rule-icon-box keep">🎒</div>
@@ -148,11 +150,36 @@
         </div>
 
         <div class="profile-section" style="margin-top: 20px;">
-          <h2>Dados e Salvamento</h2>
-          <div class="save-actions">
-            <button id="btn-export-save" class="action-btn secondary">Exportar Save</button>
-            <button id="btn-import-save" class="action-btn secondary">Importar Save</button>
-            <button id="btn-reset-save" class="action-btn danger">Resetar Progresso</button>
+          <h2>Opções e Sistema</h2>
+          <div class="settings-panel">
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <strong>🎵 Música de Fundo</strong>
+                <small>Banda sonora do jogo</small>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-music" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <strong>🔊 Efeitos Sonoros</strong>
+                <small>Sons de cliques e upgrades</small>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-sfx" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #E8D8C8; margin: 16px 0;">
+
+            <button id="btn-reset-save" class="action-btn danger" style="width: 100%;">
+              ⚠️ Apagar Progresso (Reset)
+            </button>
           </div>
         </div>
       </section>
