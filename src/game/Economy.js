@@ -1,7 +1,9 @@
 import { GeneratorsData } from './Generators.js';
 import { UpgradesData } from './Upgrades.js';
 
-const PRICE_MULTIPLIER = 1.10; 
+// NERF APLICADO: Aumentado de 1.10 para 1.15. 
+// Evita que o jogador compre 500 fábricas na primeira semana.
+const PRICE_MULTIPLIER = 1.15; 
 
 export function calculateCost(baseCost, owned, amount = 1) {
   if (amount === 1) return Math.floor(baseCost * Math.pow(PRICE_MULTIPLIER, owned));
@@ -19,11 +21,9 @@ export function calculateTotalPPS(inventory, boughtUpgrades = []) {
 
       UpgradesData.forEach(upg => {
         if (boughtUpgrades.includes(upg.id)) {
-          // Bônus Direto
           if (upg.effect === 'genMultiplier' && upg.targetGen === gen.id) {
             multi *= upg.value;
           }
-          // Sinergia entre estruturas (ex: Império buffa Ajudante)
           if (upg.effect === 'synergyPPS' && upg.targetGen === gen.id) {
             const countBase = inventory[upg.baseGen] || 0;
             multi *= (1 + (countBase * upg.synergyMultiplier));
@@ -46,11 +46,9 @@ export function calculateClickValue(inventory, boughtUpgrades = []) {
 
   UpgradesData.forEach(upg => {
     if (boughtUpgrades.includes(upg.id)) {
-      // Multiplicador Direto
       if (upg.effect === 'clickMultiplier') {
         multi *= upg.value;
       }
-      // Sinergia com Estruturas (ex: Fábricas buffam clique)
       if (upg.effect === 'synergyClick') {
         const countGen = inventory[upg.targetGen] || 0;
         multi *= (1 + (countGen * upg.synergyMultiplier));

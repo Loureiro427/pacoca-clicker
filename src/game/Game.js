@@ -96,9 +96,8 @@ export class Game {
     // TALENTO ALC_7: Transmutação Sincronizada (Ganha 1% do saldo atual por clique no Frenesi)
     if (this.skillTree.hasSkill('alc_7') && this.frenzyTimeLeft > 0) extraVal += (this.score * 0.01);
 
-    // CÁLCULO FINAL DO CLIQUE (Multiplicado devidamente pelo frenzyMultiplier)
-    const baseClickResult = (this.clickValue * comboMult * critMult * maoDePedraMult) + extraVal;
-    const val = baseClickResult * this.frenzyMultiplier;
+    // CÁLCULO FINAL DO CLIQUE (this.clickValue já possui o Frenesi em tempo real!)
+    const val = (this.clickValue * comboMult * critMult * maoDePedraMult) + extraVal;
 
     this.score += val;
     this.totalEarned += val;
@@ -106,7 +105,7 @@ export class Game {
 
     // TALENTO ACT_6: Eco Clicável (1 clique grátis a cada 10 cliques)
     if (this.skillTree.hasSkill('act_6') && this.totalClicks % 10 === 0) {
-      const ecoVal = this.clickValue * this.frenzyMultiplier;
+      const ecoVal = this.clickValue;
       this.score += ecoVal;
       this.totalEarned += ecoVal;
     }
@@ -237,11 +236,11 @@ export class Game {
       basePPS *= (1 + Math.min(0.30, minsPlayed * 0.005));
     }
 
-    // Multiplicador de renascer e frenesi aplicados diretamente
+    // Multiplicador de renascer e frenesi aplicados diretamente no PPS
     this.pps = basePPS * this.frenzyMultiplier * this.prestigeMultiplier;
     
-    // O valor do clique é SEMPRE um número inteiro exato!
-    this.clickValue = Math.round(baseClick * this.prestigeMultiplier);
+    // O valor do clique agora REFLETE o Frenesi em tempo real na interface!
+    this.clickValue = Math.round(baseClick * this.prestigeMultiplier * this.frenzyMultiplier);
   }
 
   refreshUI() {

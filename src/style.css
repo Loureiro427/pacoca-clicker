@@ -1335,29 +1335,116 @@ html, body {
   transform: translateY(-2px);
 }
 
-/* Ajustes nos Cards de Melhorias */
+/* ==========================================================================
+   CARDS DE MELHORIAS (COMPACTO AAA COM TIERS & HOLOGRAFIA)
+   ========================================================================== */
 .upgrade-card {
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s;
-  align-items: center; /* Alinha ícone, informações e botão ao centro */
-  padding: 14px;
+  background: #FFFFFF;
+  border: 2px solid #E8D8C8;
+  border-bottom: 4px solid #D4C4B7;
+  border-radius: 16px;
+  padding: 8px 12px; /* Reduzido para ficar super enxuto */
+  display: grid;
+  grid-template-columns: 42px 1fr auto; /* Grade perfeita de 3 colunas */
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 3px 8px rgba(74, 48, 34, 0.04);
+  transition: transform 0.1s ease;
 }
 
-.upgrade-card .buy-btn {
-  flex-shrink: 0;
-  min-width: 95px;
-  text-align: center;
+.upgrade-card:active {
+  transform: scale(0.99);
 }
 
+/* Ícone da Melhoria */
 .upgrade-card .upg-icon {
-  background: #FFF;
+  width: 42px;
+  height: 42px;
+  background: #FFFFFF;
+  border: 2px solid #E8D8C8;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
+.upgrade-card .upg-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2px;
+}
+
+/* Informações e Textos Internos */
+.upgrade-card .upg-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.upgrade-card .upg-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.upgrade-card .upg-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 900;
+  color: #4A3022;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.upgrade-card .upg-desc {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #7A6052;
+  line-height: 1.2;
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2; /* Adicione esta linha para limpar o aviso do VS Code */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.upgrade-card .upg-cost {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #D96B00;
+  line-height: 1.1;
+}
+
+.req-display {
+  font-size: 0.68rem;
+  color: #8B5A2B;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+/* Badges de Tier */
 .tier-badge {
   text-transform: uppercase;
-  font-size: 0.65rem;
+  font-size: 0.60rem;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 6px;
+  line-height: 1;
+  flex-shrink: 0;
+  background: #F2E8DF;
+  color: #7A5600;
+  border: 1px solid #E2D4C5;
 }
+
+/* --- ESTILOS DE TIER --- */
 
 /* TIER 2 - PRATA */
 .upgrade-card.tier-2 {
@@ -1391,16 +1478,16 @@ html, body {
   background: #8E24AA;
   color: #FFF;
   border-color: #6A1B9A;
-  box-shadow: 0 0 8px rgba(142, 36, 170, 0.4);
+  box-shadow: 0 0 6px rgba(142, 36, 170, 0.3);
   animation: epicPulse 1.5s infinite alternate;
 }
 
 @keyframes epicPulse {
   0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
+  100% { transform: scale(1.06); }
 }
 
-/* Efeito Shimmer */
+/* Efeito Holográfico Shimmer */
 .upgrade-card::after {
   content: '';
   position: absolute;
@@ -1409,7 +1496,7 @@ html, body {
   background: linear-gradient(45deg, 
     transparent 0%, 
     rgba(255,255,255,0.05) 45%, 
-    rgba(255,255,255,0.6) 50%, 
+    rgba(255,255,255,0.5) 50%, 
     rgba(255,255,255,0.05) 55%, 
     transparent 100%);
   transform: rotate(45deg);
@@ -1422,6 +1509,17 @@ html, body {
   100% { left: 100%; top: 100%; }
 }
 
+/* Botão de Compra Lateral */
+.upgrade-card .buy-btn {
+  flex-shrink: 0;
+  min-width: 85px;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  border-radius: 10px;
+  text-align: center;
+}
+
 /* Estado Bloqueado */
 .upgrade-card.locked-upgrade {
   opacity: 0.65;
@@ -1432,13 +1530,6 @@ html, body {
 
 .upgrade-card.locked-upgrade::after {
   display: none !important;
-}
-
-.req-display {
-  font-size: 0.72rem;
-  color: #8B5A2B;
-  font-weight: 800;
-  margin-top: 4px;
 }
 
 /* Empty State */
