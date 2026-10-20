@@ -10,8 +10,15 @@ export class GoldenPacoca {
   }
 
   scheduleNextSpawn() {
-    // Intervalo aleatório entre 60 e 120 segundos
-    const delay = Math.floor(Math.random() * (120000 - 60000 + 1)) + 60000;
+    let minDelay = 60000;
+    let maxDelay = 120000;
+
+    if (this.game && this.game.skillTree && this.game.skillTree.hasSkill('alc_1')) {
+      minDelay *= 0.8;
+      maxDelay *= 0.8;
+    }
+
+    const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
     
     this.spawnTimer = setTimeout(() => {
       this.spawn();
@@ -19,54 +26,93 @@ export class GoldenPacoca {
   }
 
   spawn() {
-    if (this.element) return; // Garante que só existe uma por vez
+    if (this.element) return; 
 
     const el = document.createElement('div');
     el.className = 'golden-pacoca';
     
-    // Posição aleatória na tela (evitando as bordas e barras)
-    const maxX = window.innerWidth - 80;
-    const maxY = window.innerHeight - 200;
+    if (this.game && this.game.skillTree && this.game.skillTree.hasSkill('alc_3')) {
+      el.classList.add('celestial-size');
+    }
+
+    const maxX = window.innerWidth - 90;
+    const maxY = window.innerHeight - 220;
     const posX = Math.max(20, Math.floor(Math.random() * maxX));
-    const posY = Math.max(100, Math.floor(Math.random() * maxY));
+    const posY = Math.max(120, Math.floor(Math.random() * maxY));
 
     el.style.left = `${posX}px`;
     el.style.top = `${posY}px`;
 
     el.innerHTML = `<img src="/pacoca.png" alt="Paçoca Dourada" draggable="false">`;
 
-    // Previne arrastos e capta o clique
     el.addEventListener('dragstart', (e) => e.preventDefault());
+    
     el.addEventListener('pointerdown', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       this.collect();
     });
 
     document.body.appendChild(el);
     this.element = el;
 
-    // Desaparece após 10 segundos se não for clicada
+    let despawnTime = 10000;
+    if (this.game && this.game.skillTree && this.game.skillTree.hasSkill('alc_3')) {
+      despawnTime = 15000;
+    }
+
     this.despawnTimer = setTimeout(() => {
       this.remove();
       this.scheduleNextSpawn();
-    }, 10000);
+    }, despawnTime);
   }
 
   collect() {
     if (!this.element) return;
 
-    // Sorteia o tipo de bônus (50% chance para cada)
+    let gotFreeChip = false;
+    if (this.game.skillTree && this.game.skillTree.hasSkill('alc_8') && Math.random() < 0.03) {
+      this.game.prestigeChips += 1;
+      this.game.recalculateStats();
+      gotFreeChip = true;
+    }
+
+    let multiplierReward = 1;
+    if (this.game.skillTree && this.game.skillTree.hasSkill('alc_6') && Math.random() < 0.15) {
+      multiplierReward = 2;
+    }
+
     const isFrenzy = Math.random() > 0.5;
 
     if (isFrenzy || this.game.pps === 0) {
-      // Ativa Frenesi de 7x por 20 segundos
-      this.game.startFrenzy(7, 20);
+      let frenzyDuration = 20;
+      if (this.game.skillTree && this.game.skillTree.hasSkill('alc_2')) frenzyDuration += 10;
+      
+      let frenzyMult = 7;
+      if (this.game.skillTree && this.game.skillTree.hasSkill('alc_2a')) frenzyMult = 10;
+
+      this.game.startFrenzy(frenzyMult, frenzyDuration);
+      
+      let msg = `Ativado por ${frenzyDuration} segundos!`;
+      if (gotFreeChip) msg += ` ✨ Sorte: +1 Ouro!`;
+      
+      // Chamando a notificação UI bonitinha em vez do alert
+      if (this.game.ui && this.game.ui.showNotification) {
+        this.game.ui.showNotification(`🔥 Frenesi ${frenzyMult}x!`, msg);
+      }
+
     } else {
-      // Recompensa Instantânea: 15 minutos de produção atual (mínimo de 15 x valor do clique)
-      const bonus = Math.max(this.game.pps * 900, this.game.clickValue * 15);
+      const bonus = Math.max(this.game.pps * 240, this.game.clickValue * 10) * multiplierReward;
       this.game.score += bonus;
       this.game.totalEarned += bonus;
-      alert(`✨ Paçoca Dourada! Você ganhou +${formatNumber(Math.floor(bonus))} Paçocas instantâneas!`);
+      
+      let msg = `+${formatNumber(Math.floor(bonus))} instantâneas!`;
+      if (gotFreeChip) msg += ` 🌟 Sorte: +1 Ouro!`;
+      
+      // Chamando a notificação UI bonitinha em vez do alert
+      if (this.game.ui && this.game.ui.showNotification) {
+        this.game.ui.showNotification("✨ Prêmio Dourado!", msg);
+      }
     }
 
     this.remove();

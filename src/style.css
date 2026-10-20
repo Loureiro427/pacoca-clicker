@@ -1452,3 +1452,90 @@ html, body {
   margin-bottom: 10px;
   filter: grayscale(0.5) opacity(0.7);
 }
+
+/* ==========================================================================
+   PAÇOCA DOURADA (GOLDEN PAÇOCA)
+   ========================================================================== */
+.golden-pacoca {
+  position: fixed;
+  width: 65px;
+  height: 65px;
+  z-index: 9999; /* Garante que fica acima de qualquer aba ou menu */
+  cursor: pointer;
+  animation: pacocaFloat 1.2s ease-in-out infinite alternate, pacocaGlow 1.5s infinite alternate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 12px #FFD700);
+  touch-action: manipulation;
+}
+
+.golden-pacoca.celestial-size {
+  width: 90px;
+  height: 90px;
+}
+
+.golden-pacoca img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+@keyframes pacocaFloat {
+  0% { transform: translateY(0px) rotate(-8deg); }
+  100% { transform: translateY(-12px) rotate(8deg); }
+}
+
+@keyframes pacocaGlow {
+  0% { filter: drop-shadow(0 0 6px #FFD700); }
+  100% { filter: drop-shadow(0 0 20px #FFA500) brightness(1.2); }
+}
+
+/* ==========================================================================
+   NOTIFICAÇÕES FLUTUANTES (AUTOMATIZAÇÕES E BÔNUS)
+   ========================================================================== */
+.floating-notifications-container {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.game-notification {
+  background: linear-gradient(135deg, #FFD700 0%, #FF9D00 100%);
+  border: 2px solid #FFF;
+  box-shadow: 0 4px 15px rgba(255, 157, 0, 0.4);
+  color: #3E2000;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  text-align: center;
+  animation: notificationPop 2.5s ease forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.game-notification small {
+  font-size: 0.75rem;
+  font-weight: 700;
+  opacity: 0.9;
+  color: #543000;
+}
+
+@keyframes notificationPop {
+  0% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+  15% { opacity: 1; transform: translateY(0) scale(1.05); }
+  25% { transform: translateY(0) scale(1); }
+  80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-15px) scale(0.9); }
+}

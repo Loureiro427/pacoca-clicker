@@ -92,6 +92,7 @@ export class UIManager {
 
   updateShop(score, inventory, buyAmount) {
     const prestigeMult = this.game ? this.game.prestigeMultiplier : 1;
+    const boughtUpgrades = this.game ? this.game.boughtUpgrades : [];
 
     GeneratorsData.forEach(gen => {
       const owned = inventory[gen.id] || 0;
@@ -108,11 +109,40 @@ export class UIManager {
         if (costEl) costEl.innerText = `Custo (${buyAmount}x): ${formatNumber(cost)}`;
         
         if (descEl) {
+          let multi = 1;
+          
+          // 1. Calcula dinamicamente as Melhorias e Sinergias compradas
+          UpgradesData.forEach(upg => {
+            if (boughtUpgrades.includes(upg.id)) {
+              if (gen.id === 'cursor') {
+                if (upg.effect === 'clickMultiplier') multi *= upg.value;
+                if (upg.effect === 'synergyClick') {
+                  const countGen = inventory[upg.targetGen] || 0;
+                  multi *= (1 + (countGen * upg.synergyMultiplier));
+                }
+              } else {
+                if (upg.effect === 'genMultiplier' && upg.targetGen === gen.id) multi *= upg.value;
+                if (upg.effect === 'synergyPPS' && upg.targetGen === gen.id) {
+                  const countBase = inventory[upg.baseGen] || 0;
+                  multi *= (1 + (countBase * upg.synergyMultiplier));
+                }
+              }
+            }
+          });
+
+          // 2. Aplica bónus globais da Árvore de Talentos
+          let globalMult = prestigeMult;
+          if (this.game && this.game.skillTree) {
+            if (gen.id === 'cursor' && this.game.skillTree.hasSkill('act_1')) globalMult *= 1.15;
+            if (gen.id !== 'cursor' && this.game.skillTree.hasSkill('pas_1')) globalMult *= 1.10;
+          }
+
+          // 3. Renderiza o valor final real
           if (gen.id === 'cursor') {
-            const effClick = Math.round((gen.clickBonus || 1) * prestigeMult);
+            const effClick = Math.round((gen.clickBonus || 1) * multi * globalMult);
             descEl.innerText = `+${formatNumber(effClick)} por toque`;
           } else {
-            const effPPS = gen.basePPS * prestigeMult;
+            const effPPS = gen.basePPS * multi * globalMult;
             descEl.innerText = `+${formatNumber(effPPS)} p/s cada`;
           }
         }
@@ -172,6 +202,30 @@ export class UIManager {
         });
       }
     });
+  }
+
+  showNotification(title, subtitle = '') {
+    let container = document.getElementById('floating-notifications');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'floating-notifications';
+      container.className = 'floating-notifications-container';
+      document.body.appendChild(container);
+    }
+
+    const notif = document.createElement('div');
+    notif.className = 'game-notification';
+    notif.innerHTML = `
+      <span>${title}</span>
+      ${subtitle ? `<small>${subtitle}</small>` : ''}
+    `;
+    
+    container.appendChild(notif);
+    
+    // Remove o elemento após 2.5 segundos (tempo da animação)
+    setTimeout(() => {
+      notif.remove();
+    }, 2500);
   }
 
   updateUpgrades(score, inventory, boughtUpgrades) {

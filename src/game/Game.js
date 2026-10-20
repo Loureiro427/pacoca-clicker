@@ -6,6 +6,7 @@ import { GoldenPacoca } from '../systems/GoldenPacoca.js';
 import { Prestige } from './Prestige.js';
 import { SkillTreeManager } from './SkillTree.js';
 import { SkillTreeUI } from '../ui/SkillTreeUI.js';
+import { formatNumber } from '../utils/format.js';
 
 export class Game {
   constructor(ui) {
@@ -14,6 +15,12 @@ export class Game {
     this.pps = 0;
     this.clickValue = 1;
     this.buyAmount = 1;
+    
+    // Variáveis de Talentos e Combos
+    this.comboCount = 0;
+    this.lastClickTime = 0;
+    this.maoDePedraTime = 0;
+    this.autoclickTimer = 0;
     
     // Prestígio
     this.prestigeChips = 0;
@@ -47,16 +54,73 @@ export class Game {
   }
 
   click() {
-    const val = this.clickValue * this.frenzyMultiplier;
+    const now = Date.now();
+    
+    // TALENTO ACT_4: Sistema de Combo de Cliques
+    if (now - this.lastClickTime < 800) {
+      this.comboCount = Math.min(50, this.comboCount + 1);
+    } else {
+      this.comboCount = 0;
+    }
+    this.lastClickTime = now;
+
+    // TALENTO ACT_4a: Overclock Manual (Mão de Pedra)
+    if (this.comboCount === 50 && this.skillTree.hasSkill('act_4a')) {
+      this.maoDePedraTime = 3; // 3 Segundos de poder triplo
+      this.comboCount = 0;
+    }
+
+    // Aplicação dos Multiplicadores de Combo e Mão de Pedra
+    let comboMult = 1 + (this.skillTree.hasSkill('act_4') ? (this.comboCount * 0.01) : 0);
+    let maoDePedraMult = this.maoDePedraTime > 0 ? 3 : 1;
+
+    // TALENTO ACT_3: Impacto Crítico (5% de chance)
+    let isCrit = this.skillTree.hasSkill('act_3') && Math.random() < 0.05;
+    let critMult = 1;
+    if (isCrit) {
+      // TALENTO ACT_3a: Precisão Cirúrgica sobe crit para 12x
+      critMult = this.skillTree.hasSkill('act_3a') ? 12 : 5;
+      
+      // TALENTO ACT_3b: Faísca Frenética (+0.5s no Frenesi por crit)
+      if (this.skillTree.hasSkill('act_3b') && this.frenzyTimeLeft > 0) {
+        this.frenzyTimeLeft += 0.5;
+      }
+    }
+
+    // Bônus Brutos Adicionais
+    let extraVal = 0;
+    // TALENTO ACT_2: Toque Sincronizado (+1% do PPS por clique)
+    if (this.skillTree.hasSkill('act_2')) extraVal += (this.pps * 0.01);
+    // TALENTO ACT_7: Dedo de Midas (+10% do PPS por clique)
+    if (this.skillTree.hasSkill('act_7')) extraVal += (this.pps * 0.10);
+    // TALENTO ALC_7: Transmutação Sincronizada (Ganha 1% do saldo atual por clique no Frenesi)
+    if (this.skillTree.hasSkill('alc_7') && this.frenzyTimeLeft > 0) extraVal += (this.score * 0.01);
+
+    // CÁLCULO FINAL DO CLIQUE (Multiplicado devidamente pelo frenzyMultiplier)
+    const baseClickResult = (this.clickValue * comboMult * critMult * maoDePedraMult) + extraVal;
+    const val = baseClickResult * this.frenzyMultiplier;
+
     this.score += val;
     this.totalEarned += val;
     this.totalClicks += 1;
+
+    // TALENTO ACT_6: Eco Clicável (1 clique grátis a cada 10 cliques)
+    if (this.skillTree.hasSkill('act_6') && this.totalClicks % 10 === 0) {
+      const ecoVal = this.clickValue * this.frenzyMultiplier;
+      this.score += ecoVal;
+      this.totalEarned += ecoVal;
+    }
     
     this.checkAchievements();
     this.refreshUI();
   }
 
   startFrenzy(multiplier, durationSeconds) {
+    // TALENTO ALC_2a: Mega Frenesi
+    if (this.skillTree.hasSkill('alc_2a')) multiplier = Math.max(multiplier, 10);
+    // TALENTO ALC_2: Frenesi Prolongado (+10s)
+    if (this.skillTree.hasSkill('alc_2')) durationSeconds += 10;
+
     this.frenzyMultiplier = multiplier;
     this.frenzyTimeLeft = durationSeconds;
     this.recalculateStats();
@@ -70,7 +134,13 @@ export class Game {
 
   buy(genId, baseCost) {
     const owned = this.inventory[genId] || 0;
-    const cost = calculateCost(baseCost, owned, this.buyAmount);
+    
+    // TALENTO PAS_2 e PAS_2a: Descontos de Loja
+    let discount = 1;
+    if (this.skillTree.hasSkill('pas_2')) discount -= 0.05;
+    if (this.skillTree.hasSkill('pas_2a') && (this.buyAmount === 10 || this.buyAmount === 100)) discount -= 0.05;
+
+    const cost = Math.floor(calculateCost(baseCost, owned, this.buyAmount) * discount);
     
     if (this.score >= cost) {
       this.score -= cost;
@@ -142,12 +212,32 @@ export class Game {
   }
 
   recalculateStats() {
-    this.prestigeMultiplier = Prestige.getMultiplier(this.prestigeChips);
+    // TALENTO ALC_5: Essência de Ouro (+1% por paçoca dourada não gasta)
+    let extraPrestigeMult = this.skillTree.hasSkill('alc_5') ? (this.prestigeChips * 0.01) : 0;
+    this.prestigeMultiplier = Prestige.getMultiplier(this.prestigeChips) + extraPrestigeMult;
 
-    const basePPS = calculateTotalPPS(this.inventory, this.boughtUpgrades);
-    const baseClick = calculateClickValue(this.inventory, this.boughtUpgrades);
+    let basePPS = calculateTotalPPS(this.inventory, this.boughtUpgrades);
+    let baseClick = calculateClickValue(this.inventory, this.boughtUpgrades);
 
-    // Multiplicador de renascer aplicado diretamente
+    // TALENTO ACT_1: +15% no clique base
+    if (this.skillTree.hasSkill('act_1')) baseClick *= 1.15;
+    
+    // TALENTO PAS_1: +10% no PPS Global
+    if (this.skillTree.hasSkill('pas_1')) basePPS *= 1.10;
+    
+    // TALENTO PAS_5: +2% de PPS por TIPO de estrutura construída
+    if (this.skillTree.hasSkill('pas_5')) {
+      const typesOwned = Object.values(this.inventory).filter(v => v > 0).length;
+      basePPS *= (1 + (typesOwned * 0.02));
+    }
+    
+    // TALENTO PAS_7: Sobrecarga (+0.5% por min jogado, até 30%)
+    if (this.skillTree.hasSkill('pas_7')) {
+      const minsPlayed = Math.floor((Date.now() - this.startTime) / 60000);
+      basePPS *= (1 + Math.min(0.30, minsPlayed * 0.005));
+    }
+
+    // Multiplicador de renascer e frenesi aplicados diretamente
     this.pps = basePPS * this.frenzyMultiplier * this.prestigeMultiplier;
     
     // O valor do clique é SEMPRE um número inteiro exato!
@@ -170,6 +260,26 @@ export class Game {
       const now = Date.now();
       const delta = (now - this.lastTick) / 1000;
       this.lastTick = now;
+
+      // Desconto de tempo do Mão de Pedra (Talento)
+      if (this.maoDePedraTime > 0) {
+        this.maoDePedraTime -= delta;
+        if (this.maoDePedraTime < 0) this.maoDePedraTime = 0;
+      }
+
+      // TALENTO PAS_8: Automação Suprema (60x o clique a cada 10s)
+      this.autoclickTimer += delta;
+      if (this.skillTree.hasSkill('pas_8') && this.autoclickTimer >= 10) {
+        this.autoclickTimer = 0;
+        const autoVal = this.clickValue * 60 * this.frenzyMultiplier;
+        this.score += autoVal;
+        this.totalEarned += autoVal;
+        
+        // Dispara mensagem bonitinha na tela
+        if (this.ui && this.ui.showNotification) {
+          this.ui.showNotification("🤖 Automação Suprema!", `+${formatNumber(Math.floor(autoVal))} Paçocas automáticas!`);
+        }
+      }
 
       if (this.frenzyTimeLeft > 0) {
         this.frenzyTimeLeft -= delta;
@@ -229,7 +339,11 @@ export class Game {
         const secondsOffline = (Date.now() - saved.lastSaveTime) / 1000;
         if (secondsOffline > 60 && this.pps > 0) {
            const maxOffline = 24 * 60 * 60; // Limite máximo de 24h
-           const effectiveTime = Math.min(secondsOffline, maxOffline);
+           let effectiveTime = Math.min(secondsOffline, maxOffline);
+           
+           // TALENTO PAS_4: Turno da Madrugada (+50% tempo offline contabilizado)
+           if (this.skillTree.hasSkill('pas_4')) effectiveTime *= 1.5;
+
            const offlineEarned = effectiveTime * this.pps;
 
            // Exibir o Modal de Boas-vindas Personalizado
@@ -243,6 +357,8 @@ export class Game {
                  this.totalEarned += offlineEarned;
                  this.refreshUI();
                  this.saveGame();
+                 // TALENTO PAS_4a: Frenesi de Boas-vindas
+                 if (this.skillTree.hasSkill('pas_4a')) this.startFrenzy(2, 30);
                },
                () => {
                  // Dobrar Recompensa (2x - Simulação de Anúncio)
@@ -251,6 +367,7 @@ export class Game {
                  this.totalEarned += doubled;
                  this.refreshUI();
                  this.saveGame();
+                 if (this.skillTree.hasSkill('pas_4a')) this.startFrenzy(2, 30);
                }
              );
            }, 400);
