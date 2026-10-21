@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <!-- 2. TELA DE LOGIN & CADASTRO (PAÇOCA SOCIAL) -->
+    <!-- 2. LOGIN DA CONTA PAÇOCA -->
     <div id="auth-screen" class="full-screen-overlay" style="display: none;">
       <div class="auth-card">
         
@@ -49,7 +49,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
-              <a href="#" class="forgot-link">Esqueci minha senha</a>
+              <a href="#" id="forgot-password-link" class="forgot-link" target="_blank" rel="noopener">Esqueci minha senha</a>
             </div>
 
             <div class="checkbox-row">
@@ -60,49 +60,36 @@
               </label>
             </div>
 
+            <div class="auth-error-message" role="alert"></div>
             <button type="submit" id="btn-login-submit" class="auth-primary-btn">Entrar</button>
           </form>
 
           <p class="auth-footer-text">
-            Não tem uma conta? <a href="#" id="link-go-register">Cadastre-se</a>
+            Não tem uma conta? <a href="#" id="link-go-register" target="_blank" rel="noopener">Cadastre-se</a>
           </p>
         </div>
 
-        <!-- VISÃO DE CADASTRO -->
-        <div id="register-view" class="auth-view">
+        <!-- VERIFICAÇÃO EM DUAS ETAPAS -->
+        <div id="two-factor-view" class="auth-view">
           <div class="auth-header">
-            <div class="auth-brand">
-              <img src="/pacoca.png" alt="Paçoca" class="auth-mascot-sm">
-              <span>Paçoca</span>
-            </div>
-            <h2>Cadastro</h2>
-            <p>Seus dados pessoais</p>
-            <div class="step-progress-bar"><div class="step-fill"></div></div>
+            <img src="/pacoca.png" alt="Paçoca" class="auth-mascot-icon">
+            <h2>Verificação em duas etapas</h2>
+            <p>Digite o código do seu autenticador ou um código de recuperação.</p>
           </div>
 
-          <form id="register-form" onsubmit="event.preventDefault();">
+          <form id="two-factor-form" onsubmit="event.preventDefault();">
             <div class="input-group">
-              <label>NOME</label>
+              <label>CÓDIGO DE AUTENTICAÇÃO</label>
               <div class="input-wrapper">
-                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <input type="text" id="reg-name" placeholder="Nome" required>
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <input type="text" id="two-factor-code" placeholder="000000" inputmode="numeric" autocomplete="one-time-code" required>
               </div>
             </div>
-
-            <div class="input-group">
-              <label>EMAIL</label>
-              <div class="input-wrapper">
-                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <input type="email" id="reg-email" placeholder="Email" required>
-              </div>
-            </div>
-
-            <button type="submit" id="btn-register-submit" class="auth-primary-btn">Próximo</button>
+            <div class="auth-error-message" role="alert"></div>
+            <button type="submit" id="btn-two-factor-submit" class="auth-primary-btn">Confirmar código</button>
           </form>
 
-          <p class="auth-footer-text center">
-            <a href="#" id="link-go-login">Fazer login</a>
-          </p>
+          <p class="auth-footer-text center"><a href="#" id="link-back-login">Voltar para o login</a></p>
         </div>
 
       </div>
@@ -174,6 +161,18 @@
 
       <!-- Aba 5: Perfil & Renascer -->
       <section id="profile-area" class="tab-content">
+        <div class="profile-section account-profile-section">
+          <div class="clicker-account-card">
+            <img id="clicker-profile-avatar" src="/pacoca.png" alt="Foto de perfil" class="clicker-account-avatar">
+            <div class="clicker-account-info">
+              <strong id="clicker-profile-name">Jogador</strong>
+              <span id="clicker-profile-username"></span>
+              <small id="clicker-sync-status" data-status="synced">Progresso salvo na nuvem</small>
+            </div>
+            <button id="btn-logout" class="logout-btn" type="button">Sair</button>
+          </div>
+        </div>
+
         <div class="profile-section">
           <h2>Renascer (Ascensão)</h2>
           <div class="prestige-card-clean">
@@ -293,93 +292,16 @@
 
           <!-- Filtros de Categoria do Ranking -->
           <div class="rank-tabs">
-            <button class="rank-tab active">Fortuna</button>
-            <button class="rank-tab">Ouro 🌟</button>
-            <button class="rank-tab">Estruturas</button>
-          </div>
-          
-          <!-- Pódio Top 3 -->
-          <div class="podium-container">
-            <!-- 2º Lugar -->
-            <div class="podium-step step-2">
-              <div class="podium-avatar-wrapper silver">
-                <img src="/pacoca.png" alt="Avatar" class="podium-avatar">
-                <div class="podium-medal">2</div>
-              </div>
-              <strong class="podium-name">Sr. Amendoim</strong>
-              <span class="podium-score">1.5 Bi</span>
-            </div>
-
-            <!-- 1º Lugar -->
-            <div class="podium-step step-1">
-              <div class="podium-crown">👑</div>
-              <div class="podium-avatar-wrapper gold">
-                <img src="/pacoca.png" alt="Avatar" class="podium-avatar">
-                <div class="podium-medal">1</div>
-              </div>
-              <strong class="podium-name">Rei do Paçoca</strong>
-              <span class="podium-score">4.2 Bi</span>
-            </div>
-
-            <!-- 3º Lugar -->
-            <div class="podium-step step-3">
-              <div class="podium-avatar-wrapper bronze">
-                <img src="/pacoca.png" alt="Avatar" class="podium-avatar">
-                <div class="podium-medal">3</div>
-              </div>
-              <strong class="podium-name">FormigaDoce</strong>
-              <span class="podium-score">800 Mi</span>
-            </div>
+            <button class="rank-tab active" data-category="fortune">Fortuna</button>
+            <button class="rank-tab" data-category="gold">Ouro 🌟</button>
+            <button class="rank-tab" data-category="structures">Estruturas</button>
           </div>
 
-          <!-- Lista do 4º ao 10º (Scrollável) -->
+          <div class="podium-container" id="ranking-podium"></div>
           <div class="ranking-list" id="ranking-list-data">
-            <div class="rank-card">
-              <div class="rank-pos">4</div>
-              <img src="/pacoca.png" class="rank-avatar" alt="User">
-              <div class="rank-info">
-                <strong>ClickerMaluco</strong>
-                <span>450 Mi Paçocas</span>
-              </div>
-            </div>
-            
-            <div class="rank-card">
-              <div class="rank-pos">5</div>
-              <img src="/pacoca.png" class="rank-avatar" alt="User">
-              <div class="rank-info">
-                <strong>DoceiraBR</strong>
-                <span>310 Mi Paçocas</span>
-              </div>
-            </div>
-
-            <div class="rank-card">
-              <div class="rank-pos">6</div>
-              <img src="/pacoca.png" class="rank-avatar" alt="User">
-              <div class="rank-info">
-                <strong>Zezinho123</strong>
-                <span>150 Mi Paçocas</span>
-              </div>
-            </div>
-            
-            <div class="rank-card">
-              <div class="rank-pos">7</div>
-              <img src="/pacoca.png" class="rank-avatar" alt="User">
-              <div class="rank-info">
-                <strong>AmendoimSagrado</strong>
-                <span>95 Mi Paçocas</span>
-              </div>
-            </div>
+            <div class="ranking-state">Carregando ranking...</div>
           </div>
-
-          <!-- Posição do Jogador Fixo no Fundo -->
-          <div class="rank-card is-me">
-            <div class="rank-pos">42</div>
-            <img src="/pacoca.png" class="rank-avatar" alt="Me">
-            <div class="rank-info">
-              <strong>Você</strong>
-              <span>12 Mi Paçocas</span>
-            </div>
-          </div>
+          <div class="rank-card is-me" id="ranking-current-player" style="display: none;"></div>
 
         </div>
       </section>

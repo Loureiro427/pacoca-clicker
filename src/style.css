@@ -2240,3 +2240,107 @@ html, body {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* Integração com a conta Paçoca e sincronização da API */
+.auth-primary-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.auth-error-message {
+  display: none;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff0ed;
+  color: #a23b2a;
+  border: 1px solid #f3c7bf;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.account-profile-section {
+  margin-bottom: 20px;
+}
+
+.clicker-account-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 2px solid #e8d8c8;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fffdf9, #fff3e5);
+}
+
+.clicker-account-avatar {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #a26c45;
+  background: #fdf7ed;
+}
+
+.clicker-account-info {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.clicker-account-info strong,
+.clicker-account-info span,
+.clicker-account-info small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clicker-account-info strong {
+  color: #4a3022;
+  font-size: 0.95rem;
+}
+
+.clicker-account-info span {
+  color: #8b6552;
+  font-size: 0.78rem;
+}
+
+#clicker-sync-status {
+  margin-top: 4px;
+  color: #4e8b57;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+#clicker-sync-status[data-status='syncing'] { color: #a26c45; }
+#clicker-sync-status[data-status='offline'],
+#clicker-sync-status[data-status='conflict'] { color: #b14636; white-space: normal; }
+
+.logout-btn {
+  border: 1px solid #d8bca6;
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: #8b5935;
+  background: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ranking-state {
+  padding: 28px 14px;
+  color: #8b6552;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ranking-state.error {
+  color: #a23b2a;
+}
+
+.podium-avatar,
+.rank-avatar {
+  object-fit: cover;
+}

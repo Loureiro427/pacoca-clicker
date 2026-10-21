@@ -411,8 +411,9 @@ export class Game {
       const decoded = atob(code);
       const data = JSON.parse(decoded);
       if (data && typeof data.score === 'number') {
-        localStorage.setItem('pacoca_clicker_save', JSON.stringify(data));
-        window.location.reload();
+        SaveManager.replace(data)
+          .then(() => window.location.reload())
+          .catch(() => this.ui.showNotification('Não foi possível importar o save', 'Verifique sua conexão e tente novamente.'));
       } else {
         alert('Código de save inválido.');
       }
@@ -421,10 +422,14 @@ export class Game {
     }
   }
 
-  resetProgress() {
+  async resetProgress() {
     if (confirm('Tem certeza de que deseja reiniciar todo o progresso? Esta ação não pode ser desfeita.')) {
-      localStorage.removeItem('pacoca_clicker_save');
-      window.location.reload();
+      try {
+        await SaveManager.reset();
+        window.location.reload();
+      } catch (_) {
+        this.ui.showNotification('Não foi possível apagar o progresso', 'Verifique sua conexão e tente novamente.');
+      }
     }
   }
 }
