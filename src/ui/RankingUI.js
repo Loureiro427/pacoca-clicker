@@ -89,14 +89,9 @@ export class RankingUI {
       const entry = data.players.find(player => player.position === position);
       if (entry) podium.appendChild(this.createPodium(entry));
     });
-    data.players.filter(entry => entry.position > 3).forEach(entry => list.appendChild(this.createRankCard(entry)));
+    data.players.forEach(entry => list.appendChild(this.createRankCard(entry)));
     if (!data.players.length) {
       this.showState('O próximo império pode ser o seu', 'Ainda não há jogadores nesta categoria. Continue produzindo e volte para conferir.');
-    } else if (!list.childElementCount) {
-      const message = document.createElement('p');
-      message.className = 'ranking-list-note';
-      message.textContent = 'Os jogadores classificados estão no pódio acima.';
-      list.appendChild(message);
     }
     el('ranking-demo').hidden = !data.demo;
     el('ranking-source').textContent = data.demo ? 'Prévia demonstrativa' : 'Classificação global';

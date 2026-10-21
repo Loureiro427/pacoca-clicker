@@ -81,6 +81,21 @@ test('bootstrap ausente carrega e nomes recebidos permanecem texto', async t => 
   assert.equal(podium.children[2].children.length, 0);
 });
 
+test('classificação também lista os três jogadores exibidos no pódio', async t => {
+  const players = [1, 2, 3, 4].map(position => ({
+    position,
+    value: 100 - position,
+    user: { id: position, name: `Jogador ${position}` },
+  }));
+  const { ui, get } = setup(t, { ranking: async () => ({ players, current_player: null }) });
+  await ui.load('fortune', true);
+  assert.equal(get('ranking-podium').children.length, 3);
+  assert.deepEqual(
+    get('ranking-list-data').children.map(card => card.children[0].textContent),
+    ['#1', '#2', '#3', '#4'],
+  );
+});
+
 test('ranking vazio apresenta orientação e nenhuma posição pessoal fictícia', async t => {
   const { ui, get } = setup(t, { ranking: async () => ({ players: [], current_player: null }) });
   await ui.load('fortune', true);
