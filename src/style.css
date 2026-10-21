@@ -1218,40 +1218,60 @@ html, body {
    ========================================================================== */
 .bottom-nav {
   display: flex;
-  background-color: var(--nav-bg);
-  padding: 10px 16px;
-  padding-bottom: env(safe-area-inset-bottom, 12px);
-  box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
-  z-index: 10;
+  justify-content: space-between;
+  align-items: center;
+  background: #38251A; /* Fundo castanho escuro idêntico à imagem de referência */
+  border-top: 1px solid #2A1A10;
+  padding: 6px 4px 10px 4px; /* Mais espaço para o polegar no fundo */
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  width: 100%;
 }
 
 .nav-btn {
   flex: 1;
-  background: none;
-  border: none;
-  padding: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  color: var(--nav-inactive);
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #A89588; /* Cor inativa suave */
   cursor: pointer;
-  transition: color 0.15s;
+  padding: 6px 2px;
+  transition: all 0.2s ease;
+  min-width: 0; /* Previne overflow no flexbox */
 }
 
 .nav-icon {
-  width: 26px;
-  height: 26px;
-  fill: currentColor;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 4px;
+  transition: transform 0.2s;
 }
 
 .nav-btn .label {
-  font-size: 0.78rem;
+  font-size: 0.62rem;
   font-weight: 700;
+  letter-spacing: 0.2px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
+/* Estado Ativo (Selecionado) */
 .nav-btn.active {
-  color: #FFFFFF;
+  color: #FFFFFF; /* Ícone e texto brancos quando selecionado */
+}
+
+.nav-btn.active .nav-icon {
+  transform: translateY(-2px) scale(1.1);
+}
+
+.nav-btn:active {
+  transform: scale(0.92);
 }
 
 /* ==========================================================================
@@ -1973,4 +1993,250 @@ html, body {
   color: #A26C45;
   font-weight: 800;
   text-decoration: none;
+}
+
+/* ==========================================================================
+   RANKING GLOBAL (LEADERBOARD)
+   ========================================================================== */
+.rank-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  background: #FDF7ED;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid #E8D8C8;
+}
+
+.rank-tab {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #8B6552;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rank-tab.active {
+  background: #FFFFFF;
+  color: #A26C45;
+  box-shadow: 0 2px 4px rgba(74, 48, 34, 0.08);
+}
+
+/* --- PÓDIO TOP 3 --- */
+.podium-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed #E8D8C8;
+}
+
+.podium-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 30%;
+}
+
+.podium-step.step-1 { margin-bottom: 15px; width: 36%; z-index: 2; } /* 1º Lugar mais alto */
+.podium-step.step-2 { margin-bottom: 5px; }
+.podium-step.step-3 { margin-bottom: 0px; }
+
+.podium-crown {
+  font-size: 1.8rem;
+  margin-bottom: -8px;
+  z-index: 3;
+  animation: mascotPulse 2s infinite alternate;
+}
+
+.podium-avatar-wrapper {
+  position: relative;
+  border-radius: 50%;
+  padding: 4px;
+  background: #FFFFFF;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.podium-avatar-wrapper.gold   { border: 3px solid #FFD700; background: linear-gradient(145deg, #FFF8E1, #FFECB3); }
+.podium-avatar-wrapper.silver { border: 3px solid #C0C0C0; background: linear-gradient(145deg, #F5F7FA, #ECEFF1); }
+.podium-avatar-wrapper.bronze { border: 3px solid #CD7F32; background: linear-gradient(145deg, #FBE9E7, #FFCCBC); }
+
+.podium-avatar {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  display: block;
+}
+
+.podium-medal {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background: #333;
+  color: #FFF;
+  font-size: 0.7rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid #FFF;
+}
+
+.podium-avatar-wrapper.gold .podium-medal { background: #FFD700; color: #7A5600; border-color: #FFF8E1; }
+.podium-avatar-wrapper.silver .podium-medal { background: #C0C0C0; color: #37474F; border-color: #F5F7FA; }
+.podium-avatar-wrapper.bronze .podium-medal { background: #CD7F32; color: #4E342E; border-color: #FBE9E7; }
+
+.podium-name {
+  font-size: 0.75rem;
+  color: #4A3022;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.podium-step.step-1 .podium-name {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #A26C45;
+}
+
+.podium-score {
+  font-size: 0.7rem;
+  color: #8B6552;
+  font-weight: 700;
+}
+
+/* --- LISTA DE JOGADORES --- */
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding-right: 4px;
+}
+
+.rank-card {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1.5px solid #E8D8C8;
+  border-radius: 12px;
+  padding: 8px 12px;
+  gap: 12px;
+}
+
+.rank-pos {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: #A89588;
+  width: 24px;
+  text-align: center;
+}
+
+.rank-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #FDF7ED;
+  border: 1px solid #D4C4B7;
+  padding: 2px;
+}
+
+.rank-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.rank-info strong {
+  font-size: 0.85rem;
+  color: #4A3022;
+}
+
+.rank-info span {
+  font-size: 0.75rem;
+  color: #D96B00;
+  font-weight: 700;
+}
+
+/* Destaque para o Card do Jogador Atual */
+.rank-card.is-me {
+  background: linear-gradient(145deg, #FFF4E6, #FFE8CC);
+  border: 2px solid #A26C45;
+  box-shadow: 0 -4px 10px rgba(162, 108, 69, 0.15);
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.rank-card.is-me .rank-pos {
+  color: #A26C45;
+}
+
+.rank-card.is-me .rank-info strong {
+  color: #A26C45;
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   ANIMAÇÃO DOS NÚMEROS FLUTUANTES (CLIQUES)
+   ========================================================================== */
+.floating-number {
+  position: fixed;
+  color: #FFFFFF;
+  font-weight: 900;
+  font-size: 1.8rem;
+  pointer-events: none; /* Para não bloquear cliques */
+  z-index: 99999;
+  text-shadow: 0 3px 6px rgba(74, 48, 34, 0.4), 0 0 2px rgba(0,0,0,0.8);
+  animation: floatUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes floatUp {
+  0% { 
+    opacity: 1; 
+    transform: translateY(0) scale(0.8); 
+  }
+  50% {
+    transform: translateY(-40px) scale(1.2);
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-80px) scale(1); 
+  }
+}
+
+/* ==========================================================================
+   CORREÇÃO DA VISIBILIDADE DAS ABAS
+   ========================================================================== */
+.tab-content {
+  display: none;
+  animation: fadeInTab 0.2s ease-out forwards;
+}
+
+.tab-content.active {
+  display: block; /* Garante que o Ranking aparece */
+}
+
+@keyframes fadeInTab {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
