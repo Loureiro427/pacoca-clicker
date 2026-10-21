@@ -2193,3 +2193,70 @@ html, body {
 @media (min-width: 600px) { .talents-shell { padding: 28px; } .talents-hero { padding: 28px 32px; } .talents-hero-symbol { width: 100px; font-size: 6rem; } }
 @media (max-width: 360px) { .talents-shell { padding: 12px 10px 20px; } .talents-hero { padding: 20px 18px; } .talents-hero h2 { font-size: 1.45rem; } .talents-hero-symbol { width: 48px; font-size: 3rem; } .talents-tabs button { font-size: .64rem; } }
 @media (prefers-reduced-motion: reduce) { .talents-branch-progress > span { transition: none; } .talent-node:hover { transform: none; } }
+
+/* Loja e melhorias: catálogo em lista com preços e requisitos legíveis. */
+#shop-area.tab-content.active, #upgrades-area.tab-content.active { display: block; flex: 1; min-height: 0; padding: 0; overflow-y: auto; overflow-x: hidden; touch-action: pan-y; }
+.commerce-shell { width: 100%; max-width: 820px; padding: 16px 16px 24px; margin: 0 auto; }
+.commerce-shell [hidden] { display: none !important; }
+.commerce-hero { padding: 24px; background: radial-gradient(ellipse at top right, #8b5937, transparent 65%), #38251c; border: 1px solid #67422b; border-radius: 24px; color: #fff7e9; }
+.commerce-eyebrow { color: #98724c; font-size: .55rem; letter-spacing: .11em; font-weight: 800; }
+.commerce-hero > .commerce-eyebrow { color: #d6b792; }
+.commerce-hero h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.13; letter-spacing: -.045em; margin: 18px 0 10px; }
+.commerce-hero h2 em { color: #f1c883; font-style: normal; }
+.commerce-hero > p { color: #d8bda2; font-size: .72rem; line-height: 1.6; margin: 0; }
+.commerce-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 22px; padding-top: 18px; border-top: 1px solid #d6b38233; }
+.commerce-summary > div + div { border-left: 1px solid #d6b38233; padding-left: 16px; }
+.commerce-summary span { display: block; color: #c9a67e; font-size: .5rem; font-weight: 750; letter-spacing: .1em; }
+.commerce-summary strong { display: block; color: #f1cb88; font-size: 1.25rem; font-variant-numeric: tabular-nums; letter-spacing: -.035em; margin-top: 7px; overflow-wrap: anywhere; }
+.commerce-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 24px 0 18px; }
+.commerce-section-heading h3 { margin: 6px 0 0; font-size: 1.12rem; letter-spacing: -.035em; line-height: 1.3; color: #604127; }
+.commerce-count { font-size: .59rem; font-weight: 750; color: #977444; padding: 7px 9px; border: 1px solid #dfcba8; border-radius: 9px; background: #f7edda; flex-shrink: 0; }
+.commerce-buy-panel { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid #e2d0b4; border-radius: 15px; background: #fcf5e8; margin-bottom: 20px; }
+.commerce-buy-panel > div:first-child { min-width: 0; }
+.commerce-buy-panel strong { display: block; font-size: .7rem; color: #7c5b38; }
+.commerce-buy-panel span { display: block; font-size: .57rem; line-height: 1.5; color: #a08864; margin-top: 5px; }
+.commerce-buy-panel .buy-modes { display: flex; gap: 4px; margin: 0; padding: 4px; border-radius: 10px; background: #ede0cb; flex-shrink: 0; }
+.commerce-buy-panel .mode-btn { min-height: 40px; min-width: 38px; padding: 6px; border: 1px solid transparent; border-radius: 8px; font: inherit; font-size: .7rem; font-weight: 750; background: none; color: #a0835a; box-shadow: none; cursor: pointer; }
+.commerce-buy-panel .mode-btn.active { border-color: #ddc7a1; background: #fff9ee; color: #845c2f; box-shadow: 0 2px 4px #67441b0c; }
+.commerce-list-caption { display: flex; justify-content: space-between; gap: 12px; padding: 0 2px 10px; font-size: .53rem; letter-spacing: .04em; color: #9a8160; }
+.commerce-list { display: flex; flex-direction: column; gap: 10px; }
+.commerce-card { display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: start; gap: 12px; padding: 16px 14px; border: 1px solid #e5d6c0; border-radius: 17px; background: #fffaf1; box-shadow: 0 3px 6px #5c3d1f03; }
+.commerce-icon { width: 44px; height: 46px; display: grid; place-items: center; padding: 11px; border: 1px solid #e6d3b3; border-radius: 14px; background: #f6e9d0; color: #a68148; }
+.commerce-icon svg { width: 24px; height: 24px; }
+.commerce-info { min-width: 0; }
+.commerce-card-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.commerce-card-heading h3 { color: #6a482d; font-size: .83rem; line-height: 1.4; letter-spacing: -.02em; margin: 0; overflow-wrap: anywhere; }
+.commerce-owned, .commerce-tier { font-size: .5rem; font-weight: 750; color: #a08258; padding: 4px 6px; border: 1px solid #e5d6bd; border-radius: 6px; background: #f8efde; white-space: nowrap; flex-shrink: 0; }
+.commerce-card .desc-display { font-size: .69rem; color: #8e7350; line-height: 1.6; margin: 7px 0 0; }
+.commerce-purchase { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 14px; padding-top: 11px; border-top: 1px solid #eee1cc; }
+.commerce-card .cost-display { font-size: .71rem; font-weight: 800; color: #94703c; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.commerce-buy { flex-shrink: 0; min-width: 84px; min-height: 42px; padding: 9px 11px; border: 1px solid #a57c42; border-bottom: 3px solid #855c2d; border-radius: 10px; background: linear-gradient(#b28b4e, #9b7239); font: inherit; font-size: .65rem; font-weight: 800; color: #fff8e8; cursor: pointer; }
+.commerce-buy:hover:not(:disabled) { background: #946a32; }
+.commerce-buy:disabled { border-color: #ddcdb1; color: #a48e6c; background: #ece1cc; cursor: default; }
+.commerce-card-hint { display: block; font-size: .55rem; color: #a28c6c; line-height: 1.5; margin-top: 8px; }
+.commerce-card[data-state='available'] { border-color: #cdb78c; }
+.commerce-card[data-state='available'] .commerce-card-hint { color: #8a8752; }
+.commerce-card[data-state='bought'] { background: #f6f1e3; border-color: #dad0ad; }
+.commerce-card[data-state='bought'] .commerce-buy { color: #8d8a55; border-color: #d5cfac; background: #e9e6d0; }
+.commerce-card[data-state='locked'] .commerce-icon { background: #eee5d7; color: #b29e7e; border-color: #e0d3bf; }
+.commerce-card[data-state='locked'] .commerce-card-heading h3 { color: #937c5e; }
+.commerce-upgrade[data-tier='epic'] { border-left: 3px solid #bb995a; }
+.commerce-upgrade[data-tier='epic'] .commerce-tier { color: #996d2b; border-color: #d5b778; background: #f8e8bf; }
+.commerce-requirement { font-size: .59rem; color: #a38b68; line-height: 1.6; margin-top: 10px; }
+.commerce-requirement-track { height: 4px; border-radius: 4px; background: #eadeca; overflow: hidden; margin-top: 6px; }
+.commerce-requirement-track > span { display: block; height: 100%; width: 0; border-radius: inherit; background: #c6a977; }
+.commerce-category-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; background: #eadeca; border-radius: 12px; margin-bottom: 10px; }
+.commerce-category-filters .upg-filter-btn { min-width: 0; min-height: 42px; border: 1px solid transparent; border-radius: 9px; padding: 7px 3px; background: none; color: #9a7e58; box-shadow: none; font: inherit; font-size: .64rem; font-weight: 700; white-space: normal; cursor: pointer; }
+.commerce-category-filters .upg-filter-btn.active { background: #fff9ed; color: #815a2c; border-color: #decaab; box-shadow: 0 2px 4px #67441b0b; }
+.commerce-view-filters { display: flex; gap: 6px; margin-bottom: 17px; }
+.commerce-view-filters button { flex: 1; min-width: 0; min-height: 40px; padding: 7px 3px; border: 1px solid #e0ceb1; border-radius: 9px; font: inherit; font-size: .62rem; background: #f8f0e1; color: #a2865e; cursor: pointer; }
+.commerce-view-filters button[aria-pressed='true'] { border-color: #c6a775; background: #efdec0; color: #866030; font-weight: 750; }
+.commerce-empty { border: 1px dashed #d8c19c; background: #f9f1df; border-radius: 18px; padding: 30px 20px; text-align: center; margin-top: 8px; }
+.commerce-empty > span { font-size: 2rem; color: #bd9754; }
+.commerce-empty h3 { font-size: .95rem; line-height: 1.4; color: #8c6837; margin: 13px 0 9px; }
+.commerce-empty p { font-size: .72rem; line-height: 1.8; color: #a08965; margin: 0; }
+.commerce-footnote { font-size: .63rem; color: #a58b67; line-height: 1.7; margin: 18px 4px 0; text-align: center; }
+.commerce-feedback { min-height: 18px; font-size: .65rem; color: #947549; line-height: 1.6; }
+.commerce-shell button:focus-visible { outline: 3px solid #a77a36; outline-offset: 3px; }
+@media (min-width: 600px) { .commerce-shell { padding: 28px; } .commerce-hero { padding: 28px 32px; } .commerce-card { grid-template-columns: 50px minmax(0, 1fr); padding: 18px; gap: 16px; } .commerce-icon { width: 50px; height: 52px; } .commerce-card-heading h3 { font-size: .95rem; } }
+@media (max-width: 360px) { .commerce-shell { padding: 12px 10px 20px; } .commerce-hero { padding: 22px 18px; } .commerce-card { padding: 13px 10px; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; } .commerce-icon { width: 34px; height: 38px; padding: 7px; border-radius: 10px; } .commerce-icon svg { width: 21px; height: 21px; } .commerce-card-heading { flex-wrap: wrap; gap: 5px; } .commerce-buy-panel { padding: 10px; gap: 6px; } .commerce-buy-panel strong { font-size: .62rem; } .commerce-buy-panel .mode-btn { min-width: 32px; } .commerce-card .cost-display { font-size: .64rem; } .commerce-buy { min-width: 74px; font-size: .6rem; padding: 8px; } }

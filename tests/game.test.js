@@ -45,10 +45,10 @@ test('loja mostra e permite comprar pelo mesmo preço com desconto', () => {
   game.buyAmount = 10;
   const cost = game.getPurchaseCost(100, 0, 10);
   const fields = { '.owned-count': {}, '.cost-display': {} };
-  const button = {};
+  const button = { setAttribute() {} };
   const previousDocument = globalThis.document;
   globalThis.document = { getElementById: id => id === 'gen-ajudante'
-    ? { querySelector: selector => fields[selector] }
+    ? { dataset: {}, querySelector: selector => fields[selector] }
     : id === 'buy-ajudante' ? button : null };
   try {
     UIManager.prototype.updateShop.call({ game }, cost, {}, 10);

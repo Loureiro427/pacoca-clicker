@@ -163,7 +163,8 @@ export class Game {
 
   buyUpgrade(upgId) {
     const upg = UpgradesData.find(u => u.id === upgId);
-    if (upg && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost) {
+    if (upg && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost
+      && (this.inventory[upg.reqGen] || 0) >= upg.reqCount) {
       this.score -= upg.cost;
       this.boughtUpgrades.push(upgId);
       this.audio.playBuy(); // Toca o som de compra

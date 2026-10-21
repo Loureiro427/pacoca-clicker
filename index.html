@@ -133,20 +133,18 @@
       <section id="shop-area" class="tab-content"></section>
 
       <!-- Aba 3: Melhorias -->
-      <section id="upgrades-area" class="tab-content">
-        <div class="shop-header">
-          <h2>Coleção de Melhorias</h2>
+      <section id="upgrades-area" class="tab-content" aria-labelledby="upgrades-title">
+        <div class="commerce-shell">
+          <header class="commerce-hero"><span class="commerce-eyebrow">PAÇOCA CLICKER / EVOLUÇÃO DO IMPÉRIO</span><h2 id="upgrades-title">Pequenos avanços.<br><em>Grandes resultados.</em></h2><p>Uma melhoria de cada vez. Um império cada vez maior.</p><div class="commerce-summary"><div><span>SEU SALDO</span><strong id="upgrades-balance">0</strong></div><div><span>ADQUIRIDAS</span><strong id="upgrades-owned">0 / 0</strong></div></div></header>
+          <div class="commerce-section-heading"><div><span class="commerce-eyebrow">INVISTA NO SEU PRÓXIMO PASSO</span><h3>Coleção de melhorias</h3></div><span id="upgrades-available-count" class="commerce-count">0 disponíveis</span></div>
+          <div class="commerce-category-filters" role="group" aria-label="Categoria de melhorias"><button type="button" class="upg-filter-btn active" data-filter="all" aria-pressed="true">Todas</button><button type="button" class="upg-filter-btn" data-filter="click" aria-pressed="false">Cliques</button><button type="button" class="upg-filter-btn" data-filter="structure" aria-pressed="false">Estruturas</button><button type="button" class="upg-filter-btn" data-filter="synergy" aria-pressed="false">Sinergias</button></div>
+          <div class="commerce-view-filters" role="group" aria-label="Situação das melhorias"><button type="button" data-upgrade-view="pending" aria-pressed="true">A conquistar</button><button type="button" data-upgrade-view="available" aria-pressed="false">Posso comprar</button><button type="button" data-upgrade-view="bought" aria-pressed="false">Adquiridas</button></div>
+          <div class="commerce-list-caption"><span id="upgrades-result-count"></span><span>Custos em paçocas</span></div>
+          <div id="upgrades-list" class="commerce-list" role="list" aria-label="Melhorias"></div>
+          <div id="upgrades-empty-state" class="commerce-empty" hidden><span aria-hidden="true">✦</span><h3 id="upgrades-empty-title">Seu próximo avanço está a caminho</h3><p id="upgrades-empty-description"></p></div>
+          <p class="commerce-footnote">Melhorias adquiridas permanecem ativas até o próximo renascimento.</p>
+          <p id="upgrades-feedback" class="commerce-feedback" role="status"></p>
         </div>
-        
-        <!-- Filtros Holográficos -->
-        <div class="upgrades-filters">
-          <button class="upg-filter-btn active" data-filter="all">Todas</button>
-          <button class="upg-filter-btn" data-filter="click">Cliques</button>
-          <button class="upg-filter-btn" data-filter="structure">Estruturas</button>
-          <button class="upg-filter-btn" data-filter="synergy">Sinergias</button>
-        </div>
-
-        <div id="upgrades-list" class="shop-list"></div>
       </section>
 
       <!-- Aba 4: Árvore de Talentos RPG -->
