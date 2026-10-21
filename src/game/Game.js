@@ -7,6 +7,7 @@ import { Prestige } from './Prestige.js';
 import { SkillTreeManager } from './SkillTree.js';
 import { SkillTreeUI } from '../ui/SkillTreeUI.js';
 import { formatNumber } from '../utils/format.js';
+import { AudioManager } from '../audio/AudioManager.js';
 
 export class Game {
   constructor(ui) {
@@ -47,6 +48,13 @@ export class Game {
     this.skillTree = new SkillTreeManager(this);
     this.skillTreeUI = new SkillTreeUI(this);
 
+    // (Perto da definição da skillTree)
+    this.skillTree = new SkillTreeManager(this);
+    this.skillTreeUI = new SkillTreeUI(this);
+    
+    // Inicia o sistema de áudio
+    this.audio = new AudioManager();
+
     this.loadGame();
     this.goldenSystem = new GoldenPacoca(this);
     this.startGameLoop();
@@ -54,6 +62,8 @@ export class Game {
   }
 
   click() {
+    this.audio.init(); // Inicializa o contexto no primeiro clique do usuário
+    this.audio.playClick(); // Toca o "Pop" viciante
     const now = Date.now();
     
     // TALENTO ACT_4: Sistema de Combo de Cliques
@@ -144,10 +154,12 @@ export class Game {
     if (this.score >= cost) {
       this.score -= cost;
       this.inventory[genId] = owned + this.buyAmount;
+      this.audio.playBuy(); // Toca o som de compra
       this.recalculateStats();
       this.checkAchievements();
       this.refreshUI();
     }
+    
   }
 
   buyUpgrade(upgId) {
@@ -155,6 +167,7 @@ export class Game {
     if (upg && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost) {
       this.score -= upg.cost;
       this.boughtUpgrades.push(upgId);
+      this.audio.playBuy(); // Toca o som de compra
       this.recalculateStats();
       this.checkAchievements();
       this.refreshUI();

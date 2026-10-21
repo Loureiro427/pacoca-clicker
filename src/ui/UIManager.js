@@ -387,10 +387,13 @@ export class UIManager {
     const toggleMusic = document.getElementById('toggle-music');
 
     if (btnPrestige) {
-      btnPrestige.addEventListener('click', () => this.game && this.game.doPrestige());
+      btnPrestige.addEventListener('click', () => {
+        if (this.game) {
+          this.game.doPrestige();
+        }
+      });
     }
 
-    // Carregar configurações guardadas (por defeito: ligado)
     const sfxEnabled = localStorage.getItem('pacoca_sfx') !== 'false';
     const musicEnabled = localStorage.getItem('pacoca_music') !== 'false';
 
@@ -398,7 +401,10 @@ export class UIManager {
       toggleSfx.checked = sfxEnabled;
       toggleSfx.addEventListener('change', (e) => {
         localStorage.setItem('pacoca_sfx', e.target.checked);
-        // Futuro: this.game.audioManager.setSfx(e.target.checked);
+        if (this.game && this.game.audio) {
+          this.game.audio.setSfx(e.target.checked);
+          if (e.target.checked) this.game.audio.playBuy(); // Som de teste ao ligar
+        }
       });
     }
 
@@ -406,7 +412,9 @@ export class UIManager {
       toggleMusic.checked = musicEnabled;
       toggleMusic.addEventListener('change', (e) => {
         localStorage.setItem('pacoca_music', e.target.checked);
-        // Futuro: this.game.audioManager.setMusic(e.target.checked);
+        if (this.game && this.game.audio) {
+          this.game.audio.setMusic(e.target.checked);
+        }
       });
     }
 

@@ -253,7 +253,6 @@ export class SkillTreeUI {
     modal.style.display = 'flex';
   }
 
-  // Corrigido para anexar os eventos de clique APENAS UMA VEZ de forma segura
   initModalListeners() {
     if (this.listenersAdded) return;
     this.listenersAdded = true;
@@ -265,6 +264,10 @@ export class SkillTreeUI {
     if (btnLearn) {
       btnLearn.addEventListener('click', () => {
         if (this.selectedSkill && this.game.skillTree && this.game.skillTree.unlockSkill(this.selectedSkill.id)) {
+          // Dispara o som de aprendizado de talento!
+          if (this.game && this.game.audio) {
+            this.game.audio.playSkillLearn();
+          }
           if (modal) modal.style.display = 'none';
           this.forceRebuild(); // Atualiza a tela após a compra
         }

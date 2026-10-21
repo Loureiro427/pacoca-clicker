@@ -55,6 +55,7 @@ export class GoldenPacoca {
 
     document.body.appendChild(el);
     this.element = el;
+    if (this.game && this.game.audio) this.game.audio.playGoldenSpawn();
 
     let despawnTime = 10000;
     if (this.game && this.game.skillTree && this.game.skillTree.hasSkill('alc_3')) {
@@ -69,6 +70,7 @@ export class GoldenPacoca {
 
   collect() {
     if (!this.element) return;
+    if (this.game && this.game.audio) this.game.audio.playGoldenCollect();
 
     let gotFreeChip = false;
     if (this.game.skillTree && this.game.skillTree.hasSkill('alc_8') && Math.random() < 0.03) {
