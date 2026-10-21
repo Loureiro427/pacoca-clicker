@@ -7,10 +7,14 @@ import { AuthManager } from './systems/AuthManager.js';
 import { SaveManager } from './storage/SaveManager.js';
 import { RankingUI } from './ui/RankingUI.js';
 import { updateAccountProfile, updateAccountSyncStatus } from './ui/ProfileAccount.js';
+import { initSupportUI } from './ui/SupportUI.js';
+import { initMobileTextProtection, initAppNavigation } from './systems/AppNavigation.js';
 
 const api = new PacocaApi();
 
 document.addEventListener('DOMContentLoaded', () => {
+  initMobileTextProtection();
+  initAppNavigation();
   const auth = new AuthManager(api, async ({ user, bootstrap }) => {
     updateAccountProfile(user, { isDemo: api.isMocked });
 
@@ -26,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ranking = new RankingUI(api);
     ranking.init(bootstrap.ranking);
     initGame();
+    initSupportUI({ user, demo: api.isMocked });
   });
 
   auth.init();
@@ -52,6 +57,7 @@ function initGame() {
     SaveManager.flush().catch(() => {});
   };
   window.addEventListener('pacoca:before-logout', persistBeforeLeaving);
+  window.addEventListener('pacoca:before-exit', persistBeforeLeaving);
   window.addEventListener('pagehide', persistBeforeLeaving);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') persistBeforeLeaving();

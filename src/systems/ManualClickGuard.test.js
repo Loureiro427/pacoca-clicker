@@ -15,6 +15,10 @@ test('aceita rajadas humanas e descarta excesso sem bloquear permanentemente', (
   for (let i = 0; i < 20; i++) assert.equal(guard.check({ isTrusted: true }).allowed, true);
   assert.equal(guard.check({ isTrusted: true }).reason, 'rate');
   time = 1000;
+  assert.equal(guard.check({ isTrusted: true }).retryAfterMs, 29000);
+  time = 29999;
+  assert.equal(guard.check({ isTrusted: true }).allowed, false);
+  time = 30000;
   assert.equal(guard.check({ isTrusted: true }).allowed, true);
 });
 
@@ -28,6 +32,8 @@ test('limita cadência sustentada e libera a cota conforme o tempo passa', () =>
   time = 6000;
   assert.equal(guard.check({ isTrusted: true }).reason, 'rate');
   time = 10000;
+  assert.equal(guard.check({ isTrusted: true }).retryAfterMs, 26000);
+  time = 36000;
   assert.equal(guard.check({ isTrusted: true }).allowed, true);
   assert.ok(guard.accepted.length <= 120);
 });
