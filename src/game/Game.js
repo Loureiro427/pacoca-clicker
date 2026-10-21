@@ -393,39 +393,6 @@ export class Game {
     }
   }
 
-  exportSaveCode() {
-    const data = JSON.stringify({
-      score: this.score,
-      totalClicks: this.totalClicks,
-      totalEarned: this.totalEarned,
-      startTime: this.startTime,
-      inventory: this.inventory,
-      boughtUpgrades: this.boughtUpgrades,
-      unlockedAchievements: this.unlockedAchievements,
-      prestigeChips: this.prestigeChips,
-      claimedPrestigeChips: this.claimedPrestigeChips,
-      unlockedSkills: this.skillTree ? this.skillTree.unlockedSkills : ['origin'],
-      lastSaveTime: Date.now()
-    });
-    return btoa(data);
-  }
-
-  importSaveCode(code) {
-    try {
-      const decoded = atob(code);
-      const data = SaveManager.validate(JSON.parse(decoded));
-      if (data) {
-        SaveManager.replace(data)
-          .then(() => window.location.reload())
-          .catch(() => this.ui.showNotification('Não foi possível importar o save', 'Verifique sua conexão e tente novamente.'));
-      } else {
-        this.ui.showDialog({ icon: '📦', title: 'Não encontramos seu progresso', message: 'Esse código de save é inválido. Copie o código completo e tente novamente.', confirmText: 'Voltar e tentar' });
-      }
-    } catch (e) {
-      this.ui.showDialog({ icon: '📦', title: 'Não encontramos seu progresso', message: 'Esse código de save é inválido. Copie o código completo e tente novamente.', confirmText: 'Voltar e tentar' });
-    }
-  }
-
   async resetProgress() {
     const accepted = await this.ui.showDialog({
       icon: '↺', title: 'Recomeçar do zero?',

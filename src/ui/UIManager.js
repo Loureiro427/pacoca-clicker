@@ -5,6 +5,7 @@ import { AchievementsData } from '../game/Achievements.js';
 import { calculateCost } from '../game/Economy.js';
 import { Prestige } from '../game/Prestige.js';
 import { AppDialog } from './AppDialog.js';
+import { formatJourneyDuration } from './ProfileAccount.js';
 
 export class UIManager {
   showDialog(options) {
@@ -303,6 +304,16 @@ export class UIManager {
   }
   
   initAchievements() {
+    this.achievementFilter = 'all';
+    document.querySelectorAll('[data-achievement-filter]').forEach(button => {
+      button.addEventListener('click', () => {
+        this.achievementFilter = button.dataset.achievementFilter;
+        document.querySelectorAll('[data-achievement-filter]').forEach(item => {
+          item.setAttribute('aria-pressed', String(item === button));
+        });
+        if (this.game) this.updateProfile(this.game);
+      });
+    });
     if (!this.achievementsList) return;
     this.achievementsList.innerHTML = '';
     AchievementsData.forEach(ach => {
@@ -316,6 +327,7 @@ export class UIManager {
         <div class="achievement-info">
           <h3>${ach.name}</h3>
           <p>${ach.desc}</p>
+          <span class="achievement-status">A conquistar</span>
         </div>
       `;
       this.achievementsList.appendChild(el);
@@ -332,24 +344,34 @@ export class UIManager {
     setTxt('stat-earned', formatNumber(Math.floor(game.totalEarned)));
     setTxt('stat-structures', formatNumber(game.getTotalStructures()));
     
-    const minutes = Math.floor((Date.now() - game.startTime) / 60000);
-    setTxt('stat-time', `${minutes}m`);
+    setTxt('stat-time', formatJourneyDuration(game.startTime));
+    setTxt('stat-pps', formatNumber(game.pps));
+    setTxt('stat-click-value', formatNumber(game.clickValue));
+    const unlockedCount = AchievementsData.filter(achievement => game.unlockedAchievements.includes(achievement.id)).length;
+    setTxt('profile-achievement-count', `${unlockedCount}/${AchievementsData.length}`);
+    const achievementPercent = AchievementsData.length ? Math.round(unlockedCount / AchievementsData.length * 100) : 0;
+    document.getElementById('achievement-progress')?.setAttribute('aria-valuenow', String(achievementPercent));
+    const achievementFill = document.getElementById('achievement-progress-fill');
+    if (achievementFill) achievementFill.style.width = `${achievementPercent}%`;
 
     const req = Prestige.getNextChipRequirement(game.totalEarned);
     const pendingChips = Prestige.calculatePrestigeChips(game.totalEarned);
     const newChips = Math.max(0, pendingChips - game.claimedPrestigeChips);
 
     setTxt('prestige-count', formatNumber(game.prestigeChips));
-    setTxt('prestige-mult', `${game.prestigeMultiplier}x`);
+    setTxt('prestige-mult', `${Number(game.prestigeMultiplier.toFixed(2)).toLocaleString('pt-BR')}×`);
     setTxt('prestige-next-gain', `Ganho ao renascer: +${formatNumber(newChips)} 🌟`);
     setTxt('prestige-progress-pct', `${Math.floor(req.progressPercent)}%`);
 
     const fillBar = document.getElementById('prestige-bar-fill');
     if (fillBar) fillBar.style.width = `${req.progressPercent}%`;
+    document.getElementById('prestige-progress')?.setAttribute('aria-valuenow', String(Math.floor(req.progressPercent)));
 
     const missingEl = document.getElementById('prestige-missing-text');
     if (missingEl) {
-      if (req.missing > 0) {
+      if (newChips > 0) {
+        missingEl.innerText = `Seu próximo começo já tem +${formatNumber(newChips)} de ouro esperando por você.`;
+      } else if (req.missing > 0) {
         missingEl.innerText = `Faltam ${formatNumber(Math.ceil(req.missing))} Paçocas acumuladas para a próxima!`;
       } else {
         missingEl.innerText = `✨ Você já pode renascer para ganhar nova Paçoca de Ouro!`;
@@ -360,15 +382,24 @@ export class UIManager {
     if (prestigeBtn) {
       prestigeBtn.disabled = newChips <= 0;
       if (newChips > 0) {
-        prestigeBtn.innerText = `Renascer Agora (+${formatNumber(newChips)} 🌟)`;
+        prestigeBtn.innerText = `Renascer e receber +${formatNumber(newChips)} de ouro ✦`;
       } else {
-        prestigeBtn.innerText = `Renascer (Sem novas Paçocas de Ouro)`;
+        prestigeBtn.innerText = 'Continue produzindo para renascer';
       }
     }
 
+    let visibleAchievements = 0;
     AchievementsData.forEach(ach => {
       const card = document.getElementById(`ach-${ach.id}`);
       if (card) {
+        const unlocked = game.unlockedAchievements.includes(ach.id);
+        const visible = !this.achievementFilter || this.achievementFilter === 'all'
+          || (this.achievementFilter === 'unlocked' && unlocked)
+          || (this.achievementFilter === 'locked' && !unlocked);
+        card.hidden = !visible;
+        if (visible) visibleAchievements++;
+        const status = card.querySelector('.achievement-status');
+        if (status) status.textContent = unlocked ? '✓ Conquistada' : 'A conquistar';
         if (game.unlockedAchievements.includes(ach.id)) {
           card.classList.add('unlocked');
         } else {
@@ -376,8 +407,13 @@ export class UIManager {
         }
       }
     });
-
-    // Mantém a pontuação do jogador no Ranking atualizada dinamicamente
+    const empty = document.getElementById('achievement-empty');
+    if (empty) {
+      empty.hidden = visibleAchievements > 0;
+      empty.textContent = this.achievementFilter === 'locked'
+        ? 'Você conquistou todos os marcos. Que império!'
+        : 'Nenhuma conquista por aqui ainda. Seu próximo clique pode mudar isso.';
+    }
   }
 
   initSettings() {
@@ -419,8 +455,11 @@ export class UIManager {
     }
 
     if (btnReset) {
-      btnReset.addEventListener('click', () => {
-        if (this.game) this.game.resetProgress();
+      btnReset.addEventListener('click', async () => {
+        if (!this.game || btnReset.disabled) return;
+        btnReset.disabled = true;
+        try { await this.game.resetProgress(); }
+        finally { btnReset.disabled = false; }
       });
     }
   }

@@ -84,8 +84,8 @@ nova tentativa. A consulta tem limite de 12 segundos.
 ## Responsabilidades do servidor antes de liberar competição real
 
 Calcule a classificação no servidor, vinculada à sessão autenticada. Valide
-progresso, importações e ganhos offline antes de contabilizar pontuações: o
-estado do navegador e saves importados são editáveis pelo jogador. O frontend
+progresso e ganhos offline antes de contabilizar pontuações: o
+estado do navegador é editável pelo jogador. O frontend
 não garante proteção contra trapaças. Defina limites de consulta, desempate e
 consistência das revisões de save. Não exponha email ou tokens nos registros.
 

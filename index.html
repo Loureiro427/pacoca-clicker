@@ -160,124 +160,58 @@
       </section>
 
       <!-- Aba 5: Perfil & Renascer -->
-      <section id="profile-area" class="tab-content">
-        <div class="profile-section account-profile-section">
-          <div class="clicker-account-card">
-            <img id="clicker-profile-avatar" src="/pacoca.png" alt="Foto de perfil" class="clicker-account-avatar">
-            <div class="clicker-account-info">
-              <strong id="clicker-profile-name">Jogador</strong>
-              <span id="clicker-profile-username"></span>
-              <small id="clicker-sync-status" data-status="synced">Progresso salvo na nuvem</small>
+      <section id="profile-area" class="tab-content" aria-labelledby="profile-title">
+        <div class="profile-shell">
+          <header class="profile-hero">
+            <span class="profile-eyebrow">PAÇOCA CLICKER / SEU ESPAÇO</span>
+            <h2 id="profile-title">Todo império tem<br><em>a sua história.</em></h2>
+            <p>Cuide da sua conta. Prepare sua próxima conquista.</p>
+            <div class="profile-identity">
+              <img id="clicker-profile-avatar" src="/pacoca.png" alt="Seu avatar" class="clicker-account-avatar">
+              <div class="profile-identity-info"><strong id="clicker-profile-name">Jogador</strong><span id="clicker-profile-username"></span><span id="profile-account-badge" class="profile-account-badge">Conta Paçoca</span></div>
             </div>
-            <button id="btn-logout" class="logout-btn" type="button">Sair</button>
-          </div>
-        </div>
-
-        <div class="profile-section">
-          <h2>Renascer (Ascensão)</h2>
-          <div class="prestige-card-clean">
-            <div class="prestige-top-area">
-              <div class="prestige-icon-glow">
-                <div class="prestige-icon-3d">🌟</div>
-              </div>
-              <div class="prestige-stats-clean">
-                <h4>Paçocas de Ouro</h4>
-                <h1 id="prestige-count">0</h1>
-                <div class="prestige-pill">Bônus Global: <strong id="prestige-mult">1x</strong></div>
-              </div>
+          </header>
+          <nav class="profile-jump" aria-label="Seções do perfil"><a href="#profile-ascension">✦ Renascer</a><a href="#profile-journey">◈ Jornada</a><a href="#profile-settings">⚙ Preferências</a></nav>
+          <section class="profile-panel" aria-labelledby="account-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">SEMPRE COM VOCÊ</span><h3 id="account-title">Sua conta</h3></div><span class="profile-mini-icon" aria-hidden="true">☁</span></div>
+            <div class="profile-sync" id="profile-sync" data-status="pending"><span class="profile-sync-dot" aria-hidden="true"></span><div><strong id="clicker-sync-status" data-status="pending" role="status">Aguardando confirmação do salvamento</strong><small id="profile-sync-detail">O status será atualizado pelo serviço de sincronização.</small></div></div>
+            <div class="profile-connection"><div><strong>Seu perfil no pacoca.net</strong><p>Nome e foto vêm do login. A atualização contínua com o site estará disponível em breve.</p></div><span class="profile-coming">Em preparação</span></div>
+            <div class="profile-account-footer"><span>Você controla sua jornada.</span><button id="btn-logout" class="profile-text-button" type="button">Sair da conta ↗</button></div>
+          </section>
+          <section id="profile-ascension" class="profile-ascension" aria-labelledby="ascension-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">UM NOVO COMEÇO</span><h3 id="ascension-title">Renascer para ir além</h3></div><span class="ascension-emblem" aria-hidden="true">✦</span></div>
+            <p class="profile-section-description">Transforme sua produção histórica em ouro e abra novos caminhos para o seu império.</p>
+            <div class="ascension-balance"><div><span>SEU OURO DISPONÍVEL</span><strong id="prestige-count">0</strong></div><div class="ascension-multiplier"><strong id="prestige-mult">1x</strong><span>bônus global</span></div></div>
+            <div class="ascension-progress"><div><strong id="prestige-next-gain">Ganho ao renascer: +0</strong><span id="prestige-progress-pct">0%</span></div><div class="ascension-track" id="prestige-progress" role="progressbar" aria-label="Progresso para o próximo ouro" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="prestige-bar-fill"></div></div><p id="prestige-missing-text">Produza paçocas para alcançar seu primeiro ouro.</p></div>
+            <div class="ascension-rules"><div><span aria-hidden="true">✓</span><strong>Vai com você</strong><p>Ouro, talentos, conquistas e estatísticas.</p></div><div><span aria-hidden="true">↺</span><strong>Começa de novo</strong><p>Saldo, estruturas e melhorias da loja.</p></div></div>
+            <button id="btn-prestige" class="profile-primary-button" type="button" disabled>Continue produzindo para renascer</button>
+            <p class="ascension-footnote">Você revisa a recompensa antes de confirmar.</p>
+          </section>
+          <section id="profile-journey" class="profile-panel" aria-labelledby="journey-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">CADA CLIQUE CONTA</span><h3 id="journey-title">Sua jornada em números</h3></div></div>
+            <div class="profile-stats">
+              <div><span>◉ Cliques totais</span><strong id="stat-clicks">0</strong></div>
+              <div><span>◈ Produção histórica</span><strong id="stat-earned">0</strong></div>
+              <div><span>▥ Estruturas atuais</span><strong id="stat-structures">0</strong></div>
+              <div><span>◷ Desde o início</span><strong id="stat-time">0m</strong></div>
+              <div><span>↗ Paçocas por segundo</span><strong id="stat-pps">0</strong></div>
+              <div><span>☝ Clique base</span><strong id="stat-click-value">1</strong></div>
             </div>
-
-            <div class="prestige-progress-clean">
-              <div class="progress-labels-clean">
-                <strong id="prestige-next-gain" class="gain-text">Ganho: +0 🌟</strong>
-                <strong id="prestige-progress-pct" class="pct-text">0%</strong>
-              </div>
-              <div class="progress-track-clean">
-                <div id="prestige-bar-fill" class="progress-fill-clean" style="width: 0%;"></div>
-              </div>
-              <small id="prestige-missing-text" class="missing-text-clean">Faltam 100 mi Paçocas para a próxima!</small>
-            </div>
-
-            <div class="prestige-rules-clean">
-              <div class="rule-row">
-                <div class="rule-icon-box keep">🎒</div>
-                <div class="rule-details">
-                  <strong>O que você MANTÉM:</strong>
-                  <p>Paçocas de Ouro, bônus de produção, estatísticas e conquistas.</p>
-                </div>
-              </div>
-              <div class="rule-row">
-                <div class="rule-icon-box reset">♻️</div>
-                <div class="rule-details">
-                  <strong>O que RECOMEÇA:</strong>
-                  <p>Saldo de paçocas, geradores e melhorias da loja.</p>
-                </div>
-              </div>
-            </div>
-
-            <button id="btn-prestige" class="action-btn prestige-btn-clean" disabled>Renascer Bloqueado</button>
-          </div>
-        </div>
-
-        <div class="profile-section" style="margin-top: 20px;">
-          <h2>Estatísticas</h2>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <span class="stat-label">Cliques Totais</span>
-              <strong id="stat-clicks">0</strong>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Total Acumulado</span>
-              <strong id="stat-earned">0</strong>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Estruturas</span>
-              <strong id="stat-structures">0</strong>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Tempo de Jogo</span>
-              <strong id="stat-time">0m</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="profile-section" style="margin-top: 20px;">
-          <h2>Conquistas</h2>
-          <div id="achievements-list" class="shop-list"></div>
-        </div>
-
-        <div class="profile-section" style="margin-top: 20px;">
-          <h2>Opções e Sistema</h2>
-          <div class="settings-panel">
-            
-            <div class="setting-row">
-              <div class="setting-info">
-                <strong>🎵 Música de Fundo</strong>
-                <small>Banda sonora do jogo</small>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="toggle-music" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="setting-row">
-              <div class="setting-info">
-                <strong>🔊 Efeitos Sonoros</strong>
-                <small>Sons de cliques e upgrades</small>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="toggle-sfx" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #E8D8C8; margin: 16px 0;">
-
-            <button id="btn-reset-save" class="action-btn danger" style="width: 100%;">
-              ⚠️ Apagar Progresso (Reset)
-            </button>
-          </div>
+          </section>
+          <section class="profile-panel" aria-labelledby="achievements-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">SEUS MARCOS</span><h3 id="achievements-title">Pequenas grandes vitórias</h3></div><span id="profile-achievement-count" class="profile-count">0/0</span></div>
+            <div id="achievement-progress" class="achievement-progress" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="achievement-progress-fill"></span></div>
+            <div class="achievement-filters" role="group" aria-label="Filtrar conquistas"><button type="button" data-achievement-filter="all" aria-pressed="true">Todas</button><button type="button" data-achievement-filter="unlocked" aria-pressed="false">Conquistadas</button><button type="button" data-achievement-filter="locked" aria-pressed="false">A conquistar</button></div>
+            <div id="achievements-list" class="profile-achievements"></div>
+            <p id="achievement-empty" class="profile-empty" hidden>Nenhuma conquista por aqui ainda. Seu próximo clique pode mudar isso.</p>
+          </section>
+          <section id="profile-settings" class="profile-panel" aria-labelledby="settings-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">DO SEU JEITO</span><h3 id="settings-title">Som e preferências</h3></div></div>
+            <div class="profile-setting"><div class="profile-setting-icon" aria-hidden="true">♫</div><div><label for="toggle-music">Música de fundo</label><p>A trilha sonora do seu império.</p></div><label class="toggle-switch"><input type="checkbox" id="toggle-music" aria-label="Música de fundo" checked><span class="slider"></span></label></div>
+            <div class="profile-setting"><div class="profile-setting-icon" aria-hidden="true">◖</div><div><label for="toggle-sfx">Efeitos sonoros</label><p>Cliques, compras e conquistas.</p></div><label class="toggle-switch"><input type="checkbox" id="toggle-sfx" aria-label="Efeitos sonoros" checked><span class="slider"></span></label></div>
+          </section>
+          <section class="profile-danger" aria-labelledby="reset-title"><div><h3 id="reset-title">Recomeçar do zero</h3><p>Apaga todo o progresso da conta. Esta ação é permanente.</p></div><button id="btn-reset-save" class="profile-danger-button" type="button">Apagar progresso</button></section>
+          <footer class="profile-footer">Feito de amendoim, cliques e grandes ideias.<span>Paçoca Clicker</span></footer>
         </div>
       </section>
 

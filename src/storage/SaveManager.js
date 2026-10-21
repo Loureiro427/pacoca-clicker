@@ -72,16 +72,6 @@ export class SaveManager {
     return this.read(this.saveKey);
   }
 
-  static async replace(state) {
-    const validated = this.validate(state);
-    if (!validated || !this.save(validated)) throw new Error('Não foi possível importar o save');
-    while (this.pendingState || this.syncPromise) {
-      if (!this.remoteSave) break;
-      await this.flush();
-      if (this.resetting) throw new Error('Conflito ao importar o save');
-    }
-  }
-
   static async reset() {
     this.resetting = true;
     clearTimeout(this.syncTimer);

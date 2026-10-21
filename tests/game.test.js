@@ -110,20 +110,3 @@ test('save corrompido fica em backup e falha de armazenamento não lança erro',
     assert.equal(SaveManager.save({ score: 10 }), false);
   } finally { globalThis.localStorage = previousStorage; console.warn = previousWarn; }
 });
-
-test('exportação preserva histórico e importação inválida mantém o save existente', () => {
-  const game = gameState();
-  game.doPrestige();
-  const exported = JSON.parse(atob(game.exportSaveCode()));
-  assert.equal(SaveManager.validate(exported).claimedPrestigeChips, 2);
-  const previousStorage = globalThis.localStorage;
-  let writes = 0;
-  let alerts = 0;
-  globalThis.localStorage = { setItem() { writes++; } };
-  game.ui.showDialog = () => { alerts++; return Promise.resolve(true); };
-  try {
-    game.importSaveCode(btoa(JSON.stringify({ score: 10, inventory: { cursor: -5 } })));
-    assert.equal(writes, 0);
-    assert.equal(alerts, 1);
-  } finally { globalThis.localStorage = previousStorage; }
-});

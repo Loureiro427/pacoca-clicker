@@ -5,14 +5,13 @@ import { PacocaApi } from './api/PacocaApi.js';
 import { AuthManager } from './systems/AuthManager.js';
 import { SaveManager } from './storage/SaveManager.js';
 import { RankingUI } from './ui/RankingUI.js';
-
-const CDN_URL = (import.meta.env.VITE_PACOCA_CDN_URL || 'https://cdn.pacoca.net/pacoca-prod-files').replace(/\/+$/, '');
+import { updateAccountProfile, updateAccountSyncStatus } from './ui/ProfileAccount.js';
 
 const api = new PacocaApi();
 
 document.addEventListener('DOMContentLoaded', () => {
   const auth = new AuthManager(api, async ({ user, bootstrap }) => {
-    hydrateUserProfile(user);
+    updateAccountProfile(user, { isDemo: api.isMocked });
 
     await SaveManager.configure({
       userId: user.id,
@@ -20,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
       remoteRevision: bootstrap.profile?.revision || 0,
       saveRemote: (state, revision) => api.saveProgress(state, revision),
       resetRemote: () => api.resetProgress(),
-      onSyncStatus: updateSyncStatus,
+      onSyncStatus: updateAccountSyncStatus,
     });
 
     const ranking = new RankingUI(api);
@@ -30,42 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   auth.init();
 });
-
-function hydrateUserProfile(user) {
-  const name = document.getElementById('clicker-profile-name');
-  const username = document.getElementById('clicker-profile-username');
-  const avatar = document.getElementById('clicker-profile-avatar');
-
-  if (name) name.textContent = user?.name || 'Jogador';
-  if (username) username.textContent = user?.user_name ? `@${user.user_name}` : '';
-  if (avatar) {
-    avatar.src = avatarUrl(user?.img_account);
-    avatar.onerror = () => {
-      avatar.onerror = null;
-      avatar.src = '/pacoca.png';
-    };
-  }
-}
-
-function avatarUrl(path) {
-  if (!path) return '/pacoca.png';
-  if (/^(https?:|data:|blob:)/.test(path)) return path;
-  return `${CDN_URL}/${String(path).replace(/^\/+/, '')}`;
-}
-
-function updateSyncStatus(status) {
-  const element = document.getElementById('clicker-sync-status');
-  if (!element) return;
-
-  const labels = {
-    syncing: 'Sincronizando...',
-    synced: 'Progresso salvo na nuvem',
-    offline: 'Sem conexão — progresso salvo neste dispositivo',
-    conflict: 'Progresso mais recente encontrado na nuvem',
-  };
-  element.textContent = labels[status] || '';
-  element.dataset.status = status;
-}
 
 /**
  * Inicialização dos sistemas do jogo Paçoca Clicker
