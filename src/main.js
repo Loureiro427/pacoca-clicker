@@ -76,6 +76,11 @@ function initGame() {
 
   ui.init(game);
 
+  // O login é assíncrono; libera o áudio na próxima interação real com o jogo.
+  // Mantém o listener para retomar o contexto após voltar de outra aba/app.
+  document.addEventListener('pointerdown', () => game.audio.init(), { capture: true });
+  document.addEventListener('keydown', () => game.audio.init(), { capture: true });
+
   // Selecionar o botão do mascote Paçoca
   const pacocaBtn = document.getElementById('pacoca-button');
 
