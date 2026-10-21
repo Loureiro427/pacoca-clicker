@@ -3192,3 +3192,13 @@ html, body {
 .terms-dialog .support-primary { width: 100%; margin-top: 24px; }
 @media (pointer: coarse) { #app, .app-dialog, .support-dialog, .talent-dialog { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; } input, textarea, [contenteditable='true'] { user-select: text; -webkit-user-select: text; -webkit-touch-callout: default; } }
 @media (max-width: 360px) { .support-dialog-body { padding: 22px 16px; } .support-actions { grid-template-columns: 1fr; } }
+
+/* Campanhas usam os mesmos componentes de suporte do perfil. */
+.profile-support-row[hidden], #admin-codes-form[hidden] { display: none; }
+#admin-codes-form { display: grid; gap: 10px; }
+.support-dialog input:not([type="checkbox"]) { box-sizing: border-box; width: 100%; min-width: 0; padding: 13px; border: 1px solid #decab5; border-radius: 12px; background: #fffaf3; color: #543825; font: inherit; }
+.codes-list { display: grid; gap: 12px; margin: 16px 0; }
+.code-card { padding: 14px; border: 1px solid #decab5; border-radius: 14px; overflow-wrap: anywhere; }
+.code-card p { margin: 8px 0; }
+.code-card .support-actions { flex-wrap: wrap; }
+.code-active { display: flex; align-items: center; gap: 8px; }

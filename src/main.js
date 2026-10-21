@@ -1,3 +1,5 @@
+import { ReportsClient } from './systems/ReportsClient.js';
+import { initCodesUI } from './ui/CodesUI.js';
 import { Game } from './game/Game.js';
 import { UIManager } from './ui/UIManager.js';
 import { bindClickExperience } from './ui/ClickExperience.js';
@@ -29,8 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ranking = new RankingUI(api);
     ranking.init(bootstrap.ranking);
-    initGame();
-    initSupportUI({ user, demo: api.isMocked });
+    const game = initGame();
+    initCodesUI({ api, user, game });
+    initSupportUI({ user, demo: api.isMocked, client: new ReportsClient({ api }) });
   });
 
   auth.init();
@@ -63,4 +66,5 @@ function initGame() {
     if (document.visibilityState === 'hidden') persistBeforeLeaving();
   });
 
+  return game;
 }

@@ -58,3 +58,19 @@ test('canal não configurado não faz nenhuma chamada de rede', async () => {
   await assert.rejects(client.send(report), /não está configurado/);
   assert.equal(calls, 0);
 });
+
+test('suporte integrado usa sessão da API e exige recibo antes de confirmar', async () => {
+  let request;
+  const api = { request: async (path, options) => { request = { path, ...options }; return { sent: true, report_id: 'receipt-1' }; } };
+  const client = new ReportsClient({ api });
+  await client.send(report, { platform: 'android', user: { id: 'forged' } });
+  assert.equal(request.path, '/clicker/reports');
+  assert.equal(request.body.platform, 'android');
+  assert.equal(request.body.user, undefined);
+  assert.equal(request.body.type, 'problem');
+  assert.ok(request.body.request_id);
+  const unconfirmed = new ReportsClient({ api: { request: async () => ({ sent: true }) } });
+  await assert.rejects(unconfirmed.send(report), /não confirmou/);
+  const demo = new ReportsClient({ api: { isMocked: true } });
+  await assert.rejects(demo.send(report), /Nenhuma mensagem/);
+});
