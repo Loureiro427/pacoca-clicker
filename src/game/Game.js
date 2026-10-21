@@ -419,15 +419,20 @@ export class Game {
           .then(() => window.location.reload())
           .catch(() => this.ui.showNotification('Não foi possível importar o save', 'Verifique sua conexão e tente novamente.'));
       } else {
-        alert('Código de save inválido.');
+        this.ui.showDialog({ icon: '📦', title: 'Não encontramos seu progresso', message: 'Esse código de save é inválido. Copie o código completo e tente novamente.', confirmText: 'Voltar e tentar' });
       }
     } catch (e) {
-      alert('Código de save inválido.');
+      this.ui.showDialog({ icon: '📦', title: 'Não encontramos seu progresso', message: 'Esse código de save é inválido. Copie o código completo e tente novamente.', confirmText: 'Voltar e tentar' });
     }
   }
 
   async resetProgress() {
-    if (confirm('Tem certeza de que deseja reiniciar todo o progresso? Esta ação não pode ser desfeita.')) {
+    const accepted = await this.ui.showDialog({
+      icon: '↺', title: 'Recomeçar do zero?',
+      message: 'Seu saldo, estruturas, talentos e conquistas serão apagados desta conta, incluindo o progresso salvo na nuvem. Essa ação não pode ser desfeita.',
+      confirmText: 'Apagar meu progresso', cancelText: 'Manter meu império', danger: true,
+    });
+    if (accepted) {
       try {
         await SaveManager.reset();
         window.location.reload();

@@ -4,8 +4,13 @@ import { UpgradesData } from '../game/Upgrades.js';
 import { AchievementsData } from '../game/Achievements.js';
 import { calculateCost } from '../game/Economy.js';
 import { Prestige } from '../game/Prestige.js';
+import { AppDialog } from './AppDialog.js';
 
 export class UIManager {
+  showDialog(options) {
+    return AppDialog.open(options);
+  }
+
   constructor() {
     this.scoreDisplay = document.getElementById('score-display');
     this.ppsDisplay = document.getElementById('pps-display');
@@ -462,18 +467,36 @@ export class UIManager {
       btnNormal.parentNode.replaceChild(newNormal, btnNormal);
       btnAd.parentNode.replaceChild(newAd, btnAd);
 
+      let collecting = false;
+      newNormal.disabled = false;
+      newAd.disabled = false;
+      newAd.innerText = '🎬 Dobrar Recompensa (2x)';
+
       newNormal.addEventListener('click', () => {
+        if (collecting) return;
+        collecting = true;
+        newNormal.disabled = true;
+        newAd.disabled = true;
         modal.style.display = 'none';
         if (onCollectNormal) onCollectNormal();
       });
 
       newAd.addEventListener('click', () => {
+        if (collecting) return;
+        collecting = true;
+        newNormal.disabled = true;
+        newAd.disabled = true;
         newAd.innerText = '⏳ Carregando...';
         setTimeout(() => {
           modal.style.display = 'none';
           newAd.innerText = '🎬 Dobrar Recompensa (2x)';
-          alert('🎉 Anúncio assistido! Sua recompensa foi dobrada!');
           if (onCollectDouble) onCollectDouble();
+          this.showDialog({
+            icon: '🎁', title: 'Uma volta em grande estilo!',
+            message: 'Sua recompensa offline foi dobrada e já está no seu saldo.',
+            confirmText: 'Continuar meu império',
+            reward: { label: 'PAÇOCAS COLETADAS · 2×', value: `+${formatNumber(Math.floor(amount * 2))}` },
+          });
         }, 800);
       });
     }
