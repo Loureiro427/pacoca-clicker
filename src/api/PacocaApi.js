@@ -1,3 +1,5 @@
+import { createDemoRanking } from './RankingDemo.js';
+
 const API_URL = (import.meta.env.VITE_PACOCA_API_URL || 'https://api.pacoca.net/api').replace(/\/+$/, '');
 const USE_LOCAL_MOCK = import.meta.env.DEV;
 const LOCAL_USER = {
@@ -91,7 +93,13 @@ export class PacocaApi {
   async ranking(category = 'fortune') {
     if (this.isMocked) return this.mockRanking(category);
 
-    return this.request(`/clicker/ranking?category=${encodeURIComponent(category)}`);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    try {
+      return await this.request(`/clicker/ranking?category=${encodeURIComponent(category)}`, { signal: controller.signal });
+    } finally {
+      clearTimeout(timeout);
+    }
   }
 
   async logout(userId) {
@@ -104,7 +112,7 @@ export class PacocaApi {
     });
   }
 
-  async request(path, { method = 'GET', body, auth = true } = {}) {
+  async request(path, { method = 'GET', body, auth = true, signal } = {}) {
     const headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -121,6 +129,7 @@ export class PacocaApi {
       response = await fetch(`${API_URL}${path}`, {
         method,
         headers,
+        signal,
         body: body === undefined ? undefined : JSON.stringify(body),
       });
     } catch (error) {
@@ -147,19 +156,7 @@ export class PacocaApi {
   }
 
   mockRanking(category = 'fortune') {
-    const inventory = this.mockState?.inventory || {};
-    const values = {
-      fortune: Number(this.mockState?.score) || 0,
-      gold: Number(this.mockState?.prestigeChips) || 0,
-      structures: Object.values(inventory).reduce((total, amount) => total + (Number(amount) || 0), 0),
-    };
-    const entry = {
-      position: 1,
-      user: LOCAL_USER,
-      value: values[category] || 0,
-    };
-
-    return { category, players: [entry], current_player: entry };
+    return createDemoRanking(category, this.mockState, LOCAL_USER);
   }
 
   readMockState() {

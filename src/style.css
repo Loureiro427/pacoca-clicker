@@ -1996,207 +1996,6 @@ html, body {
 }
 
 /* ==========================================================================
-   RANKING GLOBAL (LEADERBOARD)
-   ========================================================================== */
-.rank-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 24px;
-  background: #FDF7ED;
-  padding: 4px;
-  border-radius: 12px;
-  border: 1px solid #E8D8C8;
-}
-
-.rank-tab {
-  flex: 1;
-  padding: 8px 12px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #8B6552;
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.rank-tab.active {
-  background: #FFFFFF;
-  color: #A26C45;
-  box-shadow: 0 2px 4px rgba(74, 48, 34, 0.08);
-}
-
-/* --- PÓDIO TOP 3 --- */
-.podium-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 12px;
-  margin-bottom: 24px;
-  padding-bottom: 10px;
-  border-bottom: 2px dashed #E8D8C8;
-}
-
-.podium-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  width: 30%;
-}
-
-.podium-step.step-1 { margin-bottom: 15px; width: 36%; z-index: 2; } /* 1º Lugar mais alto */
-.podium-step.step-2 { margin-bottom: 5px; }
-.podium-step.step-3 { margin-bottom: 0px; }
-
-.podium-crown {
-  font-size: 1.8rem;
-  margin-bottom: -8px;
-  z-index: 3;
-  animation: mascotPulse 2s infinite alternate;
-}
-
-.podium-avatar-wrapper {
-  position: relative;
-  border-radius: 50%;
-  padding: 4px;
-  background: #FFFFFF;
-  margin-bottom: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.podium-avatar-wrapper.gold   { border: 3px solid #FFD700; background: linear-gradient(145deg, #FFF8E1, #FFECB3); }
-.podium-avatar-wrapper.silver { border: 3px solid #C0C0C0; background: linear-gradient(145deg, #F5F7FA, #ECEFF1); }
-.podium-avatar-wrapper.bronze { border: 3px solid #CD7F32; background: linear-gradient(145deg, #FBE9E7, #FFCCBC); }
-
-.podium-avatar {
-  width: 100%;
-  height: auto;
-  border-radius: 50%;
-  display: block;
-}
-
-.podium-medal {
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 20px;
-  background: #333;
-  color: #FFF;
-  font-size: 0.7rem;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 2px solid #FFF;
-}
-
-.podium-avatar-wrapper.gold .podium-medal { background: #FFD700; color: #7A5600; border-color: #FFF8E1; }
-.podium-avatar-wrapper.silver .podium-medal { background: #C0C0C0; color: #37474F; border-color: #F5F7FA; }
-.podium-avatar-wrapper.bronze .podium-medal { background: #CD7F32; color: #4E342E; border-color: #FBE9E7; }
-
-.podium-name {
-  font-size: 0.75rem;
-  color: #4A3022;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.podium-step.step-1 .podium-name {
-  font-size: 0.85rem;
-  font-weight: 900;
-  color: #A26C45;
-}
-
-.podium-score {
-  font-size: 0.7rem;
-  color: #8B6552;
-  font-weight: 700;
-}
-
-/* --- LISTA DE JOGADORES --- */
-.ranking-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 10px;
-  padding-right: 4px;
-}
-
-.rank-card {
-  display: flex;
-  align-items: center;
-  background: #FFFFFF;
-  border: 1.5px solid #E8D8C8;
-  border-radius: 12px;
-  padding: 8px 12px;
-  gap: 12px;
-}
-
-.rank-pos {
-  font-size: 0.9rem;
-  font-weight: 900;
-  color: #A89588;
-  width: 24px;
-  text-align: center;
-}
-
-.rank-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #FDF7ED;
-  border: 1px solid #D4C4B7;
-  padding: 2px;
-}
-
-.rank-info {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.rank-info strong {
-  font-size: 0.85rem;
-  color: #4A3022;
-}
-
-.rank-info span {
-  font-size: 0.75rem;
-  color: #D96B00;
-  font-weight: 700;
-}
-
-/* Destaque para o Card do Jogador Atual */
-.rank-card.is-me {
-  background: linear-gradient(145deg, #FFF4E6, #FFE8CC);
-  border: 2px solid #A26C45;
-  box-shadow: 0 -4px 10px rgba(162, 108, 69, 0.15);
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
-}
-
-.rank-card.is-me .rank-pos {
-  color: #A26C45;
-}
-
-.rank-card.is-me .rank-info strong {
-  color: #A26C45;
-  font-size: 0.95rem;
-}
-
-/* ==========================================================================
    ANIMAÇÃO DOS NÚMEROS FLUTUANTES (CLIQUES)
    ========================================================================== */
 .floating-number {
@@ -2344,3 +2143,104 @@ html, body {
 .rank-avatar {
   object-fit: cover;
 }
+
+/* Ranking: superfície independente com as cores do jogo. */
+#ranking-area { touch-action: pan-y; }
+#ranking-area.tab-content.active { display: block; flex: 1; min-height: 0; padding: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+.ranking-shell { width: 100%; max-width: 820px; margin: 0 auto; padding: 16px 16px 24px; }
+.ranking-hero { position: relative; overflow: hidden; padding: 24px; color: #fff7e9; border: 1px solid #67422b; border-radius: 24px; background: radial-gradient(ellipse at 100% 0, #8b5937 0, transparent 62%), #38251c; box-shadow: 0 10px 24px #3e272313; }
+.ranking-eyebrow { color: #e5c7a3; font-size: .62rem; font-weight: 750; letter-spacing: .12em; }
+.ranking-eyebrow span { margin: 0 5px; color: #efbb66; }
+.ranking-hero-line { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 20px; }
+.ranking-hero h2 { font-size: clamp(1.55rem, 4vw, 2.25rem); line-height: 1.15; letter-spacing: -.045em; margin: 0; font-weight: 850; }
+.ranking-hero h2 em { font-style: normal; color: #f4c77d; }
+.ranking-hero p { color: #dec9b6; font-size: .78rem; margin: 12px 0 0; line-height: 1.5; }
+.ranking-trophy { display: grid; place-items: center; flex-shrink: 0; width: 86px; height: 86px; border: 1px solid #e6b56740; border-radius: 26px; background: linear-gradient(135deg, #e6b56722, #e6b56708); font-size: 2.8rem; transform: rotate(8deg); }
+.ranking-hero-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; border-top: 1px solid #e6c29c33; padding-top: 14px; margin-top: 22px; font-size: .65rem; color: #e2c6a7; }
+.ranking-hero-footer > :first-child::before { content: '◷'; margin-right: 6px; }
+.ranking-demo { padding: 10px 12px; background: #fff1d7; border: 1px solid #ecd4a2; border-radius: 10px; font-size: .7rem; color: #795223; line-height: 1.5; margin-top: 12px; }
+.ranking-shell [hidden] { display: none !important; }
+.rank-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; background: #e9dfd3; padding: 5px; border-radius: 14px; margin: 20px 0 10px; }
+.rank-tab { min-height: 44px; min-width: 0; padding: 9px 4px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: #765b48; font: inherit; font-size: .78rem; font-weight: 750; cursor: pointer; transition: background .18s, box-shadow .18s; }
+.rank-tab span { margin-right: 5px; }
+.rank-tab.active { background: #fffdf9; color: #54331e; border-color: #e6d7c7; box-shadow: 0 2px 5px #51352012; }
+.ranking-shell button:focus-visible { outline: 3px solid #9c602d; outline-offset: 3px; }
+.ranking-description { min-height: 32px; font-size: .71rem; color: #795f4c; line-height: 1.5; margin: 0 2px 20px; }
+.ranking-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ranking-overline { font-size: .58rem; font-weight: 800; letter-spacing: .12em; color: #896a51; }
+.ranking-toolbar h3 { margin: 4px 0 0; font-size: 1.25rem; letter-spacing: -.035em; color: #4c3020; }
+.ranking-refresh { display: inline-flex; justify-content: center; align-items: center; gap: 6px; min-height: 44px; padding: 8px 12px; border: 1px solid #dcc9b4; border-radius: 12px; background: #fffcf6; color: #65442d; font: inherit; font-size: .72rem; font-weight: 700; cursor: pointer; }
+.ranking-refresh:hover { background: #f0e3d1; }
+.ranking-refresh:disabled { cursor: wait; opacity: .55; }
+.ranking-refresh > span { font-size: 1.2rem; }
+.ranking-feedback { min-height: 18px; margin: 10px 0 16px; font-size: .67rem; color: #80634e; line-height: 1.5; }
+.podium-container { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: end; padding: 0; margin-bottom: 26px; }
+.podium-container:empty { display: none; }
+.podium-step { min-width: 0; width: auto; display: flex; position: relative; flex-direction: column; align-items: center; text-align: center; padding: 18px 6px 15px; border: 1px solid #ded4c8; background: linear-gradient(170deg, #fffdfa, #f2ebe1); border-radius: 18px; }
+.podium-step.step-1 { grid-column: 2; grid-row: 1; padding-top: 25px; padding-bottom: 24px; border-color: #d4ab60; background: radial-gradient(ellipse at top, #fff1c7, #faf0dd); box-shadow: 0 7px 18px #9b6a2912; }
+.podium-step.step-2 { grid-column: 1; grid-row: 1; }
+.podium-step.step-3 { grid-column: 3; grid-row: 1; background: linear-gradient(170deg, #fff8ef, #eee1d2); border-color: #d9b99c; }
+.podium-title { font-size: .49rem; color: #806b59; letter-spacing: .07em; font-weight: 850; margin-bottom: 15px; }
+.step-1 .podium-title { color: #93621b; }
+.podium-avatar-wrapper { width: 54px; height: 54px; position: relative; padding: 3px; border: 2px solid #c4c6ca; border-radius: 50%; margin-bottom: 17px; background: #fff8ed; }
+.podium-avatar-wrapper.gold { width: 64px; height: 64px; border-color: #d6a044; box-shadow: 0 0 0 5px #e5c27a25; }
+.podium-avatar-wrapper.bronze { border-color: #b77d53; }
+.podium-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.podium-medal { position: absolute; bottom: -9px; left: 50%; transform: translateX(-50%); display: grid; place-items: center; width: 22px; height: 22px; border: 2px solid #fff8ed; border-radius: 50%; background: #727c85; color: #fff; font-size: .64rem; font-weight: 900; }
+.gold .podium-medal { background: #b7842c; }
+.bronze .podium-medal { background: #a46d45; }
+.podium-name { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .77rem; color: #503521; }
+.podium-username { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .59rem; color: #876c54; margin-top: 3px; }
+.podium-score { max-width: 100%; overflow-wrap: anywhere; font-size: 1rem; letter-spacing: -.04em; color: #68431d; margin-top: 13px; font-variant-numeric: tabular-nums; }
+.step-1 .podium-score { font-size: 1.2rem; color: #8a5a14; }
+.podium-unit { font-size: .55rem; color: #846b50; margin-top: 2px; }
+.ranking-list-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.ranking-list-heading h3 { font-size: .9rem; margin: 0; }
+.ranking-list-heading > span { font-size: .62rem; color: #80664e; }
+.ranking-columns { display: flex; justify-content: space-between; gap: 10px; font-size: .53rem; letter-spacing: .08em; font-weight: 750; color: #8a715e; padding: 0 12px 8px; }
+.ranking-list { display: flex; flex-direction: column; gap: 7px; }
+.rank-card { display: grid; grid-template-columns: 34px 36px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 12px; background: #fffdf9; border: 1px solid #e5d8c8; border-radius: 14px; }
+.rank-pos { text-align: center; font-size: .7rem; font-weight: 800; color: #8c725b; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rank-avatar { width: 36px; height: 36px; border: 1px solid #e0d0bb; border-radius: 50%; background: #f1e7d9; object-fit: cover; padding: 2px; }
+.rank-info { display: flex; flex-direction: column; min-width: 0; gap: 3px; }
+.rank-info strong { font-size: .75rem; color: #503522; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rank-info span { font-size: .62rem; color: #8a715e; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rank-value { text-align: right; display: flex; flex-direction: column; gap: 3px; max-width: 120px; }
+.rank-value strong { font-size: .8rem; color: #654121; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rank-value span { font-size: .55rem; color: #8a715e; }
+.ranking-personal { margin-top: 20px; border: 1px solid #d8b986; border-radius: 18px; background: linear-gradient(120deg, #fff7e4, #f4e5cd); padding: 14px 12px 12px; }
+.rank-card.is-me { border: none; background: transparent; box-shadow: none; padding: 12px 0 8px; }
+.rank-card.is-me .rank-pos { color: #855a24; }
+.ranking-personal p { margin: 7px 2px 0; border-top: 1px solid #e2cfae; padding-top: 10px; line-height: 1.6; font-size: .65rem; color: #79603e; }
+.ranking-footer { display: flex; flex-direction: column; gap: 5px; align-items: center; color: #8b735b; font-size: .58rem; line-height: 1.5; text-align: center; padding-top: 18px; }
+#ranking-state { text-align: center; border: 1px dashed #dac7ae; border-radius: 18px; margin: 12px 0; padding: 26px 16px; color: #61452d; }
+#ranking-state strong { display: block; font-size: .9rem; }
+#ranking-state p { font-size: .73rem; line-height: 1.7; color: #876a51; margin: 8px auto 14px; max-width: 320px; }
+.ranking-state-icon { display: grid; place-items: center; margin: 0 auto 10px; width: 42px; height: 42px; border-radius: 14px; background: #f1e5cf; font-size: 1.5rem; color: #a27433; }
+.ranking-list-note { font-size: .7rem; line-height: 1.5; color: #866b52; padding: 16px; text-align: center; }
+.ranking-skeleton { height: 64px; border-radius: 14px; background: linear-gradient(90deg, #e9dfd2, #f7f0e4, #e9dfd2); background-size: 200% 100%; animation: rankingShimmer 1.5s linear infinite; }
+@keyframes rankingShimmer { to { background-position: -200% 0; } }
+@media (min-width: 600px) {
+  .ranking-shell { padding: 28px; }
+  .ranking-hero { padding: 28px 32px; }
+  .ranking-trophy { width: 110px; height: 110px; font-size: 3.7rem; }
+  .podium-container { gap: 14px; }
+  .podium-step { padding: 22px 12px; }
+  .podium-step.step-1 { padding-top: 30px; padding-bottom: 32px; }
+  .podium-name { font-size: .9rem; }
+  .podium-title { font-size: .59rem; }
+  .rank-card { grid-template-columns: 46px 40px minmax(0, 1fr) auto; padding: 14px 18px; }
+  .rank-info strong { font-size: .85rem; }
+}
+@media (max-width: 360px) {
+  .ranking-shell { padding: 12px 10px 20px; }
+  .ranking-hero { padding: 18px; }
+  .ranking-trophy { width: 56px; height: 64px; border-radius: 18px; font-size: 2rem; }
+  .ranking-hero h2 { font-size: 1.35rem; }
+  .rank-card { grid-template-columns: 27px 30px minmax(0, 1fr) auto; gap: 6px; padding: 10px 8px; }
+  .rank-avatar { width: 30px; height: 30px; }
+  .rank-value { max-width: 83px; }
+  .podium-title { font-size: .43rem; letter-spacing: 0; }
+  .podium-name { font-size: .66rem; }
+}
+@media (prefers-reduced-motion: reduce) { .ranking-skeleton { animation: none; } .rank-tab { transition: none; } }

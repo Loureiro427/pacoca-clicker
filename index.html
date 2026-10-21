@@ -282,27 +282,42 @@
       </section>
 
       <!-- Aba 6: Ranking -->
-      <section id="ranking-area" class="tab-content">
-        <div class="profile-section" style="padding: 16px 12px; display: flex; flex-direction: column; height: 100%;">
-          
-          <div class="auth-header" style="align-items: center; text-align: center; margin-bottom: 10px;">
-            <h2 style="font-size: 1.6rem; margin-bottom: 2px;">🏆 Ranking Global</h2>
-            <p style="font-size: 0.8rem;">Os maiores impérios da rede Paçoca</p>
+      <section id="ranking-area" class="tab-content" aria-labelledby="ranking-title">
+        <div class="ranking-shell">
+          <header class="ranking-hero">
+            <div class="ranking-eyebrow">PAÇOCA CLICKER <span>•</span> CLASSIFICAÇÃO GLOBAL</div>
+            <div class="ranking-hero-line">
+              <div><h2 id="ranking-title">Grandes impérios.<br><em>Doces conquistas.</em></h2>
+              <p>Seu próximo lugar começa com um clique.</p></div>
+              <div class="ranking-trophy" aria-hidden="true">🏆</div>
+            </div>
+            <div class="ranking-hero-footer"><span>Todos os tempos</span><span id="ranking-source">Classificação global</span></div>
+          </header>
+          <div class="ranking-demo" id="ranking-demo" hidden>Modo demonstração · Jogadores ilustrativos, sem competição real.</div>
+          <div class="rank-tabs" role="group" aria-label="Categoria do ranking">
+            <button type="button" class="rank-tab active" data-category="fortune" aria-pressed="true"><span aria-hidden="true">◈</span> Fortuna</button>
+            <button type="button" class="rank-tab" data-category="gold" aria-pressed="false"><span aria-hidden="true">✦</span> Ouro</button>
+            <button type="button" class="rank-tab" data-category="structures" aria-pressed="false"><span aria-hidden="true">▥</span> Estruturas</button>
           </div>
-
-          <!-- Filtros de Categoria do Ranking -->
-          <div class="rank-tabs">
-            <button class="rank-tab active" data-category="fortune">Fortuna</button>
-            <button class="rank-tab" data-category="gold">Ouro 🌟</button>
-            <button class="rank-tab" data-category="structures">Estruturas</button>
+          <p id="ranking-description" class="ranking-description"></p>
+          <div class="ranking-toolbar">
+            <div><span class="ranking-overline">OS DESTAQUES</span><h3>Hall da paçoca</h3></div>
+            <button type="button" class="ranking-refresh" id="ranking-refresh"><span aria-hidden="true">↻</span> Atualizar</button>
           </div>
-
-          <div class="podium-container" id="ranking-podium"></div>
-          <div class="ranking-list" id="ranking-list-data">
-            <div class="ranking-state">Carregando ranking...</div>
+          <p id="ranking-feedback" class="ranking-feedback" role="status" aria-live="polite"></p>
+          <div id="ranking-results" aria-busy="false">
+            <div class="podium-container" id="ranking-podium" role="list" aria-label="Os três primeiros colocados"></div>
+            <div class="ranking-list-heading"><h3>Classificação</h3><span id="ranking-count"></span></div>
+            <div class="ranking-columns" aria-hidden="true"><span>POSIÇÃO / JOGADOR</span><span>PONTUAÇÃO</span></div>
+            <div class="ranking-list" id="ranking-list-data" role="list" aria-label="Demais colocados"></div>
+            <div id="ranking-state" class="ranking-state" hidden></div>
           </div>
-          <div class="rank-card is-me" id="ranking-current-player" style="display: none;"></div>
-
+          <aside class="ranking-personal" aria-label="Sua colocação">
+            <span class="ranking-overline">SEU IMPÉRIO</span>
+            <div id="ranking-current-player"></div>
+            <p id="ranking-personal-hint">Sua posição aparece quando seu progresso entrar na classificação.</p>
+          </aside>
+          <footer class="ranking-footer"><span id="ranking-updated">Aguardando atualização</span><span>Continue produzindo. Continue subindo.</span></footer>
         </div>
       </section>
 
