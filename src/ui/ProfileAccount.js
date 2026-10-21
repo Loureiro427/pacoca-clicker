@@ -4,6 +4,7 @@ const CDN_URL = (import.meta.env?.VITE_PACOCA_CDN_URL || 'https://cdn.pacoca.net
 let demo = false;
 
 const SYNC_STATES = {
+  invalid: ['Progresso inconsistente', 'O envio foi suspenso para proteger seu progresso. Reabra o jogo para carregar a cópia da conta.'],
   pending: ['Aguardando confirmação', 'O serviço de sincronização ainda não confirmou o salvamento.'],
   syncing: ['Salvando sua jornada…', 'Sincronizando seu progresso com a conta Paçoca.'],
   synced: ['Progresso salvo na nuvem', 'Seu progresso foi confirmado pelo serviço de sincronização.'],

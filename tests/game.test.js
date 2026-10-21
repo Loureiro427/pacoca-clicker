@@ -78,7 +78,7 @@ test('automação aplica o multiplicador do frenesi uma vez', () => {
   const game = gameState();
   game.skillTree.unlockedSkills.push('pas_8');
   Object.assign(game, { clickValue: 7, frenzyMultiplier: 7, frenzyTimeLeft: 20,
-    autoclickTimer: 10, lastTick: Date.now(), pps: 0, maoDePedraTime: 0 });
+    autoclickTimer: 10, lastTick: performance.now(), pps: 0, maoDePedraTime: 0 });
   const previousInterval = globalThis.setInterval;
   globalThis.setInterval = callback => callback();
   try { game.startGameLoop(); } finally { globalThis.setInterval = previousInterval; }

@@ -8,6 +8,7 @@ import { SkillTreeManager } from './SkillTree.js';
 import { SkillTreeUI } from '../ui/SkillTreeUI.js';
 import { formatNumber } from '../utils/format.js';
 import { AudioManager } from '../audio/AudioManager.js';
+import { GeneratorsData } from './Generators.js';
 
 export class Game {
   constructor(ui) {
@@ -19,7 +20,7 @@ export class Game {
     
     // Variáveis de Talentos e Combos
     this.comboCount = 0;
-    this.lastClickTime = 0;
+    this.lastClickTime = -Infinity;
     this.maoDePedraTime = 0;
     this.autoclickTimer = 0;
     
@@ -36,6 +37,7 @@ export class Game {
     this.totalClicks = 0;
     this.totalEarned = 0;
     this.startTime = Date.now();
+    this.sessionStartedAt = performance.now();
     
     this.inventory = {
       cursor: 0, ajudante: 0, bancada: 0, carrinho: 0,
@@ -43,7 +45,7 @@ export class Game {
     };
     this.boughtUpgrades = [];
     this.unlockedAchievements = [];
-    this.lastTick = Date.now();
+    this.lastTick = performance.now();
     
     // Árvore de Talentos RPG
     this.skillTree = new SkillTreeManager(this);
@@ -60,9 +62,11 @@ export class Game {
   }
 
   click() {
+    if (![this.score, this.totalEarned, this.clickValue, this.pps].every(value => Number.isFinite(value) && value >= 0)
+      || !Number.isSafeInteger(this.totalClicks) || this.totalClicks >= Number.MAX_SAFE_INTEGER) return null;
     this.audio.init(); // Inicializa o contexto no primeiro clique do usuário
     this.audio.playClick(); // Toca o "Pop" viciante
-    const now = Date.now();
+    const now = performance.now();
     
     // TALENTO ACT_4: Sistema de Combo de Cliques
     if (now - this.lastClickTime < 800) {
@@ -106,6 +110,9 @@ export class Game {
 
     // CÁLCULO FINAL DO CLIQUE (this.clickValue já possui o Frenesi em tempo real!)
     const val = (this.clickValue * comboMult * critMult * maoDePedraMult) + extraVal;
+    const pendingEcho = this.skillTree.hasSkill('act_6') && (this.totalClicks + 1) % 10 === 0 ? this.clickValue : 0;
+    if (!Number.isFinite(val) || val < 0 || !Number.isFinite(this.score + val + pendingEcho)
+      || !Number.isFinite(this.totalEarned + val + pendingEcho)) return null;
     let gained = val;
     let echo = 0;
 
@@ -141,16 +148,22 @@ export class Game {
   }
 
   setBuyAmount(amount) {
+    if (![1, 10, 100].includes(amount)) return false;
     this.buyAmount = amount;
     this.ui.updateShop(this.score, this.inventory, this.buyAmount);
   }
 
   buy(genId, baseCost) {
+    const generator = GeneratorsData.find(item => item.id === genId);
+    if (!generator || ![1, 10, 100].includes(this.buyAmount)) return false;
+    // O preço vem do catálogo; argumentos de interface não determinam o custo.
+    baseCost = generator.baseCost;
     const owned = this.inventory[genId] || 0;
+    if (!Number.isSafeInteger(owned) || owned < 0 || !Number.isFinite(this.score) || this.score < 0) return false;
     
     const cost = this.getPurchaseCost(baseCost, owned, this.buyAmount);
     
-    if (this.score >= cost) {
+    if (Number.isFinite(cost) && cost > 0 && this.score >= cost && Number.isSafeInteger(owned + this.buyAmount)) {
       this.score -= cost;
       this.inventory[genId] = owned + this.buyAmount;
       this.audio.playBuy();
@@ -161,6 +174,7 @@ export class Game {
   }
 
   getPurchaseCost(baseCost, owned, amount = this.buyAmount) {
+    if (!Number.isFinite(baseCost) || baseCost <= 0 || !Number.isSafeInteger(owned) || owned < 0 || ![1, 10, 100].includes(amount)) return Infinity;
     let discount = 1;
     if (this.skillTree.hasSkill('pas_2')) discount -= 0.05;
     if (this.skillTree.hasSkill('pas_2a') && (amount === 10 || amount === 100)) discount -= 0.05;
@@ -169,7 +183,7 @@ export class Game {
 
   buyUpgrade(upgId) {
     const upg = UpgradesData.find(u => u.id === upgId);
-    if (upg && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost
+    if (upg && Number.isFinite(this.score) && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost
       && (this.inventory[upg.reqGen] || 0) >= upg.reqCount) {
       this.score -= upg.cost;
       this.boughtUpgrades.push(upgId);
@@ -196,8 +210,10 @@ export class Game {
       newChips,
       newMultiplierPercent,
       () => {
+        const remainingChips = Math.max(0, pendingChips - this.claimedPrestigeChips);
+        if (!remainingChips) return;
         // Callback executado somente se o jogador clicar em "Confirmar Renascimento"
-        this.prestigeChips += newChips;
+        this.prestigeChips += remainingChips;
         this.claimedPrestigeChips = pendingChips;
         this.score = 0;
         this.inventory = {
@@ -253,7 +269,7 @@ export class Game {
     
     // TALENTO PAS_7: Sobrecarga (+0.5% por min jogado, até 30%)
     if (this.skillTree.hasSkill('pas_7')) {
-      const minsPlayed = Math.floor((Date.now() - this.startTime) / 60000);
+      const minsPlayed = Math.max(0, Math.floor((performance.now() - (this.sessionStartedAt ?? performance.now())) / 60000));
       basePPS *= (1 + Math.min(0.30, minsPlayed * 0.005));
     }
 
@@ -278,8 +294,9 @@ export class Game {
 
   startGameLoop() {
     setInterval(() => {
-      const now = Date.now();
-      const delta = (now - this.lastTick) / 1000;
+      const now = performance.now();
+      // O relógio civil pode ser alterado. O tick usa tempo monotônico e limite offline.
+      const delta = Math.min(86400, Math.max(0, (now - this.lastTick) / 1000));
       this.lastTick = now;
 
       // Desconto de tempo do Mão de Pedra (Talento)
@@ -374,6 +391,17 @@ export class Game {
            if (this.skillTree.hasSkill('pas_4')) effectiveTime *= 1.5;
 
            const offlineEarned = effectiveTime * this.pps;
+           let collected = false;
+           const collect = multiplier => {
+             if (collected || !Number.isFinite(offlineEarned) || offlineEarned < 0) return;
+             collected = true;
+             this.score += offlineEarned * multiplier;
+             this.totalEarned += offlineEarned * multiplier;
+             this.checkAchievements();
+             this.refreshUI();
+             this.saveGame();
+             if (this.skillTree.hasSkill('pas_4a')) this.startFrenzy(2, 30);
+           };
 
            // Exibir o Modal de Boas-vindas Personalizado
            setTimeout(() => {
@@ -382,21 +410,11 @@ export class Game {
                offlineEarned,
                () => {
                  // Coletar Normal (1x)
-                 this.score += offlineEarned;
-                 this.totalEarned += offlineEarned;
-                 this.refreshUI();
-                 this.saveGame();
-                 // TALENTO PAS_4a: Frenesi de Boas-vindas
-                 if (this.skillTree.hasSkill('pas_4a')) this.startFrenzy(2, 30);
+                 collect(1);
                },
                () => {
                  // Dobrar Recompensa (2x - Simulação de Anúncio)
-                 const doubled = offlineEarned * 2;
-                 this.score += doubled;
-                 this.totalEarned += doubled;
-                 this.refreshUI();
-                 this.saveGame();
-                 if (this.skillTree.hasSkill('pas_4a')) this.startFrenzy(2, 30);
+                 collect(2);
                }
              );
            }, 400);
