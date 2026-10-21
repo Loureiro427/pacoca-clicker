@@ -150,12 +150,18 @@
       </section>
 
       <!-- Aba 4: Árvore de Talentos RPG -->
-      <section id="skills-area" class="tab-content">
-        <div class="skill-tree-container">
-          <div class="skill-tree-bg"></div>
-          <div class="skill-tree-viewport" id="skill-tree-viewport">
-            <div id="skill-nodes-container" style="display: flex; flex-direction: column; gap: 12px; width: 100%;"></div>
-          </div>
+      <section id="skills-area" class="tab-content" aria-labelledby="talents-title">
+        <div class="talents-shell">
+          <header class="talents-hero"><span class="talents-eyebrow">PAÇOCA CLICKER / EVOLUÇÃO</span><div class="talents-hero-line"><div><h2 id="talents-title">O poder de crescer<br><em>do seu jeito.</em></h2><p>Conecte talentos. Dê raízes ao seu império.</p></div><span class="talents-hero-symbol" aria-hidden="true">✧</span></div><div class="talents-summary"><div><span>OURO DISPONÍVEL</span><strong id="talents-gold">0 ✦</strong></div><div><span>TALENTOS APRENDIDOS</span><strong id="talents-learned">0 / 0</strong></div></div></header>
+          <div class="talents-tabs" role="group" aria-label="Caminhos de talentos"><button type="button" data-talent-branch="active" aria-pressed="true"><span aria-hidden="true">☝</span> Toque</button><button type="button" data-talent-branch="passive" aria-pressed="false"><span aria-hidden="true">⚙</span> Produção</button><button type="button" data-talent-branch="alchemy" aria-pressed="false"><span aria-hidden="true">✦</span> Alquimia</button></div>
+          <div class="talents-branch-heading"><div><span id="talents-branch-kicker" class="talents-eyebrow">CAMINHO DO TOQUE</span><h3 id="talents-branch-title"></h3></div><span id="talents-branch-count" class="talents-branch-count"></span></div>
+          <p id="talents-branch-description" class="talents-branch-description"></p>
+          <div class="talents-branch-progress" id="talents-branch-progress" role="progressbar" aria-label="Talentos aprendidos neste caminho" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="talents-branch-fill"></span></div>
+          <div class="talents-legend" aria-label="Legenda da árvore"><span><i class="learned"></i>Aprendido</span><span><i class="available"></i>Disponível</span><span><i class="unaffordable"></i>Falta ouro</span><span><i class="locked"></i>Bloqueado</span></div>
+          <div class="talents-map-panel"><div class="talents-map-caption"><span>SEU CAMINHO COMEÇA NA ORIGEM</span><span>↔ Arraste para explorar</span></div><div class="talents-map-scroll" id="talents-map-scroll" tabindex="0" aria-label="Árvore de talentos. Role para explorar e selecione um talento para ver os detalhes."><div id="talents-map" class="talents-map"></div></div></div>
+          <div class="talents-help"><span aria-hidden="true">✦</span><p>Ouro vem do renascimento. Selecione um talento para ver seu efeito, custo e os caminhos que levam até ele.</p></div>
+          <div class="talents-reset-panel"><div><h3>Um novo caminho para o mesmo império</h3><p>Redistribua seus talentos e receba de volta todo o ouro investido. Seu progresso no jogo continua.</p></div><button type="button" id="talents-reset">Redistribuir talentos ↗</button></div>
+          <p id="talents-status" class="talents-status" role="status" aria-live="polite"></p>
         </div>
       </section>
 
@@ -305,32 +311,9 @@
         </div>
       </div>
 
-      <div id="skill-modal" class="modal-overlay">
-        <div class="modal-card skill-modal-card">
-          <div class="skill-modal-header">
-            <div id="skill-modal-icon" class="skill-modal-icon"></div>
-            <div class="skill-modal-title">
-              <h3 id="skill-modal-name">Nome do Talento</h3>
-              <span id="skill-modal-branch" class="skill-modal-branch-tag">Caminho</span>
-            </div>
-          </div>
-          
-          <p id="skill-modal-lore" class="skill-modal-lore">Frase de história...</p>
-          
-          <div id="skill-modal-desc" class="skill-modal-desc-box">
-            Efeito da habilidade
-          </div>
-
-          <div class="modal-actions" style="margin-top: 14px;">
-            <button id="btn-learn-skill" class="action-btn prestige-btn-clean">
-              Aprender (1 🌟)
-            </button>
-            <button id="btn-close-skill-modal" class="action-btn secondary">
-              Fechar
-            </button>
-          </div>
-        </div>
-      </div>
+      <dialog id="skill-modal" class="talent-dialog" aria-labelledby="skill-modal-name" aria-describedby="skill-modal-desc">
+        <div class="talent-dialog-body"><div class="talent-dialog-top"><span id="skill-modal-branch" class="talents-eyebrow"></span><button id="btn-close-skill-modal" type="button" class="talent-close" aria-label="Fechar detalhes do talento">×</button></div><div id="skill-modal-icon" class="talent-detail-icon" aria-hidden="true"></div><span id="skill-modal-state" class="talent-detail-state"></span><h2 id="skill-modal-name"></h2><p id="skill-modal-lore" class="talent-detail-lore"></p><div class="talent-effect"><span>EFEITO NO SEU IMPÉRIO</span><p id="skill-modal-desc"></p></div><div class="talent-cost-row"><span>Custo do talento</span><strong id="skill-modal-cost"></strong></div><div class="talent-cost-row"><span>Seu ouro disponível</span><strong id="skill-modal-balance"></strong></div><div class="talent-requirements"><span id="skill-modal-requirement-label"></span><div id="skill-modal-requirements"></div></div><p id="skill-modal-hint" class="talent-detail-hint"></p><button id="btn-learn-skill" class="talent-learn-button" type="button">Aprender talento</button></div>
+      </dialog>
 
       <!-- Navegação Inferior (6 Botões Sólidos) -->
       <nav class="bottom-nav">

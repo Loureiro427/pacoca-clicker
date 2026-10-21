@@ -34,6 +34,7 @@ export class UIManager {
     this.updateShop(this.game.score, this.game.inventory, this.game.buyAmount);
     this.updateUpgrades(this.game.score, this.game.inventory, this.game.boughtUpgrades);
     this.updateProfile(this.game);
+    this.game.skillTreeUI?.render();
   }
 
   updateScore(score, pps) {
