@@ -3,8 +3,8 @@
 `ManualClickGuard` é aplicado em `ClickExperience` antes de creditar um toque.
 Aceita eventos nativos (`isTrusted`), rejeita eventos disparados por JavaScript,
 limita a 20 cliques em uma janela móvel de 1 segundo e 120 em 10 segundos.
-Excessos são ignorados sem banir a conta ou apagar progresso. A cota retorna
-conforme os cliques antigos saem da janela. Repetição de tecla mantida pressionada
+Excessos iniciam uma pausa de 30 segundos nos cliques manuais, sem banir a conta
+ou apagar progresso. Repetição de tecla mantida pressionada
 é suprimida; ativações individuais por teclado e acessibilidade continuam válidas.
 Cliques em outra aba ou com a página oculta não são creditados pela interface.
 
@@ -23,3 +23,11 @@ tempo offline e revisões. Usar tempo do servidor; não confiar em contadores ou
 flags enviados pelo cliente. Qualquer aplicação de penalidades precisa de uma
 regra própria do servidor, com cuidado para não confundir cliques humanos rápidos,
 latência e dispositivos de acessibilidade com automação.
+
+## Pausa por excesso de cliques
+
+Ao ultrapassar o limite, cliques manuais ficam bloqueados por 30 segundos, com
+contagem regressiva na tela. Tentativas durante a pausa não reiniciam o prazo.
+PPS, coleta offline e automação de talentos continuam funcionando. A pausa
+atual é local à sessão; a API precisa aplicar a mesma regra por conta entre
+dispositivos para que ela proteja o ranking.

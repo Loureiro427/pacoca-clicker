@@ -8,6 +8,7 @@ import { AppDialog } from './AppDialog.js';
 import { formatJourneyDuration } from './ProfileAccount.js';
 import { getUpgradeState, matchesUpgradeView } from './CommerceData.js';
 import { updateClickStats } from './ClickExperience.js';
+import { initAppNavigation, trackOverlay } from '../systems/AppNavigation.js';
 
 export class UIManager {
   showDialog(options) {
@@ -514,6 +515,7 @@ export class UIManager {
         newNormal.disabled = true;
         newAd.disabled = true;
         modal.style.display = 'none';
+        this.closeOfflineLayer?.();
         if (onCollectNormal) onCollectNormal();
       });
 
@@ -525,6 +527,7 @@ export class UIManager {
         newAd.innerText = '⏳ Carregando...';
         setTimeout(() => {
           modal.style.display = 'none';
+          this.closeOfflineLayer?.();
           newAd.innerText = '🎬 Dobrar Recompensa (2x)';
           if (onCollectDouble) onCollectDouble();
           this.showDialog({
@@ -538,6 +541,11 @@ export class UIManager {
     }
 
     modal.style.display = 'flex';
+    this.closeOfflineLayer = trackOverlay(modal, () => {
+      if (document.getElementById('btn-collect-normal')?.disabled) return false;
+      document.getElementById('btn-collect-normal')?.click();
+      return true;
+    });
   }
 
   showPrestigeModal(newChips, newMultiplierPercent, onConfirm) {
@@ -561,37 +569,24 @@ export class UIManager {
 
       newConfirm.addEventListener('click', () => {
         modal.style.display = 'none';
+        this.closePrestigeLayer?.();
         if (onConfirm) onConfirm();
       });
 
       newCancel.addEventListener('click', () => {
         modal.style.display = 'none';
+        this.closePrestigeLayer?.();
       });
     }
 
     modal.style.display = 'flex';
+    this.closePrestigeLayer = trackOverlay(modal, () => {
+      document.getElementById('btn-prestige-cancel')?.click();
+      return true;
+    });
   }
 
   initTabs() {
-    const btns = document.querySelectorAll('.nav-btn');
-    const tabs = document.querySelectorAll('.tab-content');
-
-    btns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const targetBtn = e.currentTarget;
-        const targetId = targetBtn.dataset.target;
-        const targetTab = document.getElementById(targetId);
-
-        if (!targetTab) return;
-
-        btns.forEach(b => b.classList.remove('active'));
-        tabs.forEach(t => t.classList.remove('active'));
-        
-        targetBtn.classList.add('active');
-        targetTab.classList.add('active');
-
-        // Renderiza o ranking imediatamente quando a aba for ativada
-      });
-    });
+    initAppNavigation();
   }
 }

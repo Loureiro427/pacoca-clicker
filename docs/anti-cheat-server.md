@@ -84,3 +84,11 @@ um teto simples de saldo insuficiente para provar legitimidade.
 Saves legados podem já conter alterações impossíveis de provar só pelo snapshot.
 Definir uma política de migração/entrada no ranking; não presumir legitimidade
 retroativa nem apagar progresso antigo silenciosamente.
+
+## Pausa por excesso de cliques
+
+Ao ultrapassar o limite, cliques manuais ficam bloqueados por 30 segundos, com
+contagem regressiva na tela. Tentativas durante a pausa não reiniciam o prazo.
+PPS, coleta offline e automação de talentos continuam funcionando. A pausa
+atual é local à sessão; a API precisa aplicar a mesma regra por conta entre
+dispositivos para que ela proteja o ranking.

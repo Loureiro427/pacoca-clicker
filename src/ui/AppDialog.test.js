@@ -50,13 +50,13 @@ test('avisos em fila abrem um por vez e exibem conteúdo como texto', async t =>
   const { body } = setup(t);
   const first = AppDialog.open({ title: '<img onerror=teste>', message: 'Primeiro' });
   const second = AppDialog.open({ title: 'Segundo', message: 'Mensagem' });
-  await Promise.resolve();
+  await new Promise(resolve => setImmediate(resolve));
   assert.equal(body.children.length, 1);
   const dialog = body.children[0];
   assert.equal(dialog.children[0].children[2].textContent, '<img onerror=teste>');
   dialog.children[0].children.at(-1).children[0].listeners.click();
   assert.equal(await first, true);
-  await Promise.resolve();
+  await new Promise(resolve => setImmediate(resolve));
   assert.equal(body.children.length, 2);
   body.children[1].children[0].children.at(-1).children[0].listeners.click();
   assert.equal(await second, true);

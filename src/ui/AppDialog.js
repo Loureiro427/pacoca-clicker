@@ -1,9 +1,11 @@
+import { trackDialog, waitForAppNavigation } from '../systems/AppNavigation.js';
+
 /** Diálogos do jogo. A fila evita janelas sobrepostas e confirmações perdidas. */
 export class AppDialog {
   static queue = Promise.resolve();
 
   static open(options) {
-    const result = this.queue.then(() => this.show(options));
+    const result = this.queue.then(async () => { await waitForAppNavigation(); return this.show(options); });
     this.queue = result.catch(() => {});
     return result;
   }
@@ -45,9 +47,11 @@ export class AppDialog {
       const actions = document.createElement('div');
       actions.className = 'app-dialog-actions';
       let settled = false;
+      let releaseLayer;
       const finish = accepted => {
         if (settled) return;
         settled = true;
+        releaseLayer?.();
         dialog.close();
         dialog.remove();
         if (previousFocus?.isConnected) previousFocus.focus();
@@ -80,6 +84,7 @@ export class AppDialog {
       dialog.addEventListener('close', () => finish(false));
       document.body.appendChild(dialog);
       dialog.showModal();
+      releaseLayer = trackDialog(dialog);
     });
   }
 }

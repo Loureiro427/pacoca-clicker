@@ -10,14 +10,21 @@ export function bindClickExperience(game, { particles } = {}) {
   if (!button) return;
   let animation;
   const guard = new ManualClickGuard();
-  let lastWarning = -Infinity;
+  let cooldownTimer = null;
+  const updateCooldown = () => {
+    const seconds = Math.ceil(guard.remainingMs() / 1000);
+    document.getElementById('click-special-status').textContent = seconds > 0
+      ? `Limite de cliques atingido. Aguarde ${seconds}s para voltar a clicar.`
+      : 'Cliques liberados. Continue em um ritmo natural.';
+    if (!seconds) { clearInterval(cooldownTimer); cooldownTimer = null; }
+  };
   const produce = (x, y, event) => {
     if (document.hidden || document.getElementById('click-area')?.classList?.contains('active') === false) return;
     const decision = guard.check(event);
     if (!decision.allowed) {
-      if (decision.reason === 'rate' && performance.now() - lastWarning > 3000) {
-        lastWarning = performance.now();
-        document.getElementById('click-special-status').textContent = 'Limite de cliques atingido. Diminua o ritmo para continuar.';
+      if (decision.reason === 'rate' && cooldownTimer === null) {
+        updateCooldown();
+        cooldownTimer = setInterval(updateCooldown, 1000);
       }
       return;
     }

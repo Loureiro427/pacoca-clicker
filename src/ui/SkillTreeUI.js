@@ -1,3 +1,4 @@
+import { trackDialog } from '../systems/AppNavigation.js';
 import { SkillTreeNodes, SkillTreeBranches } from '../game/SkillTreeData.js';
 import { buildTalentLayout, getTalentState } from './TalentTreeLayout.js';
 import { formatNumber } from '../utils/format.js';
@@ -172,7 +173,7 @@ export class SkillTreeUI {
     this.selectedSkill = node;
     this.updateModal();
     const dialog = el('skill-modal');
-    if (!dialog.open) dialog.showModal();
+    if (!dialog.open) { dialog.showModal(); trackDialog(dialog); }
   }
 
   updateModal() {
