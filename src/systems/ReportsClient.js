@@ -15,7 +15,8 @@ export function validateReport({ type, category, message } = {}) {
 }
 
 export class ReportsClient {
-  constructor({ webhook = import.meta.env?.VITE_SUPPORT_WEBHOOK || '', fetcher = fetch, now = () => Date.now() } = {}) {
+  constructor({ api = null, webhook = '', fetcher = fetch, now = () => Date.now() } = {}) {
+    this.api = api;
     this.webhook = webhook;
     this.fetcher = fetcher;
     this.now = now;
@@ -25,6 +26,21 @@ export class ReportsClient {
 
   async send(report, { user, platform = 'web', demo = false } = {}) {
     const data = validateReport(report);
+    if (this.api) {
+      if (this.api.isMocked) throw new Error('O suporte precisa da API real do Paçoca. Nenhuma mensagem foi enviada.');
+      if (this.sending || this.now() - this.lastAttempt < 60000) throw new Error('Aguarde um minuto antes de enviar outra mensagem.');
+      this.sending = true;
+      this.lastAttempt = this.now();
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await this.api.request('/clicker/reports', {
+          method: 'POST', signal: controller.signal, body: { ...data, platform, request_id: crypto.randomUUID() },
+        });
+        if (response?.sent !== true || !response.report_id) throw new Error('O servidor não confirmou o envio. Aguarde antes de repetir.');
+        return { sent: true };
+      } finally { clearTimeout(timeout); this.sending = false; }
+    }
     const url = new URL(this.webhook || 'https://invalid.local');
     if (url.origin !== 'https://discord.com' || !/^\/api\/webhooks\/\d+\/[A-Za-z0-9_-]+$/.test(url.pathname)) {
       throw new Error('O canal de suporte ainda não está configurado. Tente novamente mais tarde.');

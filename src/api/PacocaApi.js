@@ -102,6 +102,14 @@ export class PacocaApi {
     }
   }
 
+  async codesRequest(path = '', options = {}) {
+    if (this.isMocked) throw new ApiError('Códigos precisam da API real do Paçoca. A demonstração não concede recompensas.');
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try { return await this.request('/clicker/codes' + path, { ...options, signal: controller.signal }); }
+    finally { clearTimeout(timeout); }
+  }
+
   async logout(userId) {
     if (this.isMocked) return { logged_out: true };
 
