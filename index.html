@@ -7,6 +7,107 @@
     <link rel="stylesheet" href="/src/style.css">
   </head>
   <body>
+
+    <!-- 1. TELA DE LOADING (SPLASH) -->
+    <div id="loading-screen" class="full-screen-overlay">
+      <div class="loading-content">
+        <img src="/pacoca.png" alt="Paçoca" class="loading-mascot pulsing">
+        <div class="loading-bar-track">
+          <div id="loading-bar-fill" class="loading-bar-fill"></div>
+        </div>
+        <small class="loading-text">Carregando o Universo da Paçoca...</small>
+      </div>
+    </div>
+
+    <!-- 2. TELA DE LOGIN & CADASTRO (PAÇOCA SOCIAL) -->
+    <div id="auth-screen" class="full-screen-overlay" style="display: none;">
+      <div class="auth-card">
+        
+        <!-- VISÃO DE LOGIN -->
+        <div id="login-view" class="auth-view active">
+          <div class="auth-header">
+            <img src="/pacoca.png" alt="Paçoca" class="auth-mascot-icon">
+            <h2>Bem-vindo de volta</h2>
+            <p>Entre na sua conta para continuar</p>
+          </div>
+
+          <form id="login-form" onsubmit="event.preventDefault();">
+            <div class="input-group">
+              <label>EMAIL OU NOME DE USUÁRIO</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <input type="text" id="login-user" placeholder="Email ou nome de usuário" required>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label>SENHA</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <input type="password" id="login-pass" placeholder="Senha" required>
+                <button type="button" class="toggle-pass-btn" onclick="togglePassword('login-pass', this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+              <a href="#" class="forgot-link">Esqueci minha senha</a>
+            </div>
+
+            <div class="checkbox-row">
+              <label class="custom-checkbox">
+                <input type="checkbox" id="remember-me" checked>
+                <span class="checkmark"></span>
+                Manter logado
+              </label>
+            </div>
+
+            <button type="submit" id="btn-login-submit" class="auth-primary-btn">Entrar</button>
+          </form>
+
+          <p class="auth-footer-text">
+            Não tem uma conta? <a href="#" id="link-go-register">Cadastre-se</a>
+          </p>
+        </div>
+
+        <!-- VISÃO DE CADASTRO -->
+        <div id="register-view" class="auth-view">
+          <div class="auth-header">
+            <div class="auth-brand">
+              <img src="/pacoca.png" alt="Paçoca" class="auth-mascot-sm">
+              <span>Paçoca</span>
+            </div>
+            <h2>Cadastro</h2>
+            <p>Seus dados pessoais</p>
+            <div class="step-progress-bar"><div class="step-fill"></div></div>
+          </div>
+
+          <form id="register-form" onsubmit="event.preventDefault();">
+            <div class="input-group">
+              <label>NOME</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <input type="text" id="reg-name" placeholder="Nome" required>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label>EMAIL</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <input type="email" id="reg-email" placeholder="Email" required>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-register-submit" class="auth-primary-btn">Próximo</button>
+          </form>
+
+          <p class="auth-footer-text center">
+            <a href="#" id="link-go-login">Fazer login</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+
     <div id="app">
       <!-- Container de Notificações Flutuantes -->
       <div id="floating-notifications" class="floating-notifications-container"></div>

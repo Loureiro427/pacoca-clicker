@@ -1704,3 +1704,273 @@ html, body {
 .toggle-switch input:checked + .slider:before {
   transform: translateX(20px);
 }
+
+/* ==========================================================================
+   TELAS DE LOADING & AUTENTICAÇÃO (PAÇOCA SOCIAL)
+   ========================================================================== */
+.full-screen-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: #FFFFFF;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Loading Screen */
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loading-mascot {
+  width: 80px;
+  height: auto;
+}
+
+.loading-mascot.pulsing {
+  animation: mascotPulse 1.2s infinite ease-in-out alternate;
+}
+
+@keyframes mascotPulse {
+  0% { transform: scale(0.92); opacity: 0.8; }
+  100% { transform: scale(1.08); opacity: 1; }
+}
+
+.loading-bar-track {
+  width: 200px;
+  height: 8px;
+  background: #F0E6DD;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #A26C45, #C68B59);
+  border-radius: 10px;
+  transition: width 0.1s linear;
+}
+
+.loading-text {
+  font-size: 0.82rem;
+  color: #8C7361;
+  font-weight: 700;
+}
+
+/* Auth Card Container */
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  background: #FFFFFF;
+}
+
+.auth-view {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.auth-view.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Auth Header */
+.auth-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.auth-mascot-icon {
+  width: 48px;
+  height: auto;
+  margin-bottom: 12px;
+  align-self: center;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-self: center;
+}
+
+.auth-mascot-sm {
+  width: 32px;
+  height: auto;
+}
+
+.auth-brand span {
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: #A26C45;
+}
+
+.auth-header h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.auth-header p {
+  font-size: 0.9rem;
+  color: #8A8A8A;
+  margin: 4px 0 0 0;
+}
+
+.step-progress-bar {
+  width: 100%;
+  height: 3px;
+  background: #F0E6DD;
+  margin-top: 16px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.step-progress-bar .step-fill {
+  width: 35%;
+  height: 100%;
+  background: #A26C45;
+}
+
+/* Inputs & Forms */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.input-group label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #222222;
+  letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  width: 18px;
+  height: 18px;
+  stroke: #8A8A8A;
+  pointer-events: none;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  font-size: 0.9rem;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #FFFFFF;
+  color: #1A1A1A;
+}
+
+.input-wrapper input:focus {
+  border-color: #A26C45;
+}
+
+.toggle-pass-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-pass-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: #8A8A8A;
+}
+
+.forgot-link {
+  align-self: flex-end;
+  font-size: 0.78rem;
+  color: #A26C45;
+  text-decoration: none;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* Checkbox Customizado */
+.checkbox-row {
+  margin-bottom: 16px;
+}
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #666666;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-checkbox input {
+  accent-color: #A26C45;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Botão Principal */
+.auth-primary-btn {
+  width: 100%;
+  padding: 14px;
+  background: #A26C45;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.auth-primary-btn:active {
+  transform: scale(0.98);
+  background: #8B5935;
+}
+
+/* Footer Links */
+.auth-footer-text {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #8A8A8A;
+  margin-top: 10px;
+}
+
+.auth-footer-text a {
+  color: #A26C45;
+  font-weight: 800;
+  text-decoration: none;
+}
