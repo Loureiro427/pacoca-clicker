@@ -106,6 +106,8 @@ export class Game {
 
     // CÁLCULO FINAL DO CLIQUE (this.clickValue já possui o Frenesi em tempo real!)
     const val = (this.clickValue * comboMult * critMult * maoDePedraMult) + extraVal;
+    let gained = val;
+    let echo = 0;
 
     this.score += val;
     this.totalEarned += val;
@@ -114,12 +116,15 @@ export class Game {
     // TALENTO ACT_6: Eco Clicável (1 clique grátis a cada 10 cliques)
     if (this.skillTree.hasSkill('act_6') && this.totalClicks % 10 === 0) {
       const ecoVal = this.clickValue;
+      echo = ecoVal;
+      gained += ecoVal;
       this.score += ecoVal;
       this.totalEarned += ecoVal;
     }
     
     this.checkAchievements();
     this.refreshUI();
+    return { gained, isCrit, critMultiplier: critMult, comboMultiplier: comboMult, echo, empowered: maoDePedraMult > 1 };
   }
 
   startFrenzy(multiplier, durationSeconds) {
@@ -130,6 +135,7 @@ export class Game {
 
     this.frenzyMultiplier = multiplier;
     this.frenzyTimeLeft = durationSeconds;
+    this.frenzyDuration = durationSeconds;
     this.recalculateStats();
     this.refreshUI();
   }
@@ -163,7 +169,8 @@ export class Game {
 
   buyUpgrade(upgId) {
     const upg = UpgradesData.find(u => u.id === upgId);
-    if (upg && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost) {
+    if (upg && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost
+      && (this.inventory[upg.reqGen] || 0) >= upg.reqCount) {
       this.score -= upg.cost;
       this.boughtUpgrades.push(upgId);
       this.audio.playBuy(); // Toca o som de compra
@@ -262,7 +269,8 @@ export class Game {
     this.ui.updateShop(this.score, this.inventory, this.buyAmount);
     this.ui.updateUpgrades(this.score, this.inventory, this.boughtUpgrades);
     this.ui.updateProfile(this);
-    this.ui.updateFrenzy(this.frenzyTimeLeft);
+    this.ui.updateFrenzy(this.frenzyTimeLeft, this.frenzyMultiplier, this.frenzyDuration);
+    this.ui.updateClickStats?.(this);
     if (this.skillTreeUI) {
       this.skillTreeUI.render();
     }
@@ -301,6 +309,12 @@ export class Game {
           this.frenzyMultiplier = 1;
           this.recalculateStats();
         }
+      }
+
+      // O clique e o frenesi precisam atualizar mesmo sem produção automática.
+      if (this.pps <= 0) {
+        this.ui.updateClickStats?.(this);
+        this.ui.updateFrenzy(this.frenzyTimeLeft, this.frenzyMultiplier, this.frenzyDuration);
       }
 
       if (this.pps > 0) {
@@ -393,41 +407,13 @@ export class Game {
     }
   }
 
-  exportSaveCode() {
-    const data = JSON.stringify({
-      score: this.score,
-      totalClicks: this.totalClicks,
-      totalEarned: this.totalEarned,
-      startTime: this.startTime,
-      inventory: this.inventory,
-      boughtUpgrades: this.boughtUpgrades,
-      unlockedAchievements: this.unlockedAchievements,
-      prestigeChips: this.prestigeChips,
-      claimedPrestigeChips: this.claimedPrestigeChips,
-      unlockedSkills: this.skillTree ? this.skillTree.unlockedSkills : ['origin'],
-      lastSaveTime: Date.now()
-    });
-    return btoa(data);
-  }
-
-  importSaveCode(code) {
-    try {
-      const decoded = atob(code);
-      const data = SaveManager.validate(JSON.parse(decoded));
-      if (data) {
-        SaveManager.replace(data)
-          .then(() => window.location.reload())
-          .catch(() => this.ui.showNotification('Não foi possível importar o save', 'Verifique sua conexão e tente novamente.'));
-      } else {
-        alert('Código de save inválido.');
-      }
-    } catch (e) {
-      alert('Código de save inválido.');
-    }
-  }
-
   async resetProgress() {
-    if (confirm('Tem certeza de que deseja reiniciar todo o progresso? Esta ação não pode ser desfeita.')) {
+    const accepted = await this.ui.showDialog({
+      icon: '↺', title: 'Recomeçar do zero?',
+      message: 'Seu saldo, estruturas, talentos e conquistas serão apagados desta conta, incluindo o progresso salvo na nuvem. Essa ação não pode ser desfeita.',
+      confirmText: 'Apagar meu progresso', cancelText: 'Manter meu império', danger: true,
+    });
+    if (accepted) {
       try {
         await SaveManager.reset();
         window.location.reload();

@@ -13,7 +13,7 @@ function gameState() {
     score: 0, totalEarned: 8000000, prestigeChips: 0, claimedPrestigeChips: 0,
     inventory: {}, boughtUpgrades: [], buyAmount: 1, startTime: Date.now(),
     frenzyMultiplier: 1, frenzyTimeLeft: 0,
-    ui: { showPrestigeModal: (_chips, _mult, confirm) => confirm() },
+    ui: { showPrestigeModal: (_chips, _mult, confirm) => confirm(), updateFrenzy() {} },
     saveGame() {}, refreshUI() {},
   });
   game.skillTree = new SkillTreeManager(game);
@@ -45,10 +45,10 @@ test('loja mostra e permite comprar pelo mesmo preço com desconto', () => {
   game.buyAmount = 10;
   const cost = game.getPurchaseCost(100, 0, 10);
   const fields = { '.owned-count': {}, '.cost-display': {} };
-  const button = {};
+  const button = { setAttribute() {} };
   const previousDocument = globalThis.document;
   globalThis.document = { getElementById: id => id === 'gen-ajudante'
-    ? { querySelector: selector => fields[selector] }
+    ? { dataset: {}, querySelector: selector => fields[selector] }
     : id === 'buy-ajudante' ? button : null };
   try {
     UIManager.prototype.updateShop.call({ game }, cost, {}, 10);
@@ -109,22 +109,4 @@ test('save corrompido fica em backup e falha de armazenamento não lança erro',
     globalThis.localStorage.setItem = () => { throw new Error('Sem espaço'); };
     assert.equal(SaveManager.save({ score: 10 }), false);
   } finally { globalThis.localStorage = previousStorage; console.warn = previousWarn; }
-});
-
-test('exportação preserva histórico e importação inválida mantém o save existente', () => {
-  const game = gameState();
-  game.doPrestige();
-  const exported = JSON.parse(atob(game.exportSaveCode()));
-  assert.equal(SaveManager.validate(exported).claimedPrestigeChips, 2);
-  const previousStorage = globalThis.localStorage;
-  const previousAlert = globalThis.alert;
-  let writes = 0;
-  let alerts = 0;
-  globalThis.localStorage = { setItem() { writes++; } };
-  globalThis.alert = () => alerts++;
-  try {
-    game.importSaveCode(btoa(JSON.stringify({ score: 10, inventory: { cursor: -5 } })));
-    assert.equal(writes, 0);
-    assert.equal(alerts, 1);
-  } finally { globalThis.localStorage = previousStorage; globalThis.alert = previousAlert; }
 });

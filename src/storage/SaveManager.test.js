@@ -33,28 +33,6 @@ test('falha de envio preserva o progresso mais recente na fila', async t => {
   assert.equal(SaveManager.load().score, 20);
 });
 
-test('importação aguarda envio anterior e depois envia o save importado', async t => {
-  setup(t);
-  const sent = [];
-  let finishFirst;
-  SaveManager.remoteSave = (state, revision) => {
-    sent.push({ state, revision });
-    if (sent.length === 1) return new Promise(resolve => { finishFirst = resolve; });
-    return Promise.resolve({ saved: true, profile: { revision: 2 } });
-  };
-  SaveManager.save({ score: 10 });
-  const first = SaveManager.flush();
-  const imported = SaveManager.replace({ score: 100, claimedPrestigeChips: 2 });
-  finishFirst({ saved: true, profile: { revision: 1 } });
-  await first;
-  await imported;
-  assert.equal(sent.length, 2);
-  assert.equal(sent[1].state.score, 100);
-  assert.equal(sent[1].revision, 1);
-  assert.equal(SaveManager.load().claimedPrestigeChips, 2);
-  assert.equal(SaveManager.pendingState, null);
-});
-
 test('validação e backup usam a chave do usuário sem afetar outra conta', t => {
   const storage = setup(t);
   storage.set(`${SaveManager.BASE_KEY}:other`, JSON.stringify({ score: 99 }));

@@ -1,6 +1,9 @@
 export class AudioManager {
   constructor() {
     this.ctx = null;
+    this.resumePromise = null;
+    this.musicPlayPromise = null;
+    this.loadedTrackIndex = null;
     this.sfxEnabled = localStorage.getItem('pacoca_sfx') !== 'false';
     this.musicEnabled = localStorage.getItem('pacoca_music') !== 'false';
 
@@ -27,12 +30,19 @@ export class AudioManager {
 
   // Inicializa o áudio geral no primeiro clique na tela
   init() {
-    if (!this.ctx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      this.ctx = new AudioContext();
-    }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    // Música e efeitos são independentes: uma falha no Web Audio não bloqueia a playlist.
+    try {
+      if (!this.ctx || this.ctx.state === 'closed') {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) this.ctx = new AudioContext();
+      }
+      if (this.ctx && ['suspended', 'interrupted'].includes(this.ctx.state) && !this.resumePromise) {
+        this.resumePromise = this.ctx.resume()
+          .catch(error => console.warn('Não foi possível retomar os efeitos sonoros.', error))
+          .finally(() => { this.resumePromise = null; });
+      }
+    } catch (error) {
+      console.warn('Não foi possível iniciar os efeitos sonoros.', error);
     }
 
     // Dá o play na música caso esteja ativada no perfil
@@ -45,17 +55,23 @@ export class AudioManager {
   // CONTROLES DE MÚSICA
   // ---------------------------------------------------------
   playMusic() {
-    if (!this.musicEnabled) return;
-    this.bgmPlayer.src = this.musicTracks[this.currentTrackIndex];
-    this.bgmPlayer.play().catch(e => {
-      console.warn('O navegador bloqueou o autoplay da música até o usuário interagir.');
-    });
+    if (!this.musicEnabled || this.musicPlayPromise) return;
+    // Reatribuir src a cada toque interrompe o carregamento e reinicia a faixa.
+    if (this.loadedTrackIndex !== this.currentTrackIndex) {
+      this.bgmPlayer.src = this.musicTracks[this.currentTrackIndex];
+      this.loadedTrackIndex = this.currentTrackIndex;
+    }
+    this.musicPlayPromise = this.bgmPlayer.play()
+      .catch(error => {
+        if (error.name !== 'AbortError') console.warn('Não foi possível reproduzir a música.', error);
+      })
+      .finally(() => { this.musicPlayPromise = null; });
   }
 
   setMusic(enabled) {
     this.musicEnabled = enabled;
     if (enabled) {
-      if (this.ctx) this.playMusic(); // Só toca se o jogo já foi iniciado
+      this.init();
     } else {
       this.bgmPlayer.pause();
     }
@@ -63,6 +79,7 @@ export class AudioManager {
 
   setSfx(enabled) {
     this.sfxEnabled = enabled;
+    if (enabled) this.init();
   }
 
   // ---------------------------------------------------------

@@ -105,27 +105,26 @@
           <img src="/pacoca.png" alt="Paçoca" class="header-mascot">
         </div>
         <div class="header-stats">
-          <h1 id="score-display">0</h1>
+          <span class="header-balance-label">PAÇOCAS</span><h1 id="score-display">0</h1>
           <p id="pps-display">0 por segundo</p>
         </div>
       </header>
 
       <!-- Banner de Frenesi Dourado -->
-      <div id="frenzy-banner" class="frenzy-banner" style="display: none;">
-        🔥 FRENESI ATIVO: <span id="frenzy-timer">20</span>s
+      <div id="frenzy-banner" class="frenzy-banner" hidden>
+        <span class="frenzy-symbol" aria-hidden="true">✦</span><div><strong>Frenesi <span id="frenzy-multiplier">7×</span></strong></div><strong class="frenzy-clock"><span id="frenzy-timer">20</span>s</strong><div class="frenzy-time-track" aria-hidden="true"><span id="frenzy-time-fill"></span></div>
       </div>
 
       <!-- Aba 1: Tocar -->
-      <main id="click-area" class="tab-content active">
-        <div id="bg-rain-container" class="bg-rain"></div>
-        <div class="mascot-container">
-          <div class="shine"></div>
-          <img src="/pacoca.png" id="pacoca-button" class="pacoca-mascot" alt="Mascote Paçoca" draggable="false" ondragstart="return false;" oncontextmenu="return false;">
-        </div>
-        <div class="cream-wave">
-          <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path fill="#ffffff" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,144C672,149,768,203,864,218.7C960,235,1056,213,1152,192C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-          </svg>
+      <main id="click-area" class="tab-content active" aria-labelledby="click-title">
+        <div id="pacoca-particles" class="pacoca-particles" aria-hidden="true"></div>
+        <div class="click-shell">
+          <header class="click-heading"><span>SEU PEQUENO GRANDE IMPÉRIO</span><h2 id="click-title">Um toque de cada vez.</h2></header>
+          <div class="click-stage"><div class="click-stage-halo" aria-hidden="true"></div><button type="button" id="pacoca-button" class="click-pacoca-button" aria-label="Produzir paçocas. Toque ou use Enter ou Espaço."><img src="/pacoca.png" class="pacoca-mascot" alt="" draggable="false"></button></div>
+          <div class="click-feedback"><p id="click-result">Toque na paçoca para produzir</p><span>Simples assim. Doce assim.</span></div>
+          <div class="click-metrics"><div><span>POR CLIQUE BASE</span><strong id="click-base-value">+1</strong></div><div><span>CLIQUES NA JORNADA</span><strong id="click-total-count">0</strong></div></div>
+          <div class="click-combo" id="click-combo" hidden><div><strong id="click-combo-label">Combo de cliques</strong><span id="click-combo-count">0 / 50</span></div><div class="click-combo-track"><span id="click-combo-fill"></span></div><p id="click-combo-hint">Mantenha o ritmo para fortalecer seus cliques.</p></div>
+          <p id="click-special-status" class="click-special-status" role="status"></p>
         </div>
       </main>
 
@@ -133,176 +132,129 @@
       <section id="shop-area" class="tab-content"></section>
 
       <!-- Aba 3: Melhorias -->
-      <section id="upgrades-area" class="tab-content">
-        <div class="shop-header">
-          <h2>Coleção de Melhorias</h2>
+      <section id="upgrades-area" class="tab-content" aria-labelledby="upgrades-title">
+        <div class="commerce-shell">
+          <header class="commerce-hero"><span class="commerce-eyebrow">PAÇOCA CLICKER / EVOLUÇÃO DO IMPÉRIO</span><h2 id="upgrades-title">Pequenos avanços.<br><em>Grandes resultados.</em></h2><p>Uma melhoria de cada vez. Um império cada vez maior.</p><div class="commerce-summary"><div><span>SEU SALDO</span><strong id="upgrades-balance">0</strong></div><div><span>ADQUIRIDAS</span><strong id="upgrades-owned">0 / 0</strong></div></div></header>
+          <div class="commerce-section-heading"><div><span class="commerce-eyebrow">INVISTA NO SEU PRÓXIMO PASSO</span><h3>Coleção de melhorias</h3></div><span id="upgrades-available-count" class="commerce-count">0 disponíveis</span></div>
+          <div class="commerce-category-filters" role="group" aria-label="Categoria de melhorias"><button type="button" class="upg-filter-btn active" data-filter="all" aria-pressed="true">Todas</button><button type="button" class="upg-filter-btn" data-filter="click" aria-pressed="false">Cliques</button><button type="button" class="upg-filter-btn" data-filter="structure" aria-pressed="false">Estruturas</button><button type="button" class="upg-filter-btn" data-filter="synergy" aria-pressed="false">Sinergias</button></div>
+          <div class="commerce-view-filters" role="group" aria-label="Situação das melhorias"><button type="button" data-upgrade-view="pending" aria-pressed="true">A conquistar</button><button type="button" data-upgrade-view="available" aria-pressed="false">Posso comprar</button><button type="button" data-upgrade-view="bought" aria-pressed="false">Adquiridas</button></div>
+          <div class="commerce-list-caption"><span id="upgrades-result-count"></span><span>Custos em paçocas</span></div>
+          <div id="upgrades-list" class="commerce-list" role="list" aria-label="Melhorias"></div>
+          <div id="upgrades-empty-state" class="commerce-empty" hidden><span aria-hidden="true">✦</span><h3 id="upgrades-empty-title">Seu próximo avanço está a caminho</h3><p id="upgrades-empty-description"></p></div>
+          <p class="commerce-footnote">Melhorias adquiridas permanecem ativas até o próximo renascimento.</p>
+          <p id="upgrades-feedback" class="commerce-feedback" role="status"></p>
         </div>
-        
-        <!-- Filtros Holográficos -->
-        <div class="upgrades-filters">
-          <button class="upg-filter-btn active" data-filter="all">Todas</button>
-          <button class="upg-filter-btn" data-filter="click">Cliques</button>
-          <button class="upg-filter-btn" data-filter="structure">Estruturas</button>
-          <button class="upg-filter-btn" data-filter="synergy">Sinergias</button>
-        </div>
-
-        <div id="upgrades-list" class="shop-list"></div>
       </section>
 
       <!-- Aba 4: Árvore de Talentos RPG -->
-      <section id="skills-area" class="tab-content">
-        <div class="skill-tree-container">
-          <div class="skill-tree-bg"></div>
-          <div class="skill-tree-viewport" id="skill-tree-viewport">
-            <div id="skill-nodes-container" style="display: flex; flex-direction: column; gap: 12px; width: 100%;"></div>
-          </div>
+      <section id="skills-area" class="tab-content" aria-labelledby="talents-title">
+        <div class="talents-shell">
+          <header class="talents-hero"><span class="talents-eyebrow">PAÇOCA CLICKER / EVOLUÇÃO</span><div class="talents-hero-line"><div><h2 id="talents-title">O poder de crescer<br><em>do seu jeito.</em></h2><p>Conecte talentos. Dê raízes ao seu império.</p></div><span class="talents-hero-symbol" aria-hidden="true">✧</span></div><div class="talents-summary"><div><span>OURO DISPONÍVEL</span><strong id="talents-gold">0 ✦</strong></div><div><span>TALENTOS APRENDIDOS</span><strong id="talents-learned">0 / 0</strong></div></div></header>
+          <div class="talents-tabs" role="group" aria-label="Caminhos de talentos"><button type="button" data-talent-branch="active" aria-pressed="true"><span aria-hidden="true">☝</span> Toque</button><button type="button" data-talent-branch="passive" aria-pressed="false"><span aria-hidden="true">⚙</span> Produção</button><button type="button" data-talent-branch="alchemy" aria-pressed="false"><span aria-hidden="true">✦</span> Alquimia</button></div>
+          <div class="talents-branch-heading"><div><span id="talents-branch-kicker" class="talents-eyebrow">CAMINHO DO TOQUE</span><h3 id="talents-branch-title"></h3></div><span id="talents-branch-count" class="talents-branch-count"></span></div>
+          <p id="talents-branch-description" class="talents-branch-description"></p>
+          <div class="talents-branch-progress" id="talents-branch-progress" role="progressbar" aria-label="Talentos aprendidos neste caminho" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="talents-branch-fill"></span></div>
+          <div class="talents-legend" aria-label="Legenda da árvore"><span><i class="learned"></i>Aprendido</span><span><i class="available"></i>Disponível</span><span><i class="unaffordable"></i>Falta ouro</span><span><i class="locked"></i>Bloqueado</span></div>
+          <div class="talents-map-panel"><div class="talents-map-caption"><span>SEU CAMINHO COMEÇA NA ORIGEM</span><span>↔ Arraste para explorar</span></div><div class="talents-map-scroll" id="talents-map-scroll" tabindex="0" aria-label="Árvore de talentos. Role para explorar e selecione um talento para ver os detalhes."><div id="talents-map" class="talents-map"></div></div></div>
+          <div class="talents-help"><span aria-hidden="true">✦</span><p>Ouro vem do renascimento. Selecione um talento para ver seu efeito, custo e os caminhos que levam até ele.</p></div>
+          <div class="talents-reset-panel"><div><h3>Um novo caminho para o mesmo império</h3><p>Redistribua seus talentos e receba de volta todo o ouro investido. Seu progresso no jogo continua.</p></div><button type="button" id="talents-reset">Redistribuir talentos ↗</button></div>
+          <p id="talents-status" class="talents-status" role="status" aria-live="polite"></p>
         </div>
       </section>
 
       <!-- Aba 5: Perfil & Renascer -->
-      <section id="profile-area" class="tab-content">
-        <div class="profile-section account-profile-section">
-          <div class="clicker-account-card">
-            <img id="clicker-profile-avatar" src="/pacoca.png" alt="Foto de perfil" class="clicker-account-avatar">
-            <div class="clicker-account-info">
-              <strong id="clicker-profile-name">Jogador</strong>
-              <span id="clicker-profile-username"></span>
-              <small id="clicker-sync-status" data-status="synced">Progresso salvo na nuvem</small>
+      <section id="profile-area" class="tab-content" aria-labelledby="profile-title">
+        <div class="profile-shell">
+          <header class="profile-hero">
+            <span class="profile-eyebrow">PAÇOCA CLICKER / SEU ESPAÇO</span>
+            <h2 id="profile-title">Todo império tem<br><em>a sua história.</em></h2>
+            <p>Cuide da sua conta. Prepare sua próxima conquista.</p>
+            <div class="profile-identity">
+              <img id="clicker-profile-avatar" src="/pacoca.png" alt="Seu avatar" class="clicker-account-avatar">
+              <div class="profile-identity-info"><strong id="clicker-profile-name">Jogador</strong><span id="clicker-profile-username"></span><span id="profile-account-badge" class="profile-account-badge">Conta Paçoca</span></div>
             </div>
-            <button id="btn-logout" class="logout-btn" type="button">Sair</button>
-          </div>
-        </div>
-
-        <div class="profile-section">
-          <h2>Renascer (Ascensão)</h2>
-          <div class="prestige-card-clean">
-            <div class="prestige-top-area">
-              <div class="prestige-icon-glow">
-                <div class="prestige-icon-3d">🌟</div>
-              </div>
-              <div class="prestige-stats-clean">
-                <h4>Paçocas de Ouro</h4>
-                <h1 id="prestige-count">0</h1>
-                <div class="prestige-pill">Bônus Global: <strong id="prestige-mult">1x</strong></div>
-              </div>
+          </header>
+          <nav class="profile-jump" aria-label="Seções do perfil"><a href="#profile-ascension">✦ Renascer</a><a href="#profile-journey">◈ Jornada</a><a href="#profile-settings">⚙ Preferências</a></nav>
+          <section class="profile-panel" aria-labelledby="account-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">SEMPRE COM VOCÊ</span><h3 id="account-title">Sua conta</h3></div><span class="profile-mini-icon" aria-hidden="true">☁</span></div>
+            <div class="profile-sync" id="profile-sync" data-status="pending"><span class="profile-sync-dot" aria-hidden="true"></span><div><strong id="clicker-sync-status" data-status="pending" role="status">Aguardando confirmação do salvamento</strong><small id="profile-sync-detail">O status será atualizado pelo serviço de sincronização.</small></div></div>
+            <div class="profile-connection"><div><strong>Seu perfil no pacoca.net</strong><p>Nome e foto vêm do login. A atualização contínua com o site estará disponível em breve.</p></div><span class="profile-coming">Em preparação</span></div>
+            <div class="profile-account-footer"><span>Você controla sua jornada.</span><button id="btn-logout" class="profile-text-button" type="button">Sair da conta ↗</button></div>
+          </section>
+          <section id="profile-ascension" class="profile-ascension" aria-labelledby="ascension-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">UM NOVO COMEÇO</span><h3 id="ascension-title">Renascer para ir além</h3></div><span class="ascension-emblem" aria-hidden="true">✦</span></div>
+            <p class="profile-section-description">Transforme sua produção histórica em ouro e abra novos caminhos para o seu império.</p>
+            <div class="ascension-balance"><div><span>SEU OURO DISPONÍVEL</span><strong id="prestige-count">0</strong></div><div class="ascension-multiplier"><strong id="prestige-mult">1x</strong><span>bônus global</span></div></div>
+            <div class="ascension-progress"><div><strong id="prestige-next-gain">Ganho ao renascer: +0</strong><span id="prestige-progress-pct">0%</span></div><div class="ascension-track" id="prestige-progress" role="progressbar" aria-label="Progresso para o próximo ouro" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="prestige-bar-fill"></div></div><p id="prestige-missing-text">Produza paçocas para alcançar seu primeiro ouro.</p></div>
+            <div class="ascension-rules"><div><span aria-hidden="true">✓</span><strong>Vai com você</strong><p>Ouro, talentos, conquistas e estatísticas.</p></div><div><span aria-hidden="true">↺</span><strong>Começa de novo</strong><p>Saldo, estruturas e melhorias da loja.</p></div></div>
+            <button id="btn-prestige" class="profile-primary-button" type="button" disabled>Continue produzindo para renascer</button>
+            <p class="ascension-footnote">Você revisa a recompensa antes de confirmar.</p>
+          </section>
+          <section id="profile-journey" class="profile-panel" aria-labelledby="journey-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">CADA CLIQUE CONTA</span><h3 id="journey-title">Sua jornada em números</h3></div></div>
+            <div class="profile-stats">
+              <div><span>◉ Cliques totais</span><strong id="stat-clicks">0</strong></div>
+              <div><span>◈ Produção histórica</span><strong id="stat-earned">0</strong></div>
+              <div><span>▥ Estruturas atuais</span><strong id="stat-structures">0</strong></div>
+              <div><span>◷ Desde o início</span><strong id="stat-time">0m</strong></div>
+              <div><span>↗ Paçocas por segundo</span><strong id="stat-pps">0</strong></div>
+              <div><span>☝ Clique base</span><strong id="stat-click-value">1</strong></div>
             </div>
-
-            <div class="prestige-progress-clean">
-              <div class="progress-labels-clean">
-                <strong id="prestige-next-gain" class="gain-text">Ganho: +0 🌟</strong>
-                <strong id="prestige-progress-pct" class="pct-text">0%</strong>
-              </div>
-              <div class="progress-track-clean">
-                <div id="prestige-bar-fill" class="progress-fill-clean" style="width: 0%;"></div>
-              </div>
-              <small id="prestige-missing-text" class="missing-text-clean">Faltam 100 mi Paçocas para a próxima!</small>
-            </div>
-
-            <div class="prestige-rules-clean">
-              <div class="rule-row">
-                <div class="rule-icon-box keep">🎒</div>
-                <div class="rule-details">
-                  <strong>O que você MANTÉM:</strong>
-                  <p>Paçocas de Ouro, bônus de produção, estatísticas e conquistas.</p>
-                </div>
-              </div>
-              <div class="rule-row">
-                <div class="rule-icon-box reset">♻️</div>
-                <div class="rule-details">
-                  <strong>O que RECOMEÇA:</strong>
-                  <p>Saldo de paçocas, geradores e melhorias da loja.</p>
-                </div>
-              </div>
-            </div>
-
-            <button id="btn-prestige" class="action-btn prestige-btn-clean" disabled>Renascer Bloqueado</button>
-          </div>
-        </div>
-
-        <div class="profile-section" style="margin-top: 20px;">
-          <h2>Estatísticas</h2>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <span class="stat-label">Cliques Totais</span>
-              <strong id="stat-clicks">0</strong>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Total Acumulado</span>
-              <strong id="stat-earned">0</strong>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Estruturas</span>
-              <strong id="stat-structures">0</strong>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Tempo de Jogo</span>
-              <strong id="stat-time">0m</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="profile-section" style="margin-top: 20px;">
-          <h2>Conquistas</h2>
-          <div id="achievements-list" class="shop-list"></div>
-        </div>
-
-        <div class="profile-section" style="margin-top: 20px;">
-          <h2>Opções e Sistema</h2>
-          <div class="settings-panel">
-            
-            <div class="setting-row">
-              <div class="setting-info">
-                <strong>🎵 Música de Fundo</strong>
-                <small>Banda sonora do jogo</small>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="toggle-music" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="setting-row">
-              <div class="setting-info">
-                <strong>🔊 Efeitos Sonoros</strong>
-                <small>Sons de cliques e upgrades</small>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="toggle-sfx" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #E8D8C8; margin: 16px 0;">
-
-            <button id="btn-reset-save" class="action-btn danger" style="width: 100%;">
-              ⚠️ Apagar Progresso (Reset)
-            </button>
-          </div>
+          </section>
+          <section class="profile-panel" aria-labelledby="achievements-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">SEUS MARCOS</span><h3 id="achievements-title">Pequenas grandes vitórias</h3></div><span id="profile-achievement-count" class="profile-count">0/0</span></div>
+            <div id="achievement-progress" class="achievement-progress" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="achievement-progress-fill"></span></div>
+            <div class="achievement-filters" role="group" aria-label="Filtrar conquistas"><button type="button" data-achievement-filter="all" aria-pressed="true">Todas</button><button type="button" data-achievement-filter="unlocked" aria-pressed="false">Conquistadas</button><button type="button" data-achievement-filter="locked" aria-pressed="false">A conquistar</button></div>
+            <div id="achievements-list" class="profile-achievements"></div>
+            <p id="achievement-empty" class="profile-empty" hidden>Nenhuma conquista por aqui ainda. Seu próximo clique pode mudar isso.</p>
+          </section>
+          <section id="profile-settings" class="profile-panel" aria-labelledby="settings-title">
+            <div class="profile-section-heading"><div><span class="profile-eyebrow">DO SEU JEITO</span><h3 id="settings-title">Som e preferências</h3></div></div>
+            <div class="profile-setting"><div class="profile-setting-icon" aria-hidden="true">♫</div><div><label for="toggle-music">Música de fundo</label><p>A trilha sonora do seu império.</p></div><label class="toggle-switch"><input type="checkbox" id="toggle-music" aria-label="Música de fundo" checked><span class="slider"></span></label></div>
+            <div class="profile-setting"><div class="profile-setting-icon" aria-hidden="true">◖</div><div><label for="toggle-sfx">Efeitos sonoros</label><p>Cliques, compras e conquistas.</p></div><label class="toggle-switch"><input type="checkbox" id="toggle-sfx" aria-label="Efeitos sonoros" checked><span class="slider"></span></label></div>
+          </section>
+          <section class="profile-danger" aria-labelledby="reset-title"><div><h3 id="reset-title">Recomeçar do zero</h3><p>Apaga todo o progresso da conta. Esta ação é permanente.</p></div><button id="btn-reset-save" class="profile-danger-button" type="button">Apagar progresso</button></section>
+          <footer class="profile-footer">Feito de amendoim, cliques e grandes ideias.<span>Paçoca Clicker</span></footer>
         </div>
       </section>
 
       <!-- Aba 6: Ranking -->
-      <section id="ranking-area" class="tab-content">
-        <div class="profile-section" style="padding: 16px 12px; display: flex; flex-direction: column; height: 100%;">
-          
-          <div class="auth-header" style="align-items: center; text-align: center; margin-bottom: 10px;">
-            <h2 style="font-size: 1.6rem; margin-bottom: 2px;">🏆 Ranking Global</h2>
-            <p style="font-size: 0.8rem;">Os maiores impérios da rede Paçoca</p>
+      <section id="ranking-area" class="tab-content" aria-labelledby="ranking-title">
+        <div class="ranking-shell">
+          <header class="ranking-hero">
+            <div class="ranking-eyebrow">PAÇOCA CLICKER <span>•</span> CLASSIFICAÇÃO GLOBAL</div>
+            <div class="ranking-hero-line">
+              <div><h2 id="ranking-title">Grandes impérios.<br><em>Doces conquistas.</em></h2>
+              <p>Seu próximo lugar começa com um clique.</p></div>
+              <div class="ranking-trophy" aria-hidden="true">🏆</div>
+            </div>
+            <div class="ranking-hero-footer"><span>Todos os tempos</span><span id="ranking-source">Classificação global</span></div>
+          </header>
+          <div class="ranking-demo" id="ranking-demo" hidden>Modo demonstração · Jogadores ilustrativos, sem competição real.</div>
+          <div class="rank-tabs" role="group" aria-label="Categoria do ranking">
+            <button type="button" class="rank-tab active" data-category="fortune" aria-pressed="true"><span aria-hidden="true">◈</span> Fortuna</button>
+            <button type="button" class="rank-tab" data-category="gold" aria-pressed="false"><span aria-hidden="true">✦</span> Ouro</button>
+            <button type="button" class="rank-tab" data-category="structures" aria-pressed="false"><span aria-hidden="true">▥</span> Estruturas</button>
           </div>
-
-          <!-- Filtros de Categoria do Ranking -->
-          <div class="rank-tabs">
-            <button class="rank-tab active" data-category="fortune">Fortuna</button>
-            <button class="rank-tab" data-category="gold">Ouro 🌟</button>
-            <button class="rank-tab" data-category="structures">Estruturas</button>
+          <p id="ranking-description" class="ranking-description"></p>
+          <div class="ranking-toolbar">
+            <div><span class="ranking-overline">OS DESTAQUES</span><h3>Hall da paçoca</h3></div>
+            <button type="button" class="ranking-refresh" id="ranking-refresh"><span aria-hidden="true">↻</span> Atualizar</button>
           </div>
-
-          <div class="podium-container" id="ranking-podium"></div>
-          <div class="ranking-list" id="ranking-list-data">
-            <div class="ranking-state">Carregando ranking...</div>
+          <p id="ranking-feedback" class="ranking-feedback" role="status" aria-live="polite"></p>
+          <div id="ranking-results" aria-busy="false">
+            <div class="podium-container" id="ranking-podium" role="list" aria-label="Os três primeiros colocados"></div>
+            <div class="ranking-list-heading"><h3>Classificação</h3><span id="ranking-count"></span></div>
+            <div class="ranking-columns" aria-hidden="true"><span>POSIÇÃO / JOGADOR</span><span>PONTUAÇÃO</span></div>
+            <div class="ranking-list" id="ranking-list-data" role="list" aria-label="Demais colocados"></div>
+            <div id="ranking-state" class="ranking-state" hidden></div>
           </div>
-          <div class="rank-card is-me" id="ranking-current-player" style="display: none;"></div>
-
+          <aside class="ranking-personal" aria-label="Sua colocação">
+            <span class="ranking-overline">SEU IMPÉRIO</span>
+            <div id="ranking-current-player"></div>
+            <p id="ranking-personal-hint">Sua posição aparece quando seu progresso entrar na classificação.</p>
+          </aside>
+          <footer class="ranking-footer"><span id="ranking-updated">Aguardando atualização</span><span>Continue produzindo. Continue subindo.</span></footer>
         </div>
       </section>
 
@@ -356,32 +308,9 @@
         </div>
       </div>
 
-      <div id="skill-modal" class="modal-overlay">
-        <div class="modal-card skill-modal-card">
-          <div class="skill-modal-header">
-            <div id="skill-modal-icon" class="skill-modal-icon"></div>
-            <div class="skill-modal-title">
-              <h3 id="skill-modal-name">Nome do Talento</h3>
-              <span id="skill-modal-branch" class="skill-modal-branch-tag">Caminho</span>
-            </div>
-          </div>
-          
-          <p id="skill-modal-lore" class="skill-modal-lore">Frase de história...</p>
-          
-          <div id="skill-modal-desc" class="skill-modal-desc-box">
-            Efeito da habilidade
-          </div>
-
-          <div class="modal-actions" style="margin-top: 14px;">
-            <button id="btn-learn-skill" class="action-btn prestige-btn-clean">
-              Aprender (1 🌟)
-            </button>
-            <button id="btn-close-skill-modal" class="action-btn secondary">
-              Fechar
-            </button>
-          </div>
-        </div>
-      </div>
+      <dialog id="skill-modal" class="talent-dialog" aria-labelledby="skill-modal-name" aria-describedby="skill-modal-desc">
+        <div class="talent-dialog-body"><div class="talent-dialog-top"><span id="skill-modal-branch" class="talents-eyebrow"></span><button id="btn-close-skill-modal" type="button" class="talent-close" aria-label="Fechar detalhes do talento">×</button></div><div id="skill-modal-icon" class="talent-detail-icon" aria-hidden="true"></div><span id="skill-modal-state" class="talent-detail-state"></span><h2 id="skill-modal-name"></h2><p id="skill-modal-lore" class="talent-detail-lore"></p><div class="talent-effect"><span>EFEITO NO SEU IMPÉRIO</span><p id="skill-modal-desc"></p></div><div class="talent-cost-row"><span>Custo do talento</span><strong id="skill-modal-cost"></strong></div><div class="talent-cost-row"><span>Seu ouro disponível</span><strong id="skill-modal-balance"></strong></div><div class="talent-requirements"><span id="skill-modal-requirement-label"></span><div id="skill-modal-requirements"></div></div><p id="skill-modal-hint" class="talent-detail-hint"></p><button id="btn-learn-skill" class="talent-learn-button" type="button">Aprender talento</button></div>
+      </dialog>
 
       <!-- Navegação Inferior (6 Botões Sólidos) -->
       <nav class="bottom-nav">
