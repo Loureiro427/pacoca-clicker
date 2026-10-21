@@ -88,12 +88,12 @@ export class GoldenPacoca {
 
     if (isFrenzy || this.game.pps === 0) {
       let frenzyDuration = 20;
-      if (this.game.skillTree && this.game.skillTree.hasSkill('alc_2')) frenzyDuration += 10;
       
       let frenzyMult = 7;
       if (this.game.skillTree && this.game.skillTree.hasSkill('alc_2a')) frenzyMult = 10;
 
       this.game.startFrenzy(frenzyMult, frenzyDuration);
+      frenzyDuration = this.game.frenzyTimeLeft;
       
       let msg = `Ativado por ${frenzyDuration} segundos!`;
       if (gotFreeChip) msg += ` ✨ Sorte: +1 Ouro!`;

@@ -25,6 +25,7 @@ export class Game {
     
     // Prestígio
     this.prestigeChips = 0;
+    this.claimedPrestigeChips = 0;
     this.prestigeMultiplier = 1;
 
     // Frenesi Dourado
@@ -48,9 +49,6 @@ export class Game {
     this.skillTree = new SkillTreeManager(this);
     this.skillTreeUI = new SkillTreeUI(this);
 
-    // (Perto da definição da skillTree)
-    this.skillTree = new SkillTreeManager(this);
-    this.skillTreeUI = new SkillTreeUI(this);
     
     // Inicia o sistema de áudio
     this.audio = new AudioManager();
@@ -144,22 +142,23 @@ export class Game {
   buy(genId, baseCost) {
     const owned = this.inventory[genId] || 0;
     
-    // TALENTO PAS_2 e PAS_2a: Descontos de Loja
-    let discount = 1;
-    if (this.skillTree.hasSkill('pas_2')) discount -= 0.05;
-    if (this.skillTree.hasSkill('pas_2a') && (this.buyAmount === 10 || this.buyAmount === 100)) discount -= 0.05;
-
-    const cost = Math.floor(calculateCost(baseCost, owned, this.buyAmount) * discount);
+    const cost = this.getPurchaseCost(baseCost, owned, this.buyAmount);
     
     if (this.score >= cost) {
       this.score -= cost;
       this.inventory[genId] = owned + this.buyAmount;
-      this.audio.playBuy(); // Toca o som de compra
+      this.audio.playBuy();
       this.recalculateStats();
       this.checkAchievements();
       this.refreshUI();
     }
-    
+  }
+
+  getPurchaseCost(baseCost, owned, amount = this.buyAmount) {
+    let discount = 1;
+    if (this.skillTree.hasSkill('pas_2')) discount -= 0.05;
+    if (this.skillTree.hasSkill('pas_2a') && (amount === 10 || amount === 100)) discount -= 0.05;
+    return Math.floor(calculateCost(baseCost, owned, amount) * discount);
   }
 
   buyUpgrade(upgId) {
@@ -177,12 +176,13 @@ export class Game {
   // Executa o Prestígio
   doPrestige() {
     const pendingChips = Prestige.calculatePrestigeChips(this.totalEarned);
-    const newChips = Math.max(0, pendingChips - this.prestigeChips);
+    const newChips = Math.max(0, pendingChips - this.claimedPrestigeChips);
 
     if (newChips <= 0) return;
 
-    const totalChipsAfter = pendingChips;
-    const newMultiplierPercent = Math.round((Prestige.getMultiplier(totalChipsAfter) - 1) * 100);
+    const totalChipsAfter = this.prestigeChips + newChips;
+    const extraMultiplier = this.skillTree.hasSkill('alc_5') ? totalChipsAfter * 0.01 : 0;
+    const newMultiplierPercent = Math.round((Prestige.getMultiplier(totalChipsAfter) + extraMultiplier - 1) * 100);
 
     // Abre o Modal 3D e aguarda a confirmação do jogador
     this.ui.showPrestigeModal(
@@ -190,7 +190,8 @@ export class Game {
       newMultiplierPercent,
       () => {
         // Callback executado somente se o jogador clicar em "Confirmar Renascimento"
-        this.prestigeChips = pendingChips;
+        this.prestigeChips += newChips;
+        this.claimedPrestigeChips = pendingChips;
         this.score = 0;
         this.inventory = {
           cursor: 0, ajudante: 0, bancada: 0, carrinho: 0,
@@ -283,7 +284,7 @@ export class Game {
       this.autoclickTimer += delta;
       if (this.skillTree.hasSkill('pas_8') && this.autoclickTimer >= 10) {
         this.autoclickTimer = 0;
-        const autoVal = this.clickValue * 60 * this.frenzyMultiplier;
+        const autoVal = this.clickValue * 60;
         this.score += autoVal;
         this.totalEarned += autoVal;
         
@@ -326,6 +327,7 @@ export class Game {
       boughtUpgrades: this.boughtUpgrades,
       unlockedAchievements: this.unlockedAchievements,
       prestigeChips: this.prestigeChips,
+      claimedPrestigeChips: this.claimedPrestigeChips,
       unlockedSkills: this.skillTree ? this.skillTree.unlockedSkills : ['origin']
     });
   }
@@ -341,6 +343,7 @@ export class Game {
       this.boughtUpgrades = saved.boughtUpgrades || [];
       this.unlockedAchievements = saved.unlockedAchievements || [];
       this.prestigeChips = saved.prestigeChips || 0;
+      this.claimedPrestigeChips = saved.claimedPrestigeChips;
       if (saved.unlockedSkills && this.skillTree) {
         this.skillTree.unlockedSkills = saved.unlockedSkills;
       }
@@ -400,6 +403,7 @@ export class Game {
       boughtUpgrades: this.boughtUpgrades,
       unlockedAchievements: this.unlockedAchievements,
       prestigeChips: this.prestigeChips,
+      claimedPrestigeChips: this.claimedPrestigeChips,
       unlockedSkills: this.skillTree ? this.skillTree.unlockedSkills : ['origin'],
       lastSaveTime: Date.now()
     });
@@ -409,8 +413,8 @@ export class Game {
   importSaveCode(code) {
     try {
       const decoded = atob(code);
-      const data = JSON.parse(decoded);
-      if (data && typeof data.score === 'number') {
+      const data = SaveManager.validate(JSON.parse(decoded));
+      if (data) {
         SaveManager.replace(data)
           .then(() => window.location.reload())
           .catch(() => this.ui.showNotification('Não foi possível importar o save', 'Verifique sua conexão e tente novamente.'));

@@ -1,3 +1,9 @@
+import { GeneratorsData } from '../game/Generators.js';
+import { UpgradesData } from '../game/Upgrades.js';
+import { AchievementsData } from '../game/Achievements.js';
+import { SkillTreeNodes } from '../game/SkillTreeData.js';
+import { Prestige } from '../game/Prestige.js';
+
 export class SaveManager {
   static BASE_KEY = 'pacoca_clicker_save';
   static saveKey = this.BASE_KEY;
@@ -19,6 +25,10 @@ export class SaveManager {
 
     const userLocalState = this.read(this.saveKey);
     const legacyState = this.read(this.BASE_KEY);
+
+    const validatedRemote = remoteState ? this.validate(remoteState) : null;
+    if (remoteState && !validatedRemote) throw new Error('Progresso da nuvem inválido');
+    remoteState = validatedRemote;
 
     if (remoteState) {
       const localIsNewer = userLocalState
@@ -44,10 +54,15 @@ export class SaveManager {
   }
 
   static save(state) {
-    if (this.resetting) return state;
+    if (this.resetting) return false;
 
     const stateWithTimestamp = { ...state, lastSaveTime: Date.now() };
-    localStorage.setItem(this.saveKey, JSON.stringify(stateWithTimestamp));
+    try {
+      localStorage.setItem(this.saveKey, JSON.stringify(stateWithTimestamp));
+    } catch (error) {
+      console.warn('Não foi possível salvar o progresso.', error);
+      return false;
+    }
     this.pendingState = stateWithTimestamp;
     this.scheduleSync();
     return stateWithTimestamp;
@@ -58,8 +73,13 @@ export class SaveManager {
   }
 
   static async replace(state) {
-    this.save(state);
-    await this.flush();
+    const validated = this.validate(state);
+    if (!validated || !this.save(validated)) throw new Error('Não foi possível importar o save');
+    while (this.pendingState || this.syncPromise) {
+      if (!this.remoteSave) break;
+      await this.flush();
+      if (this.resetting) throw new Error('Conflito ao importar o save');
+    }
   }
 
   static async reset() {
@@ -97,7 +117,9 @@ export class SaveManager {
     this.syncPromise = this.remoteSave(state, this.revision)
       .then(response => {
         if (!response?.saved && response?.profile?.state) {
-          localStorage.setItem(this.saveKey, JSON.stringify(response.profile.state));
+          const remoteState = this.validate(response.profile.state);
+          if (!remoteState) throw new Error('Progresso da nuvem inválido');
+          localStorage.setItem(this.saveKey, JSON.stringify(remoteState));
           this.revision = Number(response.profile.revision) || this.revision;
           this.resetting = true;
           this.pendingState = null;
@@ -111,7 +133,7 @@ export class SaveManager {
       })
       .catch(error => {
         failed = true;
-        this.pendingState = state;
+        this.pendingState ??= state;
         this.onSyncStatus?.('offline');
         throw error;
       })
@@ -124,14 +146,59 @@ export class SaveManager {
   }
 
   static read(key) {
-    const data = localStorage.getItem(key);
-    if (!data) return null;
-
+    let raw;
     try {
-      return JSON.parse(data);
-    } catch (_) {
-      localStorage.removeItem(key);
+      raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const data = this.validate(JSON.parse(raw));
+      if (!data) throw new Error('Save inválido');
+      return data;
+    } catch (error) {
+      if (raw) {
+        try { localStorage.setItem(key + '_backup', raw); } catch { /* Sem espaço. */ }
+      }
+      console.warn('Não foi possível carregar o progresso.', error);
       return null;
     }
+  }
+
+  static validate(data) {
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return null;
+    const validNumber = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
+    if (!validNumber(data.score)) return null;
+    const result = { ...data };
+    for (const key of ['totalClicks', 'totalEarned', 'startTime', 'prestigeChips', 'claimedPrestigeChips', 'lastSaveTime']) {
+      if (data[key] !== undefined && !validNumber(data[key])) return null;
+    }
+    for (const key of ['totalClicks', 'prestigeChips', 'claimedPrestigeChips']) {
+      if (data[key] !== undefined && !Number.isSafeInteger(data[key])) return null;
+    }
+    result.inventory = {};
+    if (data.inventory !== undefined && (!data.inventory || typeof data.inventory !== 'object' || Array.isArray(data.inventory))) return null;
+    for (const generator of GeneratorsData) {
+      const count = data.inventory?.[generator.id] ?? 0;
+      if (!Number.isSafeInteger(count) || count < 0) return null;
+      result.inventory[generator.id] = count;
+    }
+    for (const [key, definitions] of [
+      ['boughtUpgrades', UpgradesData],
+      ['unlockedAchievements', AchievementsData],
+      ['unlockedSkills', SkillTreeNodes]
+    ]) {
+      const values = data[key] ?? [];
+      if (!Array.isArray(values) || values.some(id => typeof id !== 'string' || !definitions.some(item => item.id === id))) return null;
+      result[key] = [...new Set(values)];
+    }
+    if (!result.unlockedSkills.includes('origin')) result.unlockedSkills.unshift('origin');
+    if (result.claimedPrestigeChips === undefined) {
+      // Saves antigos não distinguem ouro recebido, gasto e bônus dourados.
+      // Estima o histórico pelo saldo e talentos, limitado aos marcos alcançados.
+      const spent = SkillTreeNodes.reduce((sum, node) => sum + (result.unlockedSkills.includes(node.id) ? node.cost : 0), 0);
+      result.claimedPrestigeChips = Math.min(
+        Prestige.calculatePrestigeChips(result.totalEarned ?? 0),
+        (result.prestigeChips ?? 0) + spent
+      );
+    }
+    return result;
   }
 }

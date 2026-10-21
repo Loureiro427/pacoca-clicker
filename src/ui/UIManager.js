@@ -21,6 +21,7 @@ export class UIManager {
     this.initUpgrades();
     this.initAchievements();
     this.initSettings();
+    
     this.initTabs();
     
     this.updateScore(this.game.score, this.game.pps);
@@ -96,7 +97,9 @@ export class UIManager {
 
     GeneratorsData.forEach(gen => {
       const owned = inventory[gen.id] || 0;
-      const cost = calculateCost(gen.baseCost, owned, buyAmount);
+      const cost = this.game
+        ? this.game.getPurchaseCost(gen.baseCost, owned, buyAmount)
+        : calculateCost(gen.baseCost, owned, buyAmount);
       
       const card = document.getElementById(`gen-${gen.id}`);
       if (card) {
@@ -111,7 +114,6 @@ export class UIManager {
         if (descEl) {
           let multi = 1;
           
-          // 1. Calcula dinamicamente as Melhorias e Sinergias compradas
           UpgradesData.forEach(upg => {
             if (boughtUpgrades.includes(upg.id)) {
               if (gen.id === 'cursor') {
@@ -130,14 +132,12 @@ export class UIManager {
             }
           });
 
-          // 2. Aplica bónus globais da Árvore de Talentos
           let globalMult = prestigeMult;
           if (this.game && this.game.skillTree) {
             if (gen.id === 'cursor' && this.game.skillTree.hasSkill('act_1')) globalMult *= 1.15;
             if (gen.id !== 'cursor' && this.game.skillTree.hasSkill('pas_1')) globalMult *= 1.10;
           }
 
-          // 3. Renderiza o valor final real
           if (gen.id === 'cursor') {
             const effClick = Math.round((gen.clickBonus || 1) * multi * globalMult);
             descEl.innerText = `+${formatNumber(effClick)} por toque`;
@@ -155,7 +155,6 @@ export class UIManager {
   initUpgrades() {
     this.currentUpgFilter = 'all';
     
-    // Configura Botões de Filtro
     const filterBtns = document.querySelectorAll('.upg-filter-btn');
     filterBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -188,7 +187,6 @@ export class UIManager {
           </div>
           <small class="desc-display">${upg.desc}</small>
           <div class="cost-display">Custo: ${formatNumber(upg.cost)}</div>
-          <!-- Nova linha que mostrará o requisito quando estiver bloqueado -->
           <div class="req-display" id="req-upg-${upg.id}" style="display: none;"></div>
         </div>
         <button class="buy-btn" id="buy-upg-${upg.id}">Melhorar</button>
@@ -222,7 +220,6 @@ export class UIManager {
     
     container.appendChild(notif);
     
-    // Remove o elemento após 2.5 segundos (tempo da animação)
     setTimeout(() => {
       notif.remove();
     }, 2500);
@@ -241,7 +238,6 @@ export class UIManager {
       const isUnlocked = reqOwned >= upg.reqCount;
       const matchesFilter = this.currentUpgFilter === 'all' || this.currentUpgFilter === upg.type;
 
-      // Oculta apenas se já foi comprado ou se o filtro não bater
       if (isBought || !matchesFilter) {
         card.style.display = 'none';
       } else {
@@ -252,7 +248,6 @@ export class UIManager {
         const reqText = document.getElementById(`req-upg-${upg.id}`);
         
         if (!isUnlocked) {
-          // ESTADO BLOQUEADO (Cinza)
           card.classList.add('locked-upgrade');
           if (reqText) {
             const genData = GeneratorsData.find(g => g.id === upg.reqGen);
@@ -265,7 +260,6 @@ export class UIManager {
             btn.innerText = 'Bloqueado';
           }
         } else {
-          // ESTADO DESBLOQUEADO (Colorido e Brilhante)
           card.classList.remove('locked-upgrade');
           if (reqText) reqText.style.display = 'none';
           if (btn) {
@@ -276,7 +270,6 @@ export class UIManager {
       }
     });
 
-    // Atualiza a mensagem de lista vazia
     let emptyEl = document.getElementById('upgrades-empty-state');
     if (visibleCount === 0) {
       if (!emptyEl) {
@@ -339,7 +332,7 @@ export class UIManager {
 
     const req = Prestige.getNextChipRequirement(game.totalEarned);
     const pendingChips = Prestige.calculatePrestigeChips(game.totalEarned);
-    const newChips = Math.max(0, pendingChips - game.prestigeChips);
+    const newChips = Math.max(0, pendingChips - game.claimedPrestigeChips);
 
     setTxt('prestige-count', formatNumber(game.prestigeChips));
     setTxt('prestige-mult', `${game.prestigeMultiplier}x`);
@@ -378,6 +371,8 @@ export class UIManager {
         }
       }
     });
+
+    // Mantém a pontuação do jogador no Ranking atualizada dinamicamente
   }
 
   initSettings() {
@@ -403,7 +398,7 @@ export class UIManager {
         localStorage.setItem('pacoca_sfx', e.target.checked);
         if (this.game && this.game.audio) {
           this.game.audio.setSfx(e.target.checked);
-          if (e.target.checked) this.game.audio.playBuy(); // Som de teste ao ligar
+          if (e.target.checked) this.game.audio.playBuy();
         }
       });
     }
@@ -535,6 +530,8 @@ export class UIManager {
         
         targetBtn.classList.add('active');
         targetTab.classList.add('active');
+
+        // Renderiza o ranking imediatamente quando a aba for ativada
       });
     });
   }
