@@ -25,6 +25,7 @@ export class Game {
     
     // Prestígio
     this.prestigeChips = 0;
+    this.claimedPrestigeChips = 0;
     this.prestigeMultiplier = 1;
 
     // Frenesi Dourado
@@ -48,9 +49,6 @@ export class Game {
     this.skillTree = new SkillTreeManager(this);
     this.skillTreeUI = new SkillTreeUI(this);
 
-    // (Perto da definição da skillTree)
-    this.skillTree = new SkillTreeManager(this);
-    this.skillTreeUI = new SkillTreeUI(this);
     
     // Inicia o sistema de áudio
     this.audio = new AudioManager();
@@ -108,6 +106,8 @@ export class Game {
 
     // CÁLCULO FINAL DO CLIQUE (this.clickValue já possui o Frenesi em tempo real!)
     const val = (this.clickValue * comboMult * critMult * maoDePedraMult) + extraVal;
+    let gained = val;
+    let echo = 0;
 
     this.score += val;
     this.totalEarned += val;
@@ -116,12 +116,15 @@ export class Game {
     // TALENTO ACT_6: Eco Clicável (1 clique grátis a cada 10 cliques)
     if (this.skillTree.hasSkill('act_6') && this.totalClicks % 10 === 0) {
       const ecoVal = this.clickValue;
+      echo = ecoVal;
+      gained += ecoVal;
       this.score += ecoVal;
       this.totalEarned += ecoVal;
     }
     
     this.checkAchievements();
     this.refreshUI();
+    return { gained, isCrit, critMultiplier: critMult, comboMultiplier: comboMult, echo, empowered: maoDePedraMult > 1 };
   }
 
   startFrenzy(multiplier, durationSeconds) {
@@ -132,6 +135,7 @@ export class Game {
 
     this.frenzyMultiplier = multiplier;
     this.frenzyTimeLeft = durationSeconds;
+    this.frenzyDuration = durationSeconds;
     this.recalculateStats();
     this.refreshUI();
   }
@@ -144,27 +148,29 @@ export class Game {
   buy(genId, baseCost) {
     const owned = this.inventory[genId] || 0;
     
-    // TALENTO PAS_2 e PAS_2a: Descontos de Loja
-    let discount = 1;
-    if (this.skillTree.hasSkill('pas_2')) discount -= 0.05;
-    if (this.skillTree.hasSkill('pas_2a') && (this.buyAmount === 10 || this.buyAmount === 100)) discount -= 0.05;
-
-    const cost = Math.floor(calculateCost(baseCost, owned, this.buyAmount) * discount);
+    const cost = this.getPurchaseCost(baseCost, owned, this.buyAmount);
     
     if (this.score >= cost) {
       this.score -= cost;
       this.inventory[genId] = owned + this.buyAmount;
-      this.audio.playBuy(); // Toca o som de compra
+      this.audio.playBuy();
       this.recalculateStats();
       this.checkAchievements();
       this.refreshUI();
     }
-    
+  }
+
+  getPurchaseCost(baseCost, owned, amount = this.buyAmount) {
+    let discount = 1;
+    if (this.skillTree.hasSkill('pas_2')) discount -= 0.05;
+    if (this.skillTree.hasSkill('pas_2a') && (amount === 10 || amount === 100)) discount -= 0.05;
+    return Math.floor(calculateCost(baseCost, owned, amount) * discount);
   }
 
   buyUpgrade(upgId) {
     const upg = UpgradesData.find(u => u.id === upgId);
-    if (upg && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost) {
+    if (upg && !this.boughtUpgrades.includes(upgId) && this.score >= upg.cost
+      && (this.inventory[upg.reqGen] || 0) >= upg.reqCount) {
       this.score -= upg.cost;
       this.boughtUpgrades.push(upgId);
       this.audio.playBuy(); // Toca o som de compra
@@ -177,12 +183,13 @@ export class Game {
   // Executa o Prestígio
   doPrestige() {
     const pendingChips = Prestige.calculatePrestigeChips(this.totalEarned);
-    const newChips = Math.max(0, pendingChips - this.prestigeChips);
+    const newChips = Math.max(0, pendingChips - this.claimedPrestigeChips);
 
     if (newChips <= 0) return;
 
-    const totalChipsAfter = pendingChips;
-    const newMultiplierPercent = Math.round((Prestige.getMultiplier(totalChipsAfter) - 1) * 100);
+    const totalChipsAfter = this.prestigeChips + newChips;
+    const extraMultiplier = this.skillTree.hasSkill('alc_5') ? totalChipsAfter * 0.01 : 0;
+    const newMultiplierPercent = Math.round((Prestige.getMultiplier(totalChipsAfter) + extraMultiplier - 1) * 100);
 
     // Abre o Modal 3D e aguarda a confirmação do jogador
     this.ui.showPrestigeModal(
@@ -190,7 +197,8 @@ export class Game {
       newMultiplierPercent,
       () => {
         // Callback executado somente se o jogador clicar em "Confirmar Renascimento"
-        this.prestigeChips = pendingChips;
+        this.prestigeChips += newChips;
+        this.claimedPrestigeChips = pendingChips;
         this.score = 0;
         this.inventory = {
           cursor: 0, ajudante: 0, bancada: 0, carrinho: 0,
@@ -261,7 +269,8 @@ export class Game {
     this.ui.updateShop(this.score, this.inventory, this.buyAmount);
     this.ui.updateUpgrades(this.score, this.inventory, this.boughtUpgrades);
     this.ui.updateProfile(this);
-    this.ui.updateFrenzy(this.frenzyTimeLeft);
+    this.ui.updateFrenzy(this.frenzyTimeLeft, this.frenzyMultiplier, this.frenzyDuration);
+    this.ui.updateClickStats?.(this);
     if (this.skillTreeUI) {
       this.skillTreeUI.render();
     }
@@ -283,7 +292,7 @@ export class Game {
       this.autoclickTimer += delta;
       if (this.skillTree.hasSkill('pas_8') && this.autoclickTimer >= 10) {
         this.autoclickTimer = 0;
-        const autoVal = this.clickValue * 60 * this.frenzyMultiplier;
+        const autoVal = this.clickValue * 60;
         this.score += autoVal;
         this.totalEarned += autoVal;
         
@@ -300,6 +309,12 @@ export class Game {
           this.frenzyMultiplier = 1;
           this.recalculateStats();
         }
+      }
+
+      // O clique e o frenesi precisam atualizar mesmo sem produção automática.
+      if (this.pps <= 0) {
+        this.ui.updateClickStats?.(this);
+        this.ui.updateFrenzy(this.frenzyTimeLeft, this.frenzyMultiplier, this.frenzyDuration);
       }
 
       if (this.pps > 0) {
@@ -326,6 +341,7 @@ export class Game {
       boughtUpgrades: this.boughtUpgrades,
       unlockedAchievements: this.unlockedAchievements,
       prestigeChips: this.prestigeChips,
+      claimedPrestigeChips: this.claimedPrestigeChips,
       unlockedSkills: this.skillTree ? this.skillTree.unlockedSkills : ['origin']
     });
   }
@@ -341,6 +357,7 @@ export class Game {
       this.boughtUpgrades = saved.boughtUpgrades || [];
       this.unlockedAchievements = saved.unlockedAchievements || [];
       this.prestigeChips = saved.prestigeChips || 0;
+      this.claimedPrestigeChips = saved.claimedPrestigeChips;
       if (saved.unlockedSkills && this.skillTree) {
         this.skillTree.unlockedSkills = saved.unlockedSkills;
       }
@@ -390,40 +407,13 @@ export class Game {
     }
   }
 
-  exportSaveCode() {
-    const data = JSON.stringify({
-      score: this.score,
-      totalClicks: this.totalClicks,
-      totalEarned: this.totalEarned,
-      startTime: this.startTime,
-      inventory: this.inventory,
-      boughtUpgrades: this.boughtUpgrades,
-      unlockedAchievements: this.unlockedAchievements,
-      prestigeChips: this.prestigeChips,
-      unlockedSkills: this.skillTree ? this.skillTree.unlockedSkills : ['origin'],
-      lastSaveTime: Date.now()
-    });
-    return btoa(data);
-  }
-
-  importSaveCode(code) {
-    try {
-      const decoded = atob(code);
-      const data = JSON.parse(decoded);
-      if (data && typeof data.score === 'number') {
-        SaveManager.replace(data)
-          .then(() => window.location.reload())
-          .catch(() => this.ui.showNotification('Não foi possível importar o save', 'Verifique sua conexão e tente novamente.'));
-      } else {
-        alert('Código de save inválido.');
-      }
-    } catch (e) {
-      alert('Código de save inválido.');
-    }
-  }
-
   async resetProgress() {
-    if (confirm('Tem certeza de que deseja reiniciar todo o progresso? Esta ação não pode ser desfeita.')) {
+    const accepted = await this.ui.showDialog({
+      icon: '↺', title: 'Recomeçar do zero?',
+      message: 'Seu saldo, estruturas, talentos e conquistas serão apagados desta conta, incluindo o progresso salvo na nuvem. Essa ação não pode ser desfeita.',
+      confirmText: 'Apagar meu progresso', cancelText: 'Manter meu império', danger: true,
+    });
+    if (accepted) {
       try {
         await SaveManager.reset();
         window.location.reload();
