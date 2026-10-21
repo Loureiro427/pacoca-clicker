@@ -13,7 +13,7 @@ function gameState() {
     score: 0, totalEarned: 8000000, prestigeChips: 0, claimedPrestigeChips: 0,
     inventory: {}, boughtUpgrades: [], buyAmount: 1, startTime: Date.now(),
     frenzyMultiplier: 1, frenzyTimeLeft: 0,
-    ui: { showPrestigeModal: (_chips, _mult, confirm) => confirm() },
+    ui: { showPrestigeModal: (_chips, _mult, confirm) => confirm(), updateFrenzy() {} },
     saveGame() {}, refreshUI() {},
   });
   game.skillTree = new SkillTreeManager(game);

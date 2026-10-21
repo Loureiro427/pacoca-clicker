@@ -105,27 +105,26 @@
           <img src="/pacoca.png" alt="Paçoca" class="header-mascot">
         </div>
         <div class="header-stats">
-          <h1 id="score-display">0</h1>
+          <span class="header-balance-label">PAÇOCAS</span><h1 id="score-display">0</h1>
           <p id="pps-display">0 por segundo</p>
         </div>
       </header>
 
       <!-- Banner de Frenesi Dourado -->
-      <div id="frenzy-banner" class="frenzy-banner" style="display: none;">
-        🔥 FRENESI ATIVO: <span id="frenzy-timer">20</span>s
+      <div id="frenzy-banner" class="frenzy-banner" hidden>
+        <span class="frenzy-symbol" aria-hidden="true">✦</span><div><strong>Frenesi <span id="frenzy-multiplier">7×</span></strong></div><strong class="frenzy-clock"><span id="frenzy-timer">20</span>s</strong><div class="frenzy-time-track" aria-hidden="true"><span id="frenzy-time-fill"></span></div>
       </div>
 
       <!-- Aba 1: Tocar -->
-      <main id="click-area" class="tab-content active">
-        <div id="bg-rain-container" class="bg-rain"></div>
-        <div class="mascot-container">
-          <div class="shine"></div>
-          <img src="/pacoca.png" id="pacoca-button" class="pacoca-mascot" alt="Mascote Paçoca" draggable="false" ondragstart="return false;" oncontextmenu="return false;">
-        </div>
-        <div class="cream-wave">
-          <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path fill="#ffffff" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,144C672,149,768,203,864,218.7C960,235,1056,213,1152,192C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-          </svg>
+      <main id="click-area" class="tab-content active" aria-labelledby="click-title">
+        <div id="pacoca-particles" class="pacoca-particles" aria-hidden="true"></div>
+        <div class="click-shell">
+          <header class="click-heading"><span>SEU PEQUENO GRANDE IMPÉRIO</span><h2 id="click-title">Um toque de cada vez.</h2></header>
+          <div class="click-stage"><div class="click-stage-halo" aria-hidden="true"></div><button type="button" id="pacoca-button" class="click-pacoca-button" aria-label="Produzir paçocas. Toque ou use Enter ou Espaço."><img src="/pacoca.png" class="pacoca-mascot" alt="" draggable="false"></button></div>
+          <div class="click-feedback"><p id="click-result">Toque na paçoca para produzir</p><span>Simples assim. Doce assim.</span></div>
+          <div class="click-metrics"><div><span>POR CLIQUE BASE</span><strong id="click-base-value">+1</strong></div><div><span>CLIQUES NA JORNADA</span><strong id="click-total-count">0</strong></div></div>
+          <div class="click-combo" id="click-combo" hidden><div><strong id="click-combo-label">Combo de cliques</strong><span id="click-combo-count">0 / 50</span></div><div class="click-combo-track"><span id="click-combo-fill"></span></div><p id="click-combo-hint">Mantenha o ritmo para fortalecer seus cliques.</p></div>
+          <p id="click-special-status" class="click-special-status" role="status"></p>
         </div>
       </main>
 

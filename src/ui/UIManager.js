@@ -7,6 +7,7 @@ import { Prestige } from '../game/Prestige.js';
 import { AppDialog } from './AppDialog.js';
 import { formatJourneyDuration } from './ProfileAccount.js';
 import { getUpgradeState, matchesUpgradeView } from './CommerceData.js';
+import { updateClickStats } from './ClickExperience.js';
 
 export class UIManager {
   showDialog(options) {
@@ -35,6 +36,7 @@ export class UIManager {
     this.updateShop(this.game.score, this.game.inventory, this.game.buyAmount);
     this.updateUpgrades(this.game.score, this.game.inventory, this.game.boughtUpgrades);
     this.updateProfile(this.game);
+    this.updateClickStats(this.game);
     this.game.skillTreeUI?.render();
   }
 
@@ -447,18 +449,28 @@ export class UIManager {
     }
   }
 
-  updateFrenzy(timeLeft) {
+  updateClickStats(game) {
+    updateClickStats(game);
+  }
+
+  updateFrenzy(timeLeft, multiplier = 1, duration = timeLeft) {
     const banner = document.getElementById('frenzy-banner');
     const timer = document.getElementById('frenzy-timer');
     
     if (banner && timer) {
       if (timeLeft > 0) {
-        banner.style.display = 'block';
+        banner.hidden = false;
         timer.innerText = Math.ceil(timeLeft);
       } else {
-        banner.style.display = 'none';
+        banner.hidden = true;
       }
     }
+    const label = document.getElementById('frenzy-multiplier');
+    if (label) label.innerText = `${multiplier}×`;
+    const fill = document.getElementById('frenzy-time-fill');
+    if (fill) fill.style.width = `${duration > 0 ? Math.min(100, Math.max(0, timeLeft / duration * 100)) : 0}%`;
+    const area = document.getElementById('click-area');
+    if (area) area.dataset.frenzy = String(timeLeft > 0);
   }
 
   showOfflineModal(seconds, amount, onCollectNormal, onCollectDouble) {

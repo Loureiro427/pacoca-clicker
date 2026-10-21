@@ -2260,3 +2260,91 @@ html, body {
 .commerce-shell button:focus-visible { outline: 3px solid #a77a36; outline-offset: 3px; }
 @media (min-width: 600px) { .commerce-shell { padding: 28px; } .commerce-hero { padding: 28px 32px; } .commerce-card { grid-template-columns: 50px minmax(0, 1fr); padding: 18px; gap: 16px; } .commerce-icon { width: 50px; height: 52px; } .commerce-card-heading h3 { font-size: .95rem; } }
 @media (max-width: 360px) { .commerce-shell { padding: 12px 10px 20px; } .commerce-hero { padding: 22px 18px; } .commerce-card { padding: 13px 10px; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; } .commerce-icon { width: 34px; height: 38px; padding: 7px; border-radius: 10px; } .commerce-icon svg { width: 21px; height: 21px; } .commerce-card-heading { flex-wrap: wrap; gap: 5px; } .commerce-buy-panel { padding: 10px; gap: 6px; } .commerce-buy-panel strong { font-size: .62rem; } .commerce-buy-panel .mode-btn { min-width: 32px; } .commerce-card .cost-display { font-size: .64rem; } .commerce-buy { min-width: 74px; font-size: .6rem; padding: 8px; } }
+
+/* Principal: composição limpa, contraste e um único foco visual. */
+.status-bar {
+  flex-shrink: 0;
+  gap: 14px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #e8dac6;
+  background: #fffbf5;
+  box-shadow: none;
+}
+.header-logo { padding: 8px; background: #f4e6d0; border: 1px solid #e4ccb0; border-radius: 16px; box-shadow: none; }
+.header-mascot { width: 34px; height: 34px; filter: none; }
+.header-stats { min-width: 0; }
+.header-balance-label { color: #91704c; font-size: .53rem; letter-spacing: .15em; font-weight: 750; }
+#score-display { color: #5c3d28; font-size: clamp(1.8rem, 7vw, 2.4rem); line-height: 1.1; letter-spacing: -.05em; font-weight: 800; text-shadow: none; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+#pps-display { padding: 0; margin: 5px 0 0; border: 0; background: none; box-shadow: none; color: #8e6c46; font-size: .7rem; font-weight: 550; }
+.frenzy-banner[hidden] { display: none; }
+.frenzy-banner { display: flex; align-items: center; justify-content: center; gap: 9px; flex-shrink: 0; position: relative; padding: 10px 18px 12px; background: #f2e2bc; color: #835e25; font-size: .72rem; border: 0; box-shadow: none; }
+.frenzy-symbol { font-size: 1rem; }
+.frenzy-clock { font-size: .75rem; font-variant-numeric: tabular-nums; margin-left: 12px; }
+.frenzy-time-track { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: #e6d4aa; }
+.frenzy-time-track > span { display: block; height: 100%; background: #b08b47; }
+#click-area.tab-content.active { display: block; padding: 0; min-height: 0; overflow-y: auto; overflow-x: hidden; touch-action: pan-y; background: #f8f1e6; }
+#click-area [hidden] { display: none !important; }
+.click-shell { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 480px; min-height: 100%; padding: 28px 24px 18px; gap: 18px; margin: 0 auto; }
+.click-heading { text-align: center; }
+.click-heading > span { color: #9b7b55; font-size: .48rem; font-weight: 750; letter-spacing: .15em; }
+.click-heading h2 { margin: 9px 0 0; font-size: clamp(1.2rem, 4vw, 1.45rem); line-height: 1.3; letter-spacing: -.035em; font-weight: 650; color: #735034; }
+.click-stage { position: relative; isolation: isolate; display: grid; place-items: center; width: 100%; height: clamp(220px, 34dvh, 310px); flex-shrink: 0; }
+.click-stage-halo { position: absolute; width: min(76vw, 29dvh, 265px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #f4e4c7, #ecdbbd); box-shadow: 0 0 0 12px #f1e5d180; z-index: -1; pointer-events: none; }
+.click-stage-halo::after { content: ''; position: absolute; width: 52%; height: 10%; bottom: 4%; left: 24%; border-radius: 50%; background: #b08c5422; filter: blur(8px); }
+.click-pacoca-button { display: grid; place-items: center; width: min(58vw, 27dvh, 235px); height: min(58vw, 27dvh, 235px); min-width: 155px; min-height: 155px; border: 0; padding: 0; border-radius: 35%; background: transparent; cursor: pointer; touch-action: none; }
+.click-pacoca-button .pacoca-mascot { width: 100%; height: auto; max-height: 100%; object-fit: contain; filter: drop-shadow(0 12px 10px #78502625); animation: none; transform: none; transition: none; pointer-events: none; }
+.click-pacoca-button:active .pacoca-mascot { transform: none; }
+.click-pacoca-button:focus-visible { outline: 3px solid #ae8043; outline-offset: 8px; }
+.click-feedback { text-align: center; min-height: 42px; }
+.click-feedback p { color: #805e39; font-size: .78rem; font-weight: 650; line-height: 1.5; margin: 0; }
+.click-feedback > span { display: block; margin-top: 5px; color: #a58a67; font-size: .62rem; }
+.click-metrics { width: 100%; max-width: 310px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #e3cfaf; border-radius: 16px; background: #fffbf380; padding: 14px 0; }
+.click-metrics > div { min-width: 0; text-align: center; padding: 0 10px; }
+.click-metrics > div + div { border-left: 1px solid #e5d6bc; }
+.click-metrics span { display: block; color: #94734c; font-size: .46rem; font-weight: 700; letter-spacing: .08em; }
+.click-metrics strong { display: block; margin-top: 6px; color: #78532f; font-size: 1.2rem; line-height: 1.2; font-weight: 750; letter-spacing: -.035em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.click-combo { width: 100%; max-width: 280px; padding: 0; border: 0; background: transparent; }
+.click-combo > div:first-child { display: flex; justify-content: space-between; gap: 10px; color: #927044; font-size: .65rem; }
+.click-combo > div:first-child strong { font-weight: 650; }
+.click-combo-track { height: 3px; background: #e4d5bc; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.click-combo-track > span { display: block; width: 0; height: 100%; background: #b5945a; border-radius: inherit; }
+.click-combo p { color: #a18a67; font-size: .57rem; line-height: 1.5; margin: 7px 0 0; }
+.click-special-status { min-height: 14px; margin: 0; color: #a68044; text-align: center; font-size: .63rem; }
+#click-area[data-frenzy='true'] .click-stage-halo { background: radial-gradient(circle at 40% 30%, #f8e4ad, #e8ce8e); box-shadow: 0 0 0 12px #efdfb780; }
+.click-gain-floater { position: fixed; z-index: 150; pointer-events: none; color: #936a30; font-size: 1rem; font-weight: 750; white-space: nowrap; animation: minimalClickRise .75s ease-out forwards; }
+.click-gain-floater.is-critical { color: #8b5c19; font-size: 1.2rem; }
+@keyframes minimalClickRise { from { opacity: .95; transform: translate(-50%, -20px); } to { opacity: 0; transform: translate(-50%, -100px); } }
+@media (max-height: 720px) { .status-bar { padding-top: 12px; padding-bottom: 12px; } .click-shell { padding-top: 20px; gap: 12px; } .click-stage { height: 210px; } .click-heading h2 { font-size: 1.15rem; } }
+@media (max-width: 360px) { .click-shell { padding-left: 18px; padding-right: 18px; } .click-metrics { max-width: 280px; } }
+@media (prefers-reduced-motion: reduce) { .click-gain-floater { display: none; } }
+
+/* Mini paçocas acompanham os ganhos sem competir com o mascote. */
+#click-area { isolation: isolate; }
+.pacoca-particles { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.click-shell { position: relative; z-index: 1; }
+.mini-pacoca { position: absolute; top: -50px; height: auto; opacity: 0; pointer-events: none; user-select: none; animation: miniPacocaFall linear forwards; }
+@keyframes miniPacocaFall {
+  0% { opacity: 0; transform: translate3d(0, -30px, 0) rotate(-20deg); }
+  12% { opacity: .24; }
+  80% { opacity: .24; }
+  100% { opacity: 0; transform: translate3d(15px, 100dvh, 0) rotate(var(--mini-rotation)); }
+}
+/* Escala de leitura próxima à tela original. */
+.header-balance-label { font-size: .7rem; }
+#score-display { font-size: 2.3rem; }
+#pps-display { font-size: .9rem; }
+.click-heading > span { font-size: .7rem; letter-spacing: .08em; }
+.click-heading h2 { font-size: 1.5rem; }
+.click-feedback p { font-size: .95rem; }
+.click-feedback > span { font-size: .8rem; }
+.click-metrics { max-width: 350px; }
+.click-metrics span { font-size: .68rem; letter-spacing: .025em; }
+.click-metrics strong { font-size: 1.5rem; }
+.click-combo > div:first-child { font-size: .85rem; }
+.click-combo p { font-size: .75rem; }
+.click-special-status { font-size: .8rem; }
+.click-gain-floater { font-size: 1.8rem; }
+.click-gain-floater.is-critical { font-size: 2rem; }
+.frenzy-banner, .frenzy-clock { font-size: .9rem; }
+@media (max-height: 720px) { .click-heading h2 { font-size: 1.35rem; } }
+@media (prefers-reduced-motion: reduce) { .pacoca-particles { display: none; } }

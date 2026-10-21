@@ -106,6 +106,8 @@ export class Game {
 
     // CÁLCULO FINAL DO CLIQUE (this.clickValue já possui o Frenesi em tempo real!)
     const val = (this.clickValue * comboMult * critMult * maoDePedraMult) + extraVal;
+    let gained = val;
+    let echo = 0;
 
     this.score += val;
     this.totalEarned += val;
@@ -114,12 +116,15 @@ export class Game {
     // TALENTO ACT_6: Eco Clicável (1 clique grátis a cada 10 cliques)
     if (this.skillTree.hasSkill('act_6') && this.totalClicks % 10 === 0) {
       const ecoVal = this.clickValue;
+      echo = ecoVal;
+      gained += ecoVal;
       this.score += ecoVal;
       this.totalEarned += ecoVal;
     }
     
     this.checkAchievements();
     this.refreshUI();
+    return { gained, isCrit, critMultiplier: critMult, comboMultiplier: comboMult, echo, empowered: maoDePedraMult > 1 };
   }
 
   startFrenzy(multiplier, durationSeconds) {
@@ -130,6 +135,7 @@ export class Game {
 
     this.frenzyMultiplier = multiplier;
     this.frenzyTimeLeft = durationSeconds;
+    this.frenzyDuration = durationSeconds;
     this.recalculateStats();
     this.refreshUI();
   }
@@ -263,7 +269,8 @@ export class Game {
     this.ui.updateShop(this.score, this.inventory, this.buyAmount);
     this.ui.updateUpgrades(this.score, this.inventory, this.boughtUpgrades);
     this.ui.updateProfile(this);
-    this.ui.updateFrenzy(this.frenzyTimeLeft);
+    this.ui.updateFrenzy(this.frenzyTimeLeft, this.frenzyMultiplier, this.frenzyDuration);
+    this.ui.updateClickStats?.(this);
     if (this.skillTreeUI) {
       this.skillTreeUI.render();
     }
@@ -302,6 +309,12 @@ export class Game {
           this.frenzyMultiplier = 1;
           this.recalculateStats();
         }
+      }
+
+      // O clique e o frenesi precisam atualizar mesmo sem produção automática.
+      if (this.pps <= 0) {
+        this.ui.updateClickStats?.(this);
+        this.ui.updateFrenzy(this.frenzyTimeLeft, this.frenzyMultiplier, this.frenzyDuration);
       }
 
       if (this.pps > 0) {
