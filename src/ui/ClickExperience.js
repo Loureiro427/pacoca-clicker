@@ -1,4 +1,5 @@
 import { formatNumber } from '../utils/format.js';
+import { ManualClickGuard } from '../systems/ManualClickGuard.js';
 
 export function formatClickGain(value) {
   return value < 1000 ? value.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : formatNumber(value);
@@ -8,8 +9,20 @@ export function bindClickExperience(game, { particles } = {}) {
   const button = document.getElementById('pacoca-button');
   if (!button) return;
   let animation;
-  const produce = (x, y) => {
+  const guard = new ManualClickGuard();
+  let lastWarning = -Infinity;
+  const produce = (x, y, event) => {
+    if (document.hidden || document.getElementById('click-area')?.classList?.contains('active') === false) return;
+    const decision = guard.check(event);
+    if (!decision.allowed) {
+      if (decision.reason === 'rate' && performance.now() - lastWarning > 3000) {
+        lastWarning = performance.now();
+        document.getElementById('click-special-status').textContent = 'Limite de cliques atingido. Diminua o ritmo para continuar.';
+      }
+      return;
+    }
     const result = game.click();
+    if (!result) return;
     particles?.emit(result.isCrit ? 4 : 2);
     const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const message = document.getElementById('click-result');
@@ -32,13 +45,16 @@ export function bindClickExperience(game, { particles } = {}) {
   button.addEventListener('pointerdown', event => {
     if (event.button !== 0 || button.disabled) return;
     event.preventDefault();
-    produce(event.clientX, event.clientY);
+    produce(event.clientX, event.clientY, event);
   });
   // Enter, Espaço e tecnologias assistivas geram um click sem ponteiro.
   button.addEventListener('click', event => {
     if (event.detail !== 0 || button.disabled) return;
     const rect = button.getBoundingClientRect();
-    produce(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    produce(rect.left + rect.width / 2, rect.top + rect.height / 2, event);
+  });
+  button.addEventListener('keydown', event => {
+    if (event.repeat && ['Enter', ' ', 'Spacebar'].includes(event.key)) event.preventDefault();
   });
 
 }
@@ -56,7 +72,7 @@ function showClickFloater(x, y, result) {
   setTimeout(() => floater.remove(), 750);
 }
 
-export function updateClickStats(game, now = Date.now()) {
+export function updateClickStats(game, now = performance.now()) {
   const text = (id, value) => { const element = document.getElementById(id); if (element) element.textContent = value; };
   text('click-base-value', `+${formatClickGain(game.clickValue)}`);
   text('click-total-count', formatNumber(game.totalClicks));

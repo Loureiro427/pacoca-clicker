@@ -19,7 +19,7 @@ export class SkillTreeManager {
     if (!node) return false;
 
     // Precisa ter Paçocas de Ouro suficientes
-    if (this.game.prestigeChips < node.cost) return false;
+    if (!Number.isSafeInteger(this.game.prestigeChips) || this.game.prestigeChips < node.cost) return false;
 
     // Precisa ter pelo menos um dos nós requisitos desbloqueados
     if (node.requires.length > 0) {
@@ -50,7 +50,7 @@ export class SkillTreeManager {
   resetTree() {
     let refundedChips = 0;
     
-    this.unlockedSkills.forEach(skillId => {
+    [...new Set(this.unlockedSkills)].forEach(skillId => {
       const node = SkillTreeNodes.find(n => n.id === skillId);
       if (node && node.id !== 'origin') {
         refundedChips += node.cost;

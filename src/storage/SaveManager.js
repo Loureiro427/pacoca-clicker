@@ -56,7 +56,13 @@ export class SaveManager {
   static save(state) {
     if (this.resetting) return false;
 
-    const stateWithTimestamp = { ...state, lastSaveTime: Date.now() };
+    const validated = this.validate(state);
+    if (!validated) {
+      this.onSyncStatus?.('invalid');
+      console.warn('Estado inconsistente: salvamento e envio suspensos.');
+      return false;
+    }
+    const stateWithTimestamp = { ...validated, lastSaveTime: Date.now() };
     try {
       localStorage.setItem(this.saveKey, JSON.stringify(stateWithTimestamp));
     } catch (error) {
@@ -99,7 +105,12 @@ export class SaveManager {
     if (!this.pendingState || !this.remoteSave) return this.syncPromise;
     if (this.syncPromise) return this.syncPromise;
 
-    const state = this.pendingState;
+    const state = this.validate(this.pendingState);
+    if (!state) {
+      this.pendingState = null;
+      this.onSyncStatus?.('invalid');
+      throw new Error('Progresso inconsistente: envio suspenso');
+    }
     this.pendingState = null;
     this.onSyncStatus?.('syncing');
 
@@ -117,6 +128,7 @@ export class SaveManager {
           setTimeout(() => window.location.reload(), 300);
           return response;
         }
+        if (response?.saved !== true) throw new Error('O servidor não confirmou o salvamento');
         this.revision = Number(response?.profile?.revision) || this.revision;
         this.onSyncStatus?.('synced');
         return response;
@@ -156,15 +168,19 @@ export class SaveManager {
     if (!data || typeof data !== 'object' || Array.isArray(data)) return null;
     const validNumber = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
     if (!validNumber(data.score)) return null;
-    const result = { ...data };
+    // Envia apenas campos de progresso conhecidos, nunca flags/identidade recebidas no save.
+    const result = { score: data.score };
     for (const key of ['totalClicks', 'totalEarned', 'startTime', 'prestigeChips', 'claimedPrestigeChips', 'lastSaveTime']) {
       if (data[key] !== undefined && !validNumber(data[key])) return null;
+      if (data[key] !== undefined) result[key] = data[key];
     }
     for (const key of ['totalClicks', 'prestigeChips', 'claimedPrestigeChips']) {
       if (data[key] !== undefined && !Number.isSafeInteger(data[key])) return null;
     }
+    if (result.totalEarned === undefined) result.totalEarned = result.score;
     result.inventory = {};
     if (data.inventory !== undefined && (!data.inventory || typeof data.inventory !== 'object' || Array.isArray(data.inventory))) return null;
+    if (data.inventory && Object.keys(data.inventory).some(id => !GeneratorsData.some(generator => generator.id === id))) return null;
     for (const generator of GeneratorsData) {
       const count = data.inventory?.[generator.id] ?? 0;
       if (!Number.isSafeInteger(count) || count < 0) return null;
@@ -177,9 +193,32 @@ export class SaveManager {
     ]) {
       const values = data[key] ?? [];
       if (!Array.isArray(values) || values.some(id => typeof id !== 'string' || !definitions.some(item => item.id === id))) return null;
+      if (new Set(values).size !== values.length) return null;
       result[key] = [...new Set(values)];
     }
     if (!result.unlockedSkills.includes('origin')) result.unlockedSkills.unshift('origin');
+    // Cada talento deve ter um caminho válido até a origem (pré-requisitos são OR).
+    const reachable = new Set(['origin']);
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (const node of SkillTreeNodes) {
+        if (result.unlockedSkills.includes(node.id) && !reachable.has(node.id)
+          && node.requires.some(id => reachable.has(id))) {
+          reachable.add(node.id);
+          changed = true;
+        }
+      }
+    }
+    if (result.unlockedSkills.some(id => !reachable.has(id))) return null;
+    if (result.boughtUpgrades.some(id => {
+      const upgrade = UpgradesData.find(item => item.id === id);
+      return (result.inventory[upgrade.reqGen] || 0) < upgrade.reqCount;
+    })) return null;
+    if (data.totalEarned !== undefined && data.score > data.totalEarned + Math.max(1e-9, data.totalEarned * 1e-12)) return null;
+    if (data.lastSaveTime > Date.now() + 300000 || data.startTime > Date.now() + 300000) return null;
+    if (data.claimedPrestigeChips !== undefined && data.totalEarned !== undefined
+      && data.claimedPrestigeChips > Prestige.calculatePrestigeChips(data.totalEarned)) return null;
     if (result.claimedPrestigeChips === undefined) {
       // Saves antigos não distinguem ouro recebido, gasto e bônus dourados.
       // Estima o histórico pelo saldo e talentos, limitado aos marcos alcançados.

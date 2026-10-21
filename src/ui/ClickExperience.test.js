@@ -31,7 +31,7 @@ test('feedback de clique inclui crítico, bônus de produção, saldo e eco real
 
 test('combo e poder triplo aparecem no ganho retornado sem alterar a economia', () => {
   const game = gameState(['act_4']);
-  game.lastClickTime = Date.now();
+  game.lastClickTime = performance.now();
   game.maoDePedraTime = 2;
   const result = game.click();
   assert.equal(result.gained, 10 * 1.01 * 3);
@@ -59,11 +59,11 @@ test('toque não duplica no click sintético e teclado também produz paçocas',
   let clicks = 0;
   bindClickExperience({ click() { clicks++; return { gained: 1.15, isCrit: false, echo: 0 }; } });
   const button = get('pacoca-button');
-  button.events.pointerdown({ button: 0, clientX: 10, clientY: 20, preventDefault() {} });
+  button.events.pointerdown({ isTrusted: true, button: 0, clientX: 10, clientY: 20, preventDefault() {} });
   button.events.click({ detail: 1 });
   assert.equal(clicks, 1);
   assert.equal(get('click-result').textContent, '+1,15 paçocas');
-  button.events.click({ detail: 0 });
+  button.events.click({ isTrusted: true, detail: 0 });
   assert.equal(clicks, 2);
   button.events.pointerdown({ button: 2 });
   assert.equal(clicks, 2);
@@ -87,7 +87,7 @@ test('indicador de combo expira visualmente e respeita talentos desbloqueados', 
 test('frenesi expira na interface mesmo sem estruturas de produção', () => {
   const game = gameState();
   Object.assign(game, { pps: 0, inventory: {}, boughtUpgrades: [], prestigeChips: 0,
-    startTime: Date.now(), lastTick: Date.now() - 200, frenzyTimeLeft: .1,
+    startTime: Date.now(), lastTick: performance.now() - 200, frenzyTimeLeft: .1,
     frenzyMultiplier: 7, autoclickTimer: 0 });
   let remaining;
   game.ui = { updateFrenzy: (time, multiplier) => { remaining = [time, multiplier]; } };
