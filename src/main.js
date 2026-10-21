@@ -1,114 +1,71 @@
 import { Game } from './game/Game.js';
 import { UIManager } from './ui/UIManager.js';
 import { formatNumber } from './utils/format.js';
+import { PacocaApi } from './api/PacocaApi.js';
+import { AuthManager } from './systems/AuthManager.js';
+import { SaveManager } from './storage/SaveManager.js';
+import { RankingUI } from './ui/RankingUI.js';
 
-// Função global para alternar visualização de senha nos inputs
-window.togglePassword = function(inputId, btn) {
-  const input = document.getElementById(inputId);
-  if (input) {
-    input.type = input.type === 'password' ? 'text' : 'password';
-  }
-};
+const CDN_URL = (import.meta.env.VITE_PACOCA_CDN_URL || 'https://cdn.pacoca.net/pacoca-prod-files').replace(/\/+$/, '');
 
-/**
- * Gerenciador das Telas de Loading e Autenticação (Paçoca Social)
- */
-class AuthManager {
-  constructor(onAuthSuccess) {
-    this.onAuthSuccess = onAuthSuccess;
-    this.init();
-  }
+const api = new PacocaApi();
 
-  init() {
-    this.startLoadingScreen();
-    this.bindEvents();
-  }
+document.addEventListener('DOMContentLoaded', () => {
+  const auth = new AuthManager(api, async ({ user, bootstrap }) => {
+    hydrateUserProfile(user);
 
-  startLoadingScreen() {
-    const bar = document.getElementById('loading-bar-fill');
-    let progress = 0;
+    await SaveManager.configure({
+      userId: user.id,
+      remoteState: bootstrap.profile?.state || null,
+      remoteRevision: bootstrap.profile?.revision || 0,
+      saveRemote: (state, revision) => api.saveProgress(state, revision),
+      resetRemote: () => api.resetProgress(),
+      onSyncStatus: updateSyncStatus,
+    });
 
-    const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 25) + 12;
-      if (bar) bar.style.width = `${Math.min(100, progress)}%`;
+    const ranking = new RankingUI(api);
+    ranking.init(bootstrap.ranking);
+    initGame();
+  });
 
-      if (progress >= 100) {
-        clearInterval(interval);
-        setTimeout(() => {
-          const loadingScreen = document.getElementById('loading-screen');
-          if (loadingScreen) loadingScreen.style.display = 'none';
+  auth.init();
+});
 
-          // Se já marcou "Manter logado" anteriormente, entra direto
-          const isLogged = localStorage.getItem('pacoca_logged_in') === 'true';
-          if (isLogged) {
-            this.finishAuth();
-          } else {
-            const authScreen = document.getElementById('auth-screen');
-            if (authScreen) authScreen.style.display = 'flex';
-          }
-        }, 300);
-      }
-    }, 100);
-  }
+function hydrateUserProfile(user) {
+  const name = document.getElementById('clicker-profile-name');
+  const username = document.getElementById('clicker-profile-username');
+  const avatar = document.getElementById('clicker-profile-avatar');
 
-  bindEvents() {
-    const linkGoRegister = document.getElementById('link-go-register');
-    const linkGoLogin = document.getElementById('link-go-login');
-    const loginView = document.getElementById('login-view');
-    const registerView = document.getElementById('register-view');
-
-    if (linkGoRegister) {
-      linkGoRegister.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (loginView) loginView.classList.remove('active');
-        if (registerView) registerView.classList.add('active');
-      });
-    }
-
-    if (linkGoLogin) {
-      linkGoLogin.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (registerView) registerView.classList.remove('active');
-        if (loginView) loginView.classList.add('active');
-      });
-    }
-
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-      loginForm.addEventListener('submit', () => {
-        const remember = document.getElementById('remember-me')?.checked;
-        if (remember) {
-          localStorage.setItem('pacoca_logged_in', 'true');
-        }
-        this.finishAuth();
-      });
-    }
-
-    const regForm = document.getElementById('register-form');
-    if (regForm) {
-      regForm.addEventListener('submit', () => {
-        localStorage.setItem('pacoca_logged_in', 'true');
-        this.finishAuth();
-      });
-    }
-  }
-
-  finishAuth() {
-    const authScreen = document.getElementById('auth-screen');
-    if (authScreen) authScreen.style.display = 'none';
-
-    if (this.onAuthSuccess) {
-      this.onAuthSuccess();
-    }
+  if (name) name.textContent = user?.name || 'Jogador';
+  if (username) username.textContent = user?.user_name ? `@${user.user_name}` : '';
+  if (avatar) {
+    avatar.src = avatarUrl(user?.img_account);
+    avatar.onerror = () => {
+      avatar.onerror = null;
+      avatar.src = '/pacoca.png';
+    };
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Inicializa o gerenciador de autenticação antes do loop principal do jogo
-  new AuthManager(() => {
-    initGame();
-  });
-});
+function avatarUrl(path) {
+  if (!path) return '/pacoca.png';
+  if (/^(https?:|data:|blob:)/.test(path)) return path;
+  return `${CDN_URL}/${String(path).replace(/^\/+/, '')}`;
+}
+
+function updateSyncStatus(status) {
+  const element = document.getElementById('clicker-sync-status');
+  if (!element) return;
+
+  const labels = {
+    syncing: 'Sincronizando...',
+    synced: 'Progresso salvo na nuvem',
+    offline: 'Sem conexão — progresso salvo neste dispositivo',
+    conflict: 'Progresso mais recente encontrado na nuvem',
+  };
+  element.textContent = labels[status] || '';
+  element.dataset.status = status;
+}
 
 /**
  * Inicialização dos sistemas do jogo Paçoca Clicker
@@ -149,6 +106,16 @@ function initGame() {
       }
     });
   }
+
+  const persistBeforeLeaving = () => {
+    game.saveGame();
+    SaveManager.flush().catch(() => {});
+  };
+  window.addEventListener('pacoca:before-logout', persistBeforeLeaving);
+  window.addEventListener('pagehide', persistBeforeLeaving);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') persistBeforeLeaving();
+  });
 
   // Inicializa a chuva de partículas de fundo
   initBackgroundRain();
