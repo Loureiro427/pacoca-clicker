@@ -2552,145 +2552,40 @@ html, body {
     margin-right: auto;
   }
 
-  .shop-header {
-    gap: 24px;
-    margin-bottom: 22px;
-  }
-
-  .shop-header h2 {
-    font-size: 1.7rem;
-  }
-
-  .shop-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    align-content: start;
-    gap: 16px;
-    padding-bottom: 8px;
-  }
-
-  .generator-card {
-    min-height: 92px;
-    padding: 16px 18px;
-    gap: 16px;
-    border-radius: 18px;
-  }
-
-  .generator-icon-wrapper {
-    width: 58px;
-    height: 58px;
-  }
-
-  .generator-info h3 {
-    font-size: 1.1rem;
-  }
-
-  .buy-btn {
-    min-width: 104px;
-    padding: 11px 16px;
-  }
-
-  #upgrades-area.tab-content.active {
-    padding-bottom: 44px;
-  }
-
-  .upgrades-filters {
-    gap: 10px;
-    margin-top: 0;
-    margin-bottom: 20px;
-    overflow: visible;
-  }
-
-  .upg-filter-btn {
-    padding: 9px 18px;
-  }
-
-  .upgrade-card {
-    min-height: 92px;
-    grid-template-columns: 52px minmax(0, 1fr) auto;
-    padding: 14px 16px;
-    gap: 14px;
-  }
-
-  .upgrade-card .upg-icon {
-    width: 52px;
-    height: 52px;
-  }
-
-  .upgrade-card .upg-title {
-    font-size: 0.96rem;
-  }
-
-  .upgrade-card .upg-desc,
-  .upgrade-card .upg-cost {
-    font-size: 0.78rem;
+  #shop-area > .commerce-shell,
+  #upgrades-area > .commerce-shell {
+    max-width: 920px;
   }
 
   #skills-area.tab-content.active {
+    flex-direction: column;
     height: auto;
-    overflow: hidden;
-    padding: 0;
+    overflow-y: auto;
+    padding: 30px clamp(24px, 4vw, 56px) 44px;
   }
 
-  .skill-tree-container {
-    min-height: 0;
-  }
-
-  .tree-tier-row {
-    gap: 28px;
-  }
-
-  .tree-node-box {
-    width: 58px;
-    height: 58px;
-  }
-
-  .tree-node-icon svg {
-    width: 28px;
-    height: 28px;
+  #skills-area > .talents-shell {
+    width: 100%;
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   #profile-area.tab-content.active {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-content: start;
-    align-items: start;
-    gap: 24px;
+    display: flex;
+    flex-direction: column;
   }
 
-  #profile-area > .profile-section {
-    max-width: none;
-    min-width: 0;
-    margin: 0 !important;
-  }
-
-  #profile-area > .account-profile-section,
-  #profile-area > .profile-section:nth-child(2),
-  #profile-area > .profile-section:last-child {
-    grid-column: 1 / -1;
-  }
-
-  #profile-area .clicker-account-card {
-    padding: 16px 18px;
-  }
-
-  #profile-area .prestige-card-clean {
-    max-width: none;
-  }
-
-  #profile-area .stats-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  #profile-area > .profile-shell {
+    max-width: 920px;
   }
 
   #ranking-area.tab-content.active {
     padding: 30px clamp(24px, 4vw, 56px) 44px;
   }
 
-  #ranking-area > .profile-section {
-    flex: 1;
-    min-height: 0;
-    max-width: 1240px;
-    padding: 0;
+  #ranking-area > .ranking-shell {
+    max-width: 920px;
   }
 
   #ranking-area .ranking-list {
@@ -2699,5 +2594,569 @@ html, body {
 
   .modal-card {
     max-width: 460px;
+  }
+}
+
+/* As demais áreas também aproveitam a largura do PC com painéis lado a lado. */
+@media screen and (min-width: 1100px) {
+  #click-area > .click-shell {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(5, auto);
+    align-content: center;
+    align-items: center;
+    gap: 18px 24px;
+    width: 100%;
+    max-width: 1240px;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .click-shell > .click-heading,
+  .click-shell > .click-feedback,
+  .click-shell > .click-metrics,
+  .click-shell > .click-combo,
+  .click-shell > .click-special-status {
+    grid-column: 1 / span 5;
+    width: 100%;
+    max-width: none;
+  }
+
+  .click-shell > .click-heading {
+    grid-row: 1;
+    align-self: end;
+    text-align: left;
+  }
+
+  .click-heading h2 {
+    margin-top: 14px;
+    font-size: clamp(2rem, 3.2vw, 3rem);
+    line-height: 1.08;
+  }
+
+  .click-heading > span {
+    font-size: 0.68rem;
+  }
+
+  .click-shell > .click-stage {
+    grid-column: 6 / -1;
+    grid-row: 1 / span 5;
+    width: 100%;
+    height: clamp(430px, 63vh, 590px);
+    min-height: 0;
+    border: 1px solid #e3d2b9;
+    border-radius: 32px;
+    background: radial-gradient(circle at 50% 42%, #fffaf0 0%, #f0e2cd 72%, #ead8c0 100%);
+    box-shadow: 0 18px 38px rgba(92, 61, 31, 0.08);
+  }
+
+  .click-stage-halo {
+    width: min(30vw, 350px);
+  }
+
+  .click-pacoca-button {
+    width: min(25vw, 305px);
+    height: min(25vw, 305px);
+  }
+
+  #click-area .pacoca-mascot {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .click-shell > .click-feedback {
+    grid-row: 2;
+    min-height: 0;
+    text-align: left;
+  }
+
+  .click-feedback p {
+    font-size: 1.05rem;
+  }
+
+  .click-shell > .click-metrics {
+    grid-row: 3;
+    padding: 20px 0;
+    border-radius: 20px;
+    background: #fffaf1;
+  }
+
+  .click-metrics > div {
+    text-align: left;
+    padding: 0 20px;
+  }
+
+  .click-shell > .click-combo {
+    grid-row: 4;
+    padding: 16px 18px;
+    border: 1px solid #e3cfaf;
+    border-radius: 16px;
+    background: #fffaf1;
+  }
+
+  .click-shell > .click-special-status {
+    grid-row: 5;
+    align-self: start;
+    text-align: left;
+  }
+
+  #shop-area > .commerce-shell,
+  #upgrades-area > .commerce-shell {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    gap: 24px;
+    width: 100%;
+    max-width: 1240px;
+    padding: 0;
+  }
+
+  .commerce-shell > .commerce-hero {
+    grid-column: 1 / span 5;
+    position: sticky;
+    top: 0;
+    min-width: 0;
+    padding: 38px 40px;
+    border-radius: 28px;
+    box-shadow: 0 14px 32px rgba(62, 39, 25, 0.09);
+  }
+
+  .commerce-hero h2 {
+    margin-top: 24px;
+    font-size: clamp(2.15rem, 3.1vw, 3.1rem);
+  }
+
+  .commerce-hero > p {
+    font-size: 0.84rem;
+  }
+
+  .commerce-summary {
+    margin-top: 30px;
+    padding-top: 24px;
+  }
+
+  .commerce-summary strong {
+    font-size: 1.5rem;
+  }
+
+  .commerce-shell > .commerce-catalog {
+    grid-column: 6 / -1;
+    min-width: 0;
+  }
+
+  .commerce-catalog > .commerce-section-heading {
+    margin-top: 0;
+  }
+
+  .commerce-section-heading h3 {
+    font-size: 1.35rem;
+  }
+
+  .commerce-buy-panel {
+    padding: 16px 18px;
+  }
+
+  .commerce-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .commerce-card {
+    height: 100%;
+    padding: 18px;
+  }
+
+  .commerce-card .desc-display {
+    font-size: 0.73rem;
+  }
+
+  .commerce-footnote {
+    margin-top: 22px;
+  }
+
+  #skills-area > .talents-shell {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    gap: 24px;
+    width: 100%;
+    max-width: 1240px;
+    padding: 0;
+  }
+
+  .talents-shell > .talents-sidebar {
+    grid-column: 1 / span 5;
+    position: sticky;
+    top: 0;
+    min-width: 0;
+  }
+
+  .talents-sidebar > .talents-hero {
+    padding: 34px 36px;
+    border-radius: 28px;
+    box-shadow: 0 14px 32px rgba(62, 39, 25, 0.09);
+  }
+
+  .talents-hero h2 {
+    font-size: clamp(2rem, 2.9vw, 2.8rem);
+  }
+
+  .talents-hero-symbol {
+    width: 72px;
+    font-size: 4.8rem;
+  }
+
+  .talents-sidebar > .talents-tabs {
+    margin-top: 18px;
+  }
+
+  .talents-branch-heading {
+    margin-top: 24px;
+  }
+
+  .talents-shell > .talents-workspace {
+    grid-column: 6 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    align-items: start;
+    gap: 18px;
+    min-width: 0;
+  }
+
+  .talents-workspace > .talents-map-panel,
+  .talents-workspace > .talents-status {
+    grid-column: 1 / -1;
+  }
+
+  .talents-map-panel {
+    border-radius: 24px;
+    box-shadow: 0 12px 28px rgba(92, 61, 31, 0.06);
+  }
+
+  .talents-map-caption {
+    padding: 17px 18px;
+  }
+
+  .talents-map-scroll {
+    min-height: 560px;
+  }
+
+  .talents-help,
+  .talents-reset-panel {
+    height: 100%;
+    margin-top: 0;
+    padding: 20px;
+    border: 1px solid #e0ceb2;
+    border-radius: 18px;
+    background: #fffaf1;
+  }
+
+  .talents-reset-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .talents-reset-panel button {
+    width: 100%;
+  }
+
+  #ranking-area > .ranking-shell {
+    display: block;
+    width: 100%;
+    max-width: 1240px;
+    padding: 0;
+  }
+
+  .ranking-intro {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .ranking-intro > .ranking-hero {
+    grid-column: 1 / span 7;
+    align-self: stretch;
+    padding: 38px 42px;
+    border-radius: 28px;
+    box-shadow: 0 14px 32px rgba(62, 39, 25, 0.09);
+  }
+
+  .ranking-hero h2 {
+    font-size: clamp(2.25rem, 3.2vw, 3.2rem);
+  }
+
+  .ranking-trophy {
+    width: 120px;
+    height: 120px;
+    font-size: 4rem;
+  }
+
+  .ranking-intro > .ranking-controls {
+    grid-column: 8 / -1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    min-width: 0;
+    padding: 24px;
+    border: 1px solid #e4d5c3;
+    border-radius: 24px;
+    background: #fffaf3;
+  }
+
+  .ranking-controls > .ranking-demo,
+  .ranking-controls > .rank-tabs,
+  .ranking-controls > .ranking-description {
+    margin: 0;
+  }
+
+  .ranking-controls > .ranking-description {
+    min-height: 0;
+    padding: 0 4px;
+    font-size: 0.8rem;
+  }
+
+  .ranking-board {
+    margin-top: 28px;
+  }
+
+  .ranking-toolbar h3 {
+    font-size: 1.4rem;
+  }
+
+  #ranking-results {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    gap: 10px 24px;
+  }
+
+  #ranking-results > .podium-container {
+    grid-column: 1 / span 5;
+    grid-row: 1 / span 3;
+    position: sticky;
+    top: 0;
+    gap: 10px;
+    margin: 0;
+  }
+
+  #ranking-results > .ranking-list-heading,
+  #ranking-results > .ranking-columns,
+  #ranking-results > .ranking-list {
+    grid-column: 6 / -1;
+  }
+
+  #ranking-results > .ranking-list-heading {
+    grid-row: 1;
+  }
+
+  #ranking-results > .ranking-columns {
+    grid-row: 2;
+  }
+
+  #ranking-results > .ranking-list {
+    grid-row: 3;
+  }
+
+  #ranking-results > .podium-container:empty + .ranking-list-heading,
+  #ranking-results > .podium-container:empty ~ .ranking-columns,
+  #ranking-results > .podium-container:empty ~ .ranking-list {
+    grid-column: 1 / -1;
+  }
+
+  #ranking-results > #ranking-state {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .podium-step {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .ranking-personal {
+    margin-top: 24px;
+    padding: 18px 20px 16px;
+  }
+
+  .ranking-footer {
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 22px;
+  }
+}
+
+/* Perfil em telas largas: transforma a sequência mobile em um painel de conta. */
+@media screen and (min-width: 1100px) {
+  #profile-area > .profile-shell {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto auto auto auto auto;
+    align-items: start;
+    gap: 22px 24px;
+    width: 100%;
+    max-width: 1240px;
+    padding: 0;
+  }
+
+  .profile-shell > .profile-hero {
+    grid-column: 1 / span 7;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 360px;
+    padding: 38px 42px;
+    border-radius: 28px;
+    box-shadow: 0 14px 32px rgba(62, 39, 25, 0.1);
+  }
+
+  .profile-hero h2 {
+    max-width: 600px;
+    margin-top: 24px;
+    font-size: clamp(2.35rem, 3.4vw, 3.35rem);
+  }
+
+  .profile-hero > p {
+    font-size: 0.86rem;
+  }
+
+  .profile-identity {
+    margin-top: 30px;
+    padding-top: 26px;
+  }
+
+  .profile-hero .clicker-account-avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 22px;
+  }
+
+  .profile-identity-info > strong {
+    font-size: 1.25rem;
+  }
+
+  .profile-shell > .profile-jump {
+    grid-column: 8 / -1;
+    grid-row: 1;
+    align-self: start;
+    padding: 0;
+    gap: 9px;
+  }
+
+  .profile-jump a {
+    min-height: 48px;
+    font-size: 0.74rem;
+    border-radius: 14px;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+  }
+
+  .profile-jump a:hover {
+    border-color: #cdb38e;
+    background: #fffdf8;
+    transform: translateY(-1px);
+  }
+
+  .profile-shell > .profile-account-panel {
+    grid-column: 8 / -1;
+    grid-row: 2;
+  }
+
+  .profile-shell > #profile-ascension {
+    grid-column: 1 / span 7;
+    grid-row: 3;
+  }
+
+  .profile-shell > #profile-journey {
+    grid-column: 8 / -1;
+    grid-row: 3;
+    align-self: stretch;
+  }
+
+  .profile-shell > .profile-achievements-panel {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+
+  .profile-shell > #profile-settings {
+    grid-column: 1 / span 7;
+    grid-row: 5;
+    align-self: stretch;
+  }
+
+  .profile-shell > .profile-danger {
+    grid-column: 8 / -1;
+    grid-row: 5;
+    align-self: stretch;
+  }
+
+  .profile-shell > .profile-footer {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+
+  .profile-shell > .profile-panel,
+  .profile-shell > .profile-ascension,
+  .profile-shell > .profile-danger {
+    min-width: 0;
+    margin-top: 0;
+    padding: 28px;
+  }
+
+  .profile-shell > .profile-panel,
+  .profile-shell > .profile-ascension {
+    border-radius: 24px;
+  }
+
+  .profile-section-heading h3 {
+    font-size: 1.28rem;
+  }
+
+  .profile-section-description,
+  .profile-connection p {
+    font-size: 0.76rem;
+  }
+
+  .profile-sync #clicker-sync-status,
+  .profile-connection strong,
+  .profile-setting label:not(.toggle-switch) {
+    font-size: 0.8rem;
+  }
+
+  .profile-sync small,
+  .profile-setting p {
+    font-size: 0.69rem;
+  }
+
+  .profile-stats > div {
+    padding: 19px 15px;
+  }
+
+  .profile-stats strong {
+    font-size: 1.38rem;
+  }
+
+  .profile-achievements {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .profile-achievements .achievement-card {
+    min-height: 92px;
+    padding: 14px;
+  }
+
+  .profile-danger-button {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .profile-footer {
+    padding-top: 4px;
   }
 }

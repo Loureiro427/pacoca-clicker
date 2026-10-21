@@ -135,30 +135,36 @@
       <section id="upgrades-area" class="tab-content" aria-labelledby="upgrades-title">
         <div class="commerce-shell">
           <header class="commerce-hero"><span class="commerce-eyebrow">PAÇOCA CLICKER / EVOLUÇÃO DO IMPÉRIO</span><h2 id="upgrades-title">Pequenos avanços.<br><em>Grandes resultados.</em></h2><p>Uma melhoria de cada vez. Um império cada vez maior.</p><div class="commerce-summary"><div><span>SEU SALDO</span><strong id="upgrades-balance">0</strong></div><div><span>ADQUIRIDAS</span><strong id="upgrades-owned">0 / 0</strong></div></div></header>
-          <div class="commerce-section-heading"><div><span class="commerce-eyebrow">INVISTA NO SEU PRÓXIMO PASSO</span><h3>Coleção de melhorias</h3></div><span id="upgrades-available-count" class="commerce-count">0 disponíveis</span></div>
-          <div class="commerce-category-filters" role="group" aria-label="Categoria de melhorias"><button type="button" class="upg-filter-btn active" data-filter="all" aria-pressed="true">Todas</button><button type="button" class="upg-filter-btn" data-filter="click" aria-pressed="false">Cliques</button><button type="button" class="upg-filter-btn" data-filter="structure" aria-pressed="false">Estruturas</button><button type="button" class="upg-filter-btn" data-filter="synergy" aria-pressed="false">Sinergias</button></div>
-          <div class="commerce-view-filters" role="group" aria-label="Situação das melhorias"><button type="button" data-upgrade-view="pending" aria-pressed="true">A conquistar</button><button type="button" data-upgrade-view="available" aria-pressed="false">Posso comprar</button><button type="button" data-upgrade-view="bought" aria-pressed="false">Adquiridas</button></div>
-          <div class="commerce-list-caption"><span id="upgrades-result-count"></span><span>Custos em paçocas</span></div>
-          <div id="upgrades-list" class="commerce-list" role="list" aria-label="Melhorias"></div>
-          <div id="upgrades-empty-state" class="commerce-empty" hidden><span aria-hidden="true">✦</span><h3 id="upgrades-empty-title">Seu próximo avanço está a caminho</h3><p id="upgrades-empty-description"></p></div>
-          <p class="commerce-footnote">Melhorias adquiridas permanecem ativas até o próximo renascimento.</p>
-          <p id="upgrades-feedback" class="commerce-feedback" role="status"></p>
+          <div class="commerce-catalog">
+            <div class="commerce-section-heading"><div><span class="commerce-eyebrow">INVISTA NO SEU PRÓXIMO PASSO</span><h3>Coleção de melhorias</h3></div><span id="upgrades-available-count" class="commerce-count">0 disponíveis</span></div>
+            <div class="commerce-category-filters" role="group" aria-label="Categoria de melhorias"><button type="button" class="upg-filter-btn active" data-filter="all" aria-pressed="true">Todas</button><button type="button" class="upg-filter-btn" data-filter="click" aria-pressed="false">Cliques</button><button type="button" class="upg-filter-btn" data-filter="structure" aria-pressed="false">Estruturas</button><button type="button" class="upg-filter-btn" data-filter="synergy" aria-pressed="false">Sinergias</button></div>
+            <div class="commerce-view-filters" role="group" aria-label="Situação das melhorias"><button type="button" data-upgrade-view="pending" aria-pressed="true">A conquistar</button><button type="button" data-upgrade-view="available" aria-pressed="false">Posso comprar</button><button type="button" data-upgrade-view="bought" aria-pressed="false">Adquiridas</button></div>
+            <div class="commerce-list-caption"><span id="upgrades-result-count"></span><span>Custos em paçocas</span></div>
+            <div id="upgrades-list" class="commerce-list" role="list" aria-label="Melhorias"></div>
+            <div id="upgrades-empty-state" class="commerce-empty" hidden><span aria-hidden="true">✦</span><h3 id="upgrades-empty-title">Seu próximo avanço está a caminho</h3><p id="upgrades-empty-description"></p></div>
+            <p class="commerce-footnote">Melhorias adquiridas permanecem ativas até o próximo renascimento.</p>
+            <p id="upgrades-feedback" class="commerce-feedback" role="status"></p>
+          </div>
         </div>
       </section>
 
       <!-- Aba 4: Árvore de Talentos RPG -->
       <section id="skills-area" class="tab-content" aria-labelledby="talents-title">
         <div class="talents-shell">
-          <header class="talents-hero"><span class="talents-eyebrow">PAÇOCA CLICKER / EVOLUÇÃO</span><div class="talents-hero-line"><div><h2 id="talents-title">O poder de crescer<br><em>do seu jeito.</em></h2><p>Conecte talentos. Dê raízes ao seu império.</p></div><span class="talents-hero-symbol" aria-hidden="true">✧</span></div><div class="talents-summary"><div><span>OURO DISPONÍVEL</span><strong id="talents-gold">0 ✦</strong></div><div><span>TALENTOS APRENDIDOS</span><strong id="talents-learned">0 / 0</strong></div></div></header>
-          <div class="talents-tabs" role="group" aria-label="Caminhos de talentos"><button type="button" data-talent-branch="active" aria-pressed="true"><span aria-hidden="true">☝</span> Toque</button><button type="button" data-talent-branch="passive" aria-pressed="false"><span aria-hidden="true">⚙</span> Produção</button><button type="button" data-talent-branch="alchemy" aria-pressed="false"><span aria-hidden="true">✦</span> Alquimia</button></div>
-          <div class="talents-branch-heading"><div><span id="talents-branch-kicker" class="talents-eyebrow">CAMINHO DO TOQUE</span><h3 id="talents-branch-title"></h3></div><span id="talents-branch-count" class="talents-branch-count"></span></div>
-          <p id="talents-branch-description" class="talents-branch-description"></p>
-          <div class="talents-branch-progress" id="talents-branch-progress" role="progressbar" aria-label="Talentos aprendidos neste caminho" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="talents-branch-fill"></span></div>
-          <div class="talents-legend" aria-label="Legenda da árvore"><span><i class="learned"></i>Aprendido</span><span><i class="available"></i>Disponível</span><span><i class="unaffordable"></i>Falta ouro</span><span><i class="locked"></i>Bloqueado</span></div>
-          <div class="talents-map-panel"><div class="talents-map-caption"><span>SEU CAMINHO COMEÇA NA ORIGEM</span><span>↔ Arraste para explorar</span></div><div class="talents-map-scroll" id="talents-map-scroll" tabindex="0" aria-label="Árvore de talentos. Role para explorar e selecione um talento para ver os detalhes."><div id="talents-map" class="talents-map"></div></div></div>
-          <div class="talents-help"><span aria-hidden="true">✦</span><p>Ouro vem do renascimento. Selecione um talento para ver seu efeito, custo e os caminhos que levam até ele.</p></div>
-          <div class="talents-reset-panel"><div><h3>Um novo caminho para o mesmo império</h3><p>Redistribua seus talentos e receba de volta todo o ouro investido. Seu progresso no jogo continua.</p></div><button type="button" id="talents-reset">Redistribuir talentos ↗</button></div>
-          <p id="talents-status" class="talents-status" role="status" aria-live="polite"></p>
+          <div class="talents-sidebar">
+            <header class="talents-hero"><span class="talents-eyebrow">PAÇOCA CLICKER / EVOLUÇÃO</span><div class="talents-hero-line"><div><h2 id="talents-title">O poder de crescer<br><em>do seu jeito.</em></h2><p>Conecte talentos. Dê raízes ao seu império.</p></div><span class="talents-hero-symbol" aria-hidden="true">✧</span></div><div class="talents-summary"><div><span>OURO DISPONÍVEL</span><strong id="talents-gold">0 ✦</strong></div><div><span>TALENTOS APRENDIDOS</span><strong id="talents-learned">0 / 0</strong></div></div></header>
+            <div class="talents-tabs" role="group" aria-label="Caminhos de talentos"><button type="button" data-talent-branch="active" aria-pressed="true"><span aria-hidden="true">☝</span> Toque</button><button type="button" data-talent-branch="passive" aria-pressed="false"><span aria-hidden="true">⚙</span> Produção</button><button type="button" data-talent-branch="alchemy" aria-pressed="false"><span aria-hidden="true">✦</span> Alquimia</button></div>
+            <div class="talents-branch-heading"><div><span id="talents-branch-kicker" class="talents-eyebrow">CAMINHO DO TOQUE</span><h3 id="talents-branch-title"></h3></div><span id="talents-branch-count" class="talents-branch-count"></span></div>
+            <p id="talents-branch-description" class="talents-branch-description"></p>
+            <div class="talents-branch-progress" id="talents-branch-progress" role="progressbar" aria-label="Talentos aprendidos neste caminho" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="talents-branch-fill"></span></div>
+            <div class="talents-legend" aria-label="Legenda da árvore"><span><i class="learned"></i>Aprendido</span><span><i class="available"></i>Disponível</span><span><i class="unaffordable"></i>Falta ouro</span><span><i class="locked"></i>Bloqueado</span></div>
+          </div>
+          <div class="talents-workspace">
+            <div class="talents-map-panel"><div class="talents-map-caption"><span>SEU CAMINHO COMEÇA NA ORIGEM</span><span>↔ Arraste para explorar</span></div><div class="talents-map-scroll" id="talents-map-scroll" tabindex="0" aria-label="Árvore de talentos. Role para explorar e selecione um talento para ver os detalhes."><div id="talents-map" class="talents-map"></div></div></div>
+            <div class="talents-help"><span aria-hidden="true">✦</span><p>Ouro vem do renascimento. Selecione um talento para ver seu efeito, custo e os caminhos que levam até ele.</p></div>
+            <div class="talents-reset-panel"><div><h3>Um novo caminho para o mesmo império</h3><p>Redistribua seus talentos e receba de volta todo o ouro investido. Seu progresso no jogo continua.</p></div><button type="button" id="talents-reset">Redistribuir talentos ↗</button></div>
+            <p id="talents-status" class="talents-status" role="status" aria-live="polite"></p>
+          </div>
         </div>
       </section>
 
@@ -175,7 +181,7 @@
             </div>
           </header>
           <nav class="profile-jump" aria-label="Seções do perfil"><a href="#profile-ascension">✦ Renascer</a><a href="#profile-journey">◈ Jornada</a><a href="#profile-settings">⚙ Preferências</a></nav>
-          <section class="profile-panel" aria-labelledby="account-title">
+          <section class="profile-panel profile-account-panel" aria-labelledby="account-title">
             <div class="profile-section-heading"><div><span class="profile-eyebrow">SEMPRE COM VOCÊ</span><h3 id="account-title">Sua conta</h3></div><span class="profile-mini-icon" aria-hidden="true">☁</span></div>
             <div class="profile-sync" id="profile-sync" data-status="pending"><span class="profile-sync-dot" aria-hidden="true"></span><div><strong id="clicker-sync-status" data-status="pending" role="status">Aguardando confirmação do salvamento</strong><small id="profile-sync-detail">O status será atualizado pelo serviço de sincronização.</small></div></div>
             <div class="profile-connection"><div><strong>Seu perfil no pacoca.net</strong><p>Nome e foto vêm do login. A atualização contínua com o site estará disponível em breve.</p></div><span class="profile-coming">Em preparação</span></div>
@@ -201,7 +207,7 @@
               <div><span>☝ Clique base</span><strong id="stat-click-value">1</strong></div>
             </div>
           </section>
-          <section class="profile-panel" aria-labelledby="achievements-title">
+          <section class="profile-panel profile-achievements-panel" aria-labelledby="achievements-title">
             <div class="profile-section-heading"><div><span class="profile-eyebrow">SEUS MARCOS</span><h3 id="achievements-title">Pequenas grandes vitórias</h3></div><span id="profile-achievement-count" class="profile-count">0/0</span></div>
             <div id="achievement-progress" class="achievement-progress" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="achievement-progress-fill"></span></div>
             <div class="achievement-filters" role="group" aria-label="Filtrar conquistas"><button type="button" data-achievement-filter="all" aria-pressed="true">Todas</button><button type="button" data-achievement-filter="unlocked" aria-pressed="false">Conquistadas</button><button type="button" data-achievement-filter="locked" aria-pressed="false">A conquistar</button></div>
@@ -221,33 +227,39 @@
       <!-- Aba 6: Ranking -->
       <section id="ranking-area" class="tab-content" aria-labelledby="ranking-title">
         <div class="ranking-shell">
-          <header class="ranking-hero">
-            <div class="ranking-eyebrow">PAÇOCA CLICKER <span>•</span> CLASSIFICAÇÃO GLOBAL</div>
-            <div class="ranking-hero-line">
-              <div><h2 id="ranking-title">Grandes impérios.<br><em>Doces conquistas.</em></h2>
-              <p>Seu próximo lugar começa com um clique.</p></div>
-              <div class="ranking-trophy" aria-hidden="true">🏆</div>
+          <div class="ranking-intro">
+            <header class="ranking-hero">
+              <div class="ranking-eyebrow">PAÇOCA CLICKER <span>•</span> CLASSIFICAÇÃO GLOBAL</div>
+              <div class="ranking-hero-line">
+                <div><h2 id="ranking-title">Grandes impérios.<br><em>Doces conquistas.</em></h2>
+                <p>Seu próximo lugar começa com um clique.</p></div>
+                <div class="ranking-trophy" aria-hidden="true">🏆</div>
+              </div>
+              <div class="ranking-hero-footer"><span>Todos os tempos</span><span id="ranking-source">Classificação global</span></div>
+            </header>
+            <div class="ranking-controls">
+              <div class="ranking-demo" id="ranking-demo" hidden>Modo demonstração · Jogadores ilustrativos, sem competição real.</div>
+              <div class="rank-tabs" role="group" aria-label="Categoria do ranking">
+                <button type="button" class="rank-tab active" data-category="fortune" aria-pressed="true"><span aria-hidden="true">◈</span> Fortuna</button>
+                <button type="button" class="rank-tab" data-category="gold" aria-pressed="false"><span aria-hidden="true">✦</span> Ouro</button>
+                <button type="button" class="rank-tab" data-category="structures" aria-pressed="false"><span aria-hidden="true">▥</span> Estruturas</button>
+              </div>
+              <p id="ranking-description" class="ranking-description"></p>
             </div>
-            <div class="ranking-hero-footer"><span>Todos os tempos</span><span id="ranking-source">Classificação global</span></div>
-          </header>
-          <div class="ranking-demo" id="ranking-demo" hidden>Modo demonstração · Jogadores ilustrativos, sem competição real.</div>
-          <div class="rank-tabs" role="group" aria-label="Categoria do ranking">
-            <button type="button" class="rank-tab active" data-category="fortune" aria-pressed="true"><span aria-hidden="true">◈</span> Fortuna</button>
-            <button type="button" class="rank-tab" data-category="gold" aria-pressed="false"><span aria-hidden="true">✦</span> Ouro</button>
-            <button type="button" class="rank-tab" data-category="structures" aria-pressed="false"><span aria-hidden="true">▥</span> Estruturas</button>
           </div>
-          <p id="ranking-description" class="ranking-description"></p>
-          <div class="ranking-toolbar">
-            <div><span class="ranking-overline">OS DESTAQUES</span><h3>Hall da paçoca</h3></div>
-            <button type="button" class="ranking-refresh" id="ranking-refresh"><span aria-hidden="true">↻</span> Atualizar</button>
-          </div>
-          <p id="ranking-feedback" class="ranking-feedback" role="status" aria-live="polite"></p>
-          <div id="ranking-results" aria-busy="false">
-            <div class="podium-container" id="ranking-podium" role="list" aria-label="Os três primeiros colocados"></div>
-            <div class="ranking-list-heading"><h3>Classificação</h3><span id="ranking-count"></span></div>
-            <div class="ranking-columns" aria-hidden="true"><span>POSIÇÃO / JOGADOR</span><span>PONTUAÇÃO</span></div>
-            <div class="ranking-list" id="ranking-list-data" role="list" aria-label="Demais colocados"></div>
-            <div id="ranking-state" class="ranking-state" hidden></div>
+          <div class="ranking-board">
+            <div class="ranking-toolbar">
+              <div><span class="ranking-overline">OS DESTAQUES</span><h3>Hall da paçoca</h3></div>
+              <button type="button" class="ranking-refresh" id="ranking-refresh"><span aria-hidden="true">↻</span> Atualizar</button>
+            </div>
+            <p id="ranking-feedback" class="ranking-feedback" role="status" aria-live="polite"></p>
+            <div id="ranking-results" aria-busy="false">
+              <div class="podium-container" id="ranking-podium" role="list" aria-label="Os três primeiros colocados"></div>
+              <div class="ranking-list-heading"><h3>Classificação</h3><span id="ranking-count"></span></div>
+              <div class="ranking-columns" aria-hidden="true"><span>POSIÇÃO / JOGADOR</span><span>PONTUAÇÃO</span></div>
+              <div class="ranking-list" id="ranking-list-data" role="list" aria-label="Demais colocados"></div>
+              <div id="ranking-state" class="ranking-state" hidden></div>
+            </div>
           </div>
           <aside class="ranking-personal" aria-label="Sua colocação">
             <span class="ranking-overline">SEU IMPÉRIO</span>
