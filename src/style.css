@@ -2344,3 +2344,356 @@ html, body {
 .rank-avatar {
   object-fit: cover;
 }
+
+/* ============================================================================
+   EXPERIÊNCIA DESKTOP
+   A interface mobile continua sendo a referência abaixo deste breakpoint.
+   No desktop, a navegação vira uma barra lateral e as áreas ganham espaço
+   para aproveitar telas largas sem alterar a mecânica do jogo.
+   ============================================================================ */
+@media screen and (min-width: 900px) {
+  html,
+  body {
+    position: static;
+    min-width: 900px;
+    overflow: hidden;
+    touch-action: auto;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 224px minmax(0, 1fr);
+    grid-template-rows: minmax(88px, auto) minmax(0, 1fr);
+    grid-template-areas:
+      'navigation header'
+      'navigation content';
+    width: 100%;
+    height: 100vh;
+    min-height: 620px;
+    background: #f4ebe1;
+  }
+
+  .status-bar {
+    grid-area: header;
+    justify-content: flex-start;
+    gap: 18px;
+    min-width: 0;
+    padding: 16px clamp(24px, 4vw, 56px);
+    background: rgba(255, 253, 245, 0.96);
+    border-bottom: 1px solid #e8d8c8;
+    box-shadow: 0 5px 18px rgba(74, 48, 34, 0.06);
+  }
+
+  .header-logo {
+    width: 58px;
+    height: 58px;
+    padding: 7px;
+    border-radius: 16px;
+  }
+
+  .header-mascot {
+    width: 42px;
+    height: 42px;
+  }
+
+  #score-display {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+  }
+
+  #pps-display {
+    margin-top: 2px;
+  }
+
+  .bottom-nav {
+    grid-area: navigation;
+    position: relative;
+    inset: auto;
+    width: auto;
+    height: 100%;
+    min-height: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 8px;
+    padding: 24px 14px 20px;
+    background: linear-gradient(180deg, #3b2519 0%, #2f1d13 100%);
+    border: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 8px 0 24px rgba(53, 31, 19, 0.12);
+  }
+
+  .bottom-nav::before {
+    content: 'PAÇOCA\A CLICKER';
+    white-space: pre;
+    display: block;
+    padding: 0 10px 24px;
+    color: #fff8ed;
+    font-size: 1.05rem;
+    font-weight: 950;
+    line-height: 1.05;
+    letter-spacing: 0.08em;
+    text-align: left;
+  }
+
+  .nav-btn {
+    flex: 0 0 auto;
+    min-height: 52px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 13px;
+    padding: 12px 14px;
+    border-radius: 13px;
+    color: #b8a79a;
+    text-align: left;
+  }
+
+  .nav-icon {
+    width: 21px;
+    height: 21px;
+    margin: 0;
+    flex: 0 0 21px;
+  }
+
+  .nav-btn .label {
+    max-width: none;
+    font-size: 0.82rem;
+    letter-spacing: 0;
+  }
+
+  .nav-btn.active {
+    color: #fff;
+    background: linear-gradient(90deg, rgba(212, 155, 106, 0.3), rgba(212, 155, 106, 0.08));
+    box-shadow: inset 3px 0 #e0ba98;
+  }
+
+  .nav-btn.active .nav-icon {
+    transform: scale(1.08);
+  }
+
+  .nav-btn:hover:not(.active) {
+    color: #fff1df;
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .tab-content {
+    grid-area: content;
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    animation: fadeInTab 0.2s ease-out forwards;
+  }
+
+  #click-area.tab-content.active,
+  #shop-area.tab-content.active,
+  #upgrades-area.tab-content.active,
+  #skills-area.tab-content.active,
+  #profile-area.tab-content.active,
+  #ranking-area.tab-content.active {
+    display: flex;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #click-area.tab-content.active {
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(24px, 4vw, 56px);
+  }
+
+  #click-area .mascot-container {
+    width: min(38vw, 440px);
+    height: min(38vw, 440px);
+    max-width: 440px;
+    max-height: 440px;
+  }
+
+  #click-area .pacoca-mascot {
+    width: min(27vw, 320px);
+    max-width: 320px;
+  }
+
+  #click-area .cream-wave {
+    height: 110px;
+  }
+
+  .frenzy-banner {
+    position: fixed;
+    top: 88px;
+    left: 224px;
+    right: 0;
+    padding: 10px 18px;
+    font-size: 0.85rem;
+    z-index: 30;
+  }
+
+  #shop-area.tab-content.active,
+  #upgrades-area.tab-content.active,
+  #profile-area.tab-content.active,
+  #ranking-area.tab-content.active {
+    flex-direction: column;
+    padding: 30px clamp(24px, 4vw, 56px) 44px;
+  }
+
+  #shop-area > *,
+  #upgrades-area > *,
+  #profile-area > *,
+  #ranking-area > * {
+    width: 100%;
+    max-width: 1240px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .shop-header {
+    gap: 24px;
+    margin-bottom: 22px;
+  }
+
+  .shop-header h2 {
+    font-size: 1.7rem;
+  }
+
+  .shop-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    align-content: start;
+    gap: 16px;
+    padding-bottom: 8px;
+  }
+
+  .generator-card {
+    min-height: 92px;
+    padding: 16px 18px;
+    gap: 16px;
+    border-radius: 18px;
+  }
+
+  .generator-icon-wrapper {
+    width: 58px;
+    height: 58px;
+  }
+
+  .generator-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .buy-btn {
+    min-width: 104px;
+    padding: 11px 16px;
+  }
+
+  #upgrades-area.tab-content.active {
+    padding-bottom: 44px;
+  }
+
+  .upgrades-filters {
+    gap: 10px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    overflow: visible;
+  }
+
+  .upg-filter-btn {
+    padding: 9px 18px;
+  }
+
+  .upgrade-card {
+    min-height: 92px;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    padding: 14px 16px;
+    gap: 14px;
+  }
+
+  .upgrade-card .upg-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .upgrade-card .upg-title {
+    font-size: 0.96rem;
+  }
+
+  .upgrade-card .upg-desc,
+  .upgrade-card .upg-cost {
+    font-size: 0.78rem;
+  }
+
+  #skills-area.tab-content.active {
+    height: auto;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .skill-tree-container {
+    min-height: 0;
+  }
+
+  .tree-tier-row {
+    gap: 28px;
+  }
+
+  .tree-node-box {
+    width: 58px;
+    height: 58px;
+  }
+
+  .tree-node-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  #profile-area.tab-content.active {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    align-items: start;
+    gap: 24px;
+  }
+
+  #profile-area > .profile-section {
+    max-width: none;
+    min-width: 0;
+    margin: 0 !important;
+  }
+
+  #profile-area > .account-profile-section,
+  #profile-area > .profile-section:nth-child(2),
+  #profile-area > .profile-section:last-child {
+    grid-column: 1 / -1;
+  }
+
+  #profile-area .clicker-account-card {
+    padding: 16px 18px;
+  }
+
+  #profile-area .prestige-card-clean {
+    max-width: none;
+  }
+
+  #profile-area .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #ranking-area.tab-content.active {
+    padding: 30px clamp(24px, 4vw, 56px) 44px;
+  }
+
+  #ranking-area > .profile-section {
+    flex: 1;
+    min-height: 0;
+    max-width: 1240px;
+    padding: 0;
+  }
+
+  #ranking-area .ranking-list {
+    min-height: 180px;
+  }
+
+  .modal-card {
+    max-width: 460px;
+  }
+}
