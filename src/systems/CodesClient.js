@@ -1,7 +1,13 @@
 import { SaveManager } from '../storage/SaveManager.js';
 
 export function normalizeCode(value) {
-  const code = String(value ?? '').trim().toUpperCase();
+  // Teclados móveis e cópias de mensagens podem inserir caracteres invisíveis.
+  // Eles não devem transformar um código visualmente válido em erro de formato.
+  const code = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, '')
+    .trim()
+    .toUpperCase();
   if (!/^[A-Z0-9][A-Z0-9_-]{2,39}$/.test(code)) throw new Error('Use de 3 a 40 letras, números, hífen ou sublinhado.');
   return code;
 }
@@ -20,6 +26,7 @@ export function validateCampaign(data, now = Date.now()) {
 
 // Apenas sugere a entrada visual; a autorização de todas as rotas pertence à API.
 export function isTeamAccount(user) {
+  if (user?.can_manage_codes === true) return true;
   return ['joao', 'bochecha'].includes(String(user?.user_name ?? '').replace(/^@/, '').toLowerCase());
 }
 

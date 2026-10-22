@@ -5,6 +5,8 @@ import { SaveManager } from '../storage/SaveManager.js';
 
 test('códigos normalizam caixa e recusam conteúdo inválido', () => {
   assert.equal(normalizeCode('  pacoca_2026 '), 'PACOCA_2026');
+  assert.equal(normalizeCode('ma_mmia'), 'MA_MMIA');
+  assert.equal(normalizeCode('ma\u200B_mmia'), 'MA_MMIA');
   for (const value of ['', 'ab', 'a'.repeat(41), '<script>', 'paçoca']) assert.throws(() => normalizeCode(value));
 });
 test('campanhas validam quantidade, validade e limite antes de enviar', () => {
@@ -14,7 +16,8 @@ test('campanhas validam quantidade, validade e limite antes de enviar', () => {
     assert.throws(() => validateCampaign({ ...base, ...change }));
   }
 });
-test('entrada da equipe considera somente os nomes solicitados', () => {
+test('entrada da equipe usa a permissão confirmada pela API e preserva os nomes solicitados', () => {
+  assert.equal(isTeamAccount({ user_name: 'jogador', can_manage_codes: true }), true);
   for (const user_name of ['joao', '@Bochecha', 'BOCHECHA']) assert.equal(isTeamAccount({ user_name }), true);
   for (const user_name of ['joao2', 'bochecha_admin', '', undefined]) assert.equal(isTeamAccount({ user_name }), false);
 });
