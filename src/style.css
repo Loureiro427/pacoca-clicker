@@ -3094,9 +3094,14 @@ html, body {
     align-self: stretch;
   }
 
-  .profile-shell > .profile-footer {
+  .profile-shell > #profile-support {
     grid-column: 1 / -1;
     grid-row: 6;
+  }
+
+  .profile-shell > .profile-footer {
+    grid-column: 1 / -1;
+    grid-row: 7;
   }
 
   .profile-shell > .profile-panel,
