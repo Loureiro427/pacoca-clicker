@@ -1,6 +1,20 @@
 import { isTeamAccount, normalizeCode, validateCampaign, redeemCode } from '../systems/CodesClient.js';
 import { trackDialog } from '../systems/AppNavigation.js';
 
+// Em alguns WebViews, FormData pode entregar um valor divergente do que o campo mostra.
+// Leia os controles diretamente para enviar exatamente o código digitado.
+export function campaignValuesFromForm(form) {
+  const { code, reward_type: rewardType, amount, expires_at: expiresAt, max_redemptions: maxRedemptions, active } = form.elements;
+  return {
+    code: code.value,
+    reward_type: rewardType.value,
+    amount: amount.value,
+    expires_at: expiresAt.value,
+    max_redemptions: maxRedemptions.value,
+    active: active.checked,
+  };
+}
+
 export function initCodesUI({ api, user, game }) {
   const template = document.createElement('template');
   template.innerHTML = `
@@ -121,8 +135,7 @@ export function initCodesUI({ api, user, game }) {
     event.preventDefault();
     if (busy || !authorized) return;
     run(async () => {
-      const fields = new FormData(adminForm);
-      const campaign = validateCampaign({ ...Object.fromEntries(fields), active: fields.has('active') });
+      const campaign = validateCampaign(campaignValuesFromForm(adminForm));
       const serialized = JSON.stringify(campaign);
       if (createRequest?.serialized !== serialized) createRequest = { serialized, id: crypto.randomUUID() };
       const response = await api.codesRequest('/admin', { method: 'POST', body: { ...campaign, request_id: createRequest.id } });
