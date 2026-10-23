@@ -50,12 +50,16 @@ export class UIManager {
     if (!this.shopArea) return;
     this.shopArea.innerHTML = `
       <div class="commerce-shell">
-        <header class="commerce-hero"><span class="commerce-eyebrow">PAÇOCA CLICKER / CONSTRUA SEU IMPÉRIO</span><h2 id="shop-title">Da primeira paçoca<br><em>à próxima fábrica.</em></h2><p>Mais estruturas. Mais produção. Mais possibilidades.</p><div class="commerce-summary"><div><span>SEU SALDO</span><strong id="shop-balance">0</strong></div><div><span>PRODUÇÃO ATUAL</span><strong id="shop-production">0 /s</strong></div></div></header>
+        <aside class="commerce-rail">
+          <header class="commerce-hero"><span class="commerce-eyebrow">PAÇOCA CLICKER / CONSTRUA SEU IMPÉRIO</span><h2 id="shop-title">Da primeira paçoca<br><em>à próxima fábrica.</em></h2><p>Mais estruturas. Mais produção. Mais possibilidades.</p><div class="commerce-summary"><div><span>SEU SALDO</span><strong id="shop-balance">0</strong></div><div><span>PRODUÇÃO ATUAL</span><strong id="shop-production">0 /s</strong></div></div></header>
+          <div class="game-ad commerce-side-ad" data-ad-slot="shop-sidebar" hidden></div>
+        </aside>
         <div class="commerce-catalog">
           <div class="commerce-section-heading"><div><span class="commerce-eyebrow">O PRÓXIMO PASSO É SEU</span><h3>Expanda sua produção</h3></div><span id="shop-owned-count" class="commerce-count">0 estruturas</span></div>
           <div class="commerce-buy-panel"><div><strong>Quantidade por compra</strong><span id="shop-discount-note">Preço total do lote</span></div><div class="buy-modes" role="group" aria-label="Quantidade por compra"><button type="button" class="mode-btn active" data-amount="1" aria-pressed="true">×1</button><button type="button" class="mode-btn" data-amount="10" aria-pressed="false">×10</button><button type="button" class="mode-btn" data-amount="100" aria-pressed="false">×100</button></div></div>
           <div class="commerce-list-caption"><span>ESTRUTURAS & CLIQUES</span><span id="shop-lot-label">Lotes de 1 unidade</span></div>
           <div id="generators-list" class="commerce-list" role="list" aria-label="Estruturas à venda"></div>
+          <div class="game-ad" data-ad-slot="shop" hidden></div>
           <p class="commerce-footnote">Produção base por unidade. Melhorias, talentos e bônus são aplicados ao total do seu império.</p>
           <p id="shop-feedback" class="commerce-feedback" role="status"></p>
         </div>

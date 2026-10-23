@@ -2710,10 +2710,16 @@ html, body {
     padding: 0;
   }
 
-  .commerce-shell > .commerce-hero {
+  .commerce-shell > .commerce-rail {
     grid-column: 1 / span 5;
     position: sticky;
     top: 0;
+    display: grid;
+    gap: 24px;
+    min-width: 0;
+  }
+
+  .commerce-rail > .commerce-hero {
     min-width: 0;
     padding: 38px 40px;
     border-radius: 28px;
@@ -3207,3 +3213,91 @@ html, body {
 .code-card p { margin: 8px 0; }
 .code-card .support-actions { flex-wrap: wrap; }
 .code-active { display: flex; align-items: center; gap: 8px; }
+
+/* O banner lateral preenche a coluna vazia no desktop sem ocupar área no celular. */
+.commerce-side-ad {
+  display: none;
+}
+
+@media screen and (min-width: 1100px) {
+  .commerce-rail > .commerce-side-ad {
+    display: flex;
+    margin: 0;
+  }
+}
+
+/* Publicidade nas listas, seguindo o mesmo formato de banner do frontend. */
+.game-ad {
+  --game-ad-height: 250px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: calc(var(--game-ad-height) + 50px);
+  margin: 20px 0;
+  padding: 38px 10px 12px;
+  overflow: hidden;
+  border: 1px solid #e2d8ce;
+  border-radius: 16px;
+  background: #fffdf8;
+  color: #3e2723;
+}
+
+.game-ad[hidden] {
+  display: none;
+}
+
+.game-ad__label {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 2;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.58);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: .02em;
+  pointer-events: none;
+}
+
+.game-ad__unit {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: var(--game-ad-height);
+}
+
+.game-ad__loading {
+  position: absolute;
+  inset: 38px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  border-radius: 12px;
+  background: rgba(62, 39, 35, .05);
+}
+
+.game-ad__loading span {
+  display: block;
+  width: 72%;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(62, 39, 35, .1);
+  animation: game-ad-pulse 1.2s ease-in-out infinite alternate;
+}
+
+.game-ad__loading span:last-child {
+  width: 46%;
+}
+
+@keyframes game-ad-pulse {
+  from { opacity: .45; }
+  to { opacity: 1; }
+}

@@ -11,6 +11,7 @@ import { RankingUI } from './ui/RankingUI.js';
 import { updateAccountProfile, updateAccountSyncStatus } from './ui/ProfileAccount.js';
 import { initSupportUI } from './ui/SupportUI.js';
 import { initMobileTextProtection, initAppNavigation } from './systems/AppNavigation.js';
+import { initAds } from './ads/AdsManager.js';
 
 const api = new PacocaApi();
 
@@ -47,6 +48,7 @@ function initGame() {
   const game = new Game(ui);
 
   ui.init(game);
+  initAds();
 
   // O login é assíncrono; libera o áudio na próxima interação real com o jogo.
   // Mantém o listener para retomar o contexto após voltar de outra aba/app.
